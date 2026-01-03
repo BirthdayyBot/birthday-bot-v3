@@ -1,0 +1,21 @@
+services:
+  birthdayy:
+    build:
+      context: ../
+    container_name: birthdayy
+    env_file:
+      - src/.env
+      - src/.env.development.local
+    image: ghcr.io/birthdayybot/birthdayy:latest
+    logging:
+      options:
+        max-size: '1g'
+        max-file: '3'
+    networks:
+      - birthdayy
+    restart: always
+
+volumes:
+
+networks:
+  birthdayy:
