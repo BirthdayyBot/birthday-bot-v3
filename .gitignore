@@ -24,6 +24,3 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
-
-# Command that I use locally to parse the old starboard
-src/commands/System/parse-starboard.ts
