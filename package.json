@@ -26,17 +26,19 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "tsc-watch": "^6.3.0",
+    "tsdown": "^0.19.0-beta.2",
     "typescript": "~5.4.5"
   },
   "scripts": {
-    "sapphire": "sapphire",
-    "generate": "sapphire generate",
-    "build": "tsc",
-    "watch": "tsc -w",
-    "start": "node dist/index.js",
-    "dev": "npm run build && npm run start",
-    "watch:start": "tsc-watch --onSuccess \"npm run start\"",
-    "format": "prettier --write \"src/\""
+    "start": "node --preserve-symlinks --enable-source-maps dist/index.js",
+    "lint": "eslint src --ext ts --fix",
+    "prettier": "prettier --ignore-path=.prettierignore",
+    "format": "prettier --write .",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
+    "clean": "rimraf dist/",
+    "typecheck": "tsc -b src",
+    "dev": "tsdown --watch --onSuccess \"yarn start\""
   },
   "commitlint": {
     "extends": [
