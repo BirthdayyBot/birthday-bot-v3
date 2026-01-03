@@ -5,14 +5,13 @@ import { ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framew
 import '@sapphire/plugin-logger/register';
 import { setup } from '@skyra/env-utilities';
 import * as colorette from 'colorette';
-import { join } from 'node:path';
-import { srcDir } from './constants';
+import { srcFolder } from './constants';
 
 // Set default behavior to bulk overwrite
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
 
 // Read env var
-setup({ path: join(srcDir, '.env') });
+setup(new URL('.env', srcFolder));
 
 // Enable colorette
 colorette.createColors({ useColor: true });

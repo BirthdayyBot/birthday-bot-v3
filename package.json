@@ -30,7 +30,7 @@
     "typescript": "~5.4.5"
   },
   "scripts": {
-    "start": "node --preserve-symlinks --enable-source-maps dist/index.js",
+    "start": "node --preserve-symlinks --enable-source-maps dist/index.mjs",
     "lint": "eslint src --ext ts --fix",
     "prettier": "prettier --ignore-path=.prettierignore",
     "format": "prettier --write .",
