@@ -1,4 +1,3 @@
-dist/
-node_modules/
+.docker/
 .yarn/
-examples/*/dist/
+dist/

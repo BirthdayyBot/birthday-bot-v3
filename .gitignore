@@ -8,19 +8,15 @@ node_modules/
 .yarn/install-state.gz
 .yarn/build-state.yml
 
-# Environment variables
-.DS_Store
-
+# Ignore the dist output
 dist/
-
-# Ignore the config file (contains sensitive information such as tokens)
-config.ts
+.swc/
 
 # Ignore heapsnapshot and log files
 *.heapsnapshot
 *.log
 
-# Ignore npm lockfiles file
+# Ignore package locks
 package-lock.json
 
 # Environment variables
@@ -28,3 +24,6 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Command that I use locally to parse the old starboard
+src/commands/System/parse-starboard.ts
