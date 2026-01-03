@@ -1,105 +1,30 @@
-# Birthday Bot v3 (Experimental)
+# TypeScript Sapphire Bot example
 
-⚠️ **Important notice**  
-This repository contains an **experimental redesign** of Birthday Bot.  
-It is **not production-ready** and **no deployment is planned at this stage**.
+This is a basic setup of a Discord bot using the [sapphire framework][sapphire] written in TypeScript
 
----
+## How to use it?
 
-## 🧠 Why a v3?
+### Prerequisite
 
-Birthday Bot has been running for a long time and has naturally accumulated technical debt as Discord, features, and usage evolved.
+```sh
+npm install
+```
 
-Instead of continuing to apply fragile patches, this repository explores a **clean v3 architecture**, with the goal of:
-- improving stability
-- reducing memory pressure
-- simplifying long-term maintenance
-- enabling future evolution without breaking everything
+### Development
 
-This is a **design-first approach**, not a rushed rewrite.
+This example can be run with `tsc-watch` to watch the files and automatically restart your bot.
 
----
+```sh
+npm run watch:start
+```
 
-## 🎯 Project goals
+### Production
 
-Birthday Bot v3 focuses on:
+You can also run the bot with `npm dev`, this will first build your code and then run `node ./dist/index.js`. But this is not the recommended way to run a bot in production.
 
-- a unified celebration system (birthdays, server events, custom dates)
-- per-guild scheduling with better isolation
-- safer memory usage and predictable runtime behavior
-- clearer and fairer premium model
-- optional dashboard for advanced configuration
-- explicit separation between runtime logic and configuration
+## License
 
-The bot must remain **fully functional without premium**.
+Dedicated to the public domain via the [Unlicense], courtesy of the Sapphire Community and its contributors.
 
----
-
-## 🧩 Current status
-
-- 🟡 Architecture and specifications are being defined
-- 🟡 No production code yet
-- 🟡 No migration is happening at this stage
-- 🟡 No release timeline
-
-This repository exists to **prepare the ground**, not to announce a release.
-
----
-
-## 📚 Documentation
-
-Key documents live in the `/docs` directory:
-
-- `specs-v3.md` — full technical specifications
-- `roadmap.md` — high-level development plan
-- `migration-v2-v3.md` — migration considerations (work in progress)
-- `faq-v3.md` — community-facing FAQ
-
-These documents may evolve over time.
-
----
-
-## 🔁 Relationship with v2
-
-- Birthday Bot v2 remains the active production version
-- v3 is developed **in parallel**, with no impact on v2
-- no breaking changes or forced migration will happen silently
-
-If a migration ever happens, it will be communicated clearly and tested carefully.
-
----
-
-## 🤝 Contributing
-
-At this stage:
-- the project is **not open for external contributions**
-- discussions and feedback are welcome
-- implementation decisions are intentionally conservative
-
-This may change later, once the foundation is validated.
-
----
-
-## 💬 Transparency
-
-This repository exists because of the community:
-- user feedback
-- messages of support
-- constructive discussions
-
-Those messages are the main reason why this reflection exists at all.
-
----
-
-## 🛑 Disclaimer
-
-This repository:
-- is experimental
-- may be paused or abandoned
-- does not guarantee a v3 release
-
-The goal is to do things **properly**, or not at all.
-
----
-
-❤️ Thank you for your patience and support.
+[sapphire]: https://github.com/sapphiredev/framework
+[unlicense]: https://github.com/sapphiredev/examples/blob/main/LICENSE.md
