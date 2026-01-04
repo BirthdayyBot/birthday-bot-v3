@@ -5,7 +5,8 @@
     "rootDir": ".",
     "paths": {
       "#lib/*": ["./lib/*.js"],
-      "#root/*": ["./*.js"]
+      "#root/*": ["./*.js"],
+    "#utils/*": ["./lib/util/*.js"]
     }
   },
   "include": ["."]

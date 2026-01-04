@@ -5,7 +5,7 @@ import { ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framew
 import '@sapphire/plugin-logger/register';
 import { setup } from '@skyra/env-utilities';
 import * as colorette from 'colorette';
-import { srcFolder } from './constants';
+import { srcFolder } from '#utils/constants';
 
 // Set default behavior to bulk overwrite
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
