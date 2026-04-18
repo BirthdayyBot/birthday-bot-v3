@@ -27,7 +27,9 @@
     "colorette": "^2.0.20",
     "discord.js": "^14.17.3",
     "figlet": "^1.11.0",
-    "gradient-string": "^3.0.0"
+    "gradient-string": "^3.0.0",
+    "kysely": "^0.28.16",
+    "mysql2": "^3.22.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",
@@ -41,6 +43,7 @@
     "prettier": "^3.4.2",
     "tsc-watch": "^6.3.0",
     "tsdown": "^0.19.0-beta.2",
+    "tsx": "^4.21.0",
     "typescript": "~5.4.5"
   },
   "scripts": {
@@ -52,7 +55,9 @@
     "watch": "tsdown --watch",
     "clean": "rimraf dist/",
     "typecheck": "tsc -b src",
-    "dev": "tsdown --watch --onSuccess \"yarn start\""
+    "dev": "tsdown --watch --onSuccess \"yarn start\"",
+    "migrate": "node --env-file=src/.env --import tsx/esm scripts/migrate.ts up",
+    "migrate:down": "node --env-file=src/.env --import tsx/esm scripts/migrate.ts down"
   },
   "commitlint": {
     "extends": [

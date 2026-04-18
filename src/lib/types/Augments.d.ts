@@ -1,14 +1,27 @@
 import { Nullish } from '@sapphire/utilities/types';
 import type { AnalyticsData } from '#lib/structures/AnalyticsData';
+import type { Database } from '#lib/database/Database';
+import type { IBirthdayRepository } from '#lib/domain/birthday/IBirthdayRepository';
+import type { IBlacklistRepository } from '#lib/domain/blacklist/IBlacklistRepository';
+import type { IGuildRepository } from '#lib/domain/guild/IGuildRepository';
+import type { IPremiumRepository } from '#lib/domain/premium/IPremiumRepository';
+import type { IUserRepository } from '#lib/domain/user/IUserRepository';
 import type { ArrayString, BooleanString, IntegerString } from '@skyra/env-utilities';
+import type { Kysely } from 'kysely';
 import { WebhookClient } from 'discord.js';
 
 declare module '@sapphire/pieces' {
   interface Container {
-     /** The InfluxDB Analytics controller. */
+    /** The InfluxDB Analytics controller. */
     analytics: AnalyticsData | Nullish;
     /** The webhook to use for the error event. */
     webhookError: WebhookClient | Nullish;
+    database: Kysely<Database>;
+    birthday: IBirthdayRepository;
+    blacklist: IBlacklistRepository;
+    guild: IGuildRepository;
+    premium: IPremiumRepository;
+    user: IUserRepository;
   }
 }
 
@@ -43,5 +56,7 @@ declare module '@skyra/env-utilities' {
     INFLUX_TOKEN: string;
     INFLUX_ORG: string;
     INFLUX_ORG_ANALYTICS_BUCKET: string;
+
+    DB_URL: string;
   }
 }

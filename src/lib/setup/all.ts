@@ -1,5 +1,6 @@
 import '#lib/setup/env';
 
+import '#lib/setup/database';
 import '#lib/setup/analytics';
 import '#lib/setup/colorette';
 import '#lib/setup/error-webhook';
