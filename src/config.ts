@@ -1,8 +1,9 @@
+import '#lib/setup/env';
 import { LogLevel } from '@sapphire/framework';
 import { cast } from '@sapphire/utilities';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
 import type { RedisOptions } from 'bullmq';
-import { ActivityType, GatewayIntentBits, Partials, WebhookClientData, type ActivitiesOptions, type ClientOptions } from 'discord.js';
+import { ActivityType, GatewayIntentBits, Partials, type WebhookClientData, type ActivitiesOptions, type ClientOptions } from 'discord.js';
 
 export const OWNERS = ['267614892821970945', '696324357940838492'];
 
