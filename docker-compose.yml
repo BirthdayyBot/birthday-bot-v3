@@ -1,7 +1,7 @@
 services:
   birthdayy:
     build:
-      context: ../
+      context: .
     container_name: birthdayy
     depends_on:
       - redis
