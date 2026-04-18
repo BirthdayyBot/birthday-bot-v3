@@ -2,7 +2,7 @@ import { handleChatInputOrContextMenuCommandDenied } from '#utils/functions/deni
 import { Events, Listener, UserError, type ChatInputCommandDeniedPayload } from '@sapphire/framework';
 
 export class ChatInputCommandDenied extends Listener<typeof Events.ChatInputCommandDenied> {
-  public run(error: UserError, payload: ChatInputCommandDeniedPayload) {
-    return handleChatInputOrContextMenuCommandDenied(error, payload);
-  }
+	public run(error: UserError, payload: ChatInputCommandDeniedPayload) {
+		return handleChatInputOrContextMenuCommandDenied(error, payload);
+	}
 }

@@ -19,19 +19,19 @@ const OFFSET_TO_IANA: Record<number, string> = {
 	[-3]: 'America/Argentina/Buenos_Aires',
 	[-2]: 'Atlantic/South_Georgia',
 	[-1]: 'Atlantic/Azores',
-	[0]: 'Europe/London',
-	[1]: 'Europe/Paris',
-	[2]: 'Europe/Berlin',
-	[3]: 'Europe/Moscow',
-	[4]: 'Asia/Dubai',
-	[5]: 'Asia/Karachi',
-	[6]: 'Asia/Dhaka',
-	[7]: 'Asia/Jakarta',
-	[8]: 'Asia/Shanghai',
-	[9]: 'Asia/Tokyo',
-	[10]: 'Australia/Brisbane',
-	[11]: 'Pacific/Noumea',
-	[12]: 'Pacific/Fiji'
+	0: 'Europe/London',
+	1: 'Europe/Paris',
+	2: 'Europe/Berlin',
+	3: 'Europe/Moscow',
+	4: 'Asia/Dubai',
+	5: 'Asia/Karachi',
+	6: 'Asia/Dhaka',
+	7: 'Asia/Jakarta',
+	8: 'Asia/Shanghai',
+	9: 'Asia/Tokyo',
+	10: 'Australia/Brisbane',
+	11: 'Pacific/Noumea',
+	12: 'Pacific/Fiji'
 };
 
 function resolveIana(timezone: string): string {
@@ -44,11 +44,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 	// MySQL converts integer column values to their string representation during this ALTER
 	await sql`ALTER TABLE guild MODIFY COLUMN timezone VARCHAR(64) NOT NULL DEFAULT 'Europe/London'`.execute(db);
 
-	const rows = await (db as Kysely<{ guild: GuildRow }>)
-		.selectFrom('guild')
-		.select('timezone')
-		.distinct()
-		.execute();
+	const rows = await (db as Kysely<{ guild: GuildRow }>).selectFrom('guild').select('timezone').distinct().execute();
 
 	for (const { timezone } of rows) {
 		await (db as Kysely<{ guild: GuildRow }>)

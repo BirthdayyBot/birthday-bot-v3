@@ -10,17 +10,25 @@ export const DefaultAnnouncementMessage = T<string>('commands/config:defaults.an
 export const ErrorGuildOnly = T<string>('commands/config:errors.guildOnly');
 
 export const SubcommandAnnouncementChannelDescription = T<string>('commands/config:subcommands.announcementChannel.description');
-export const SubcommandAnnouncementChannelOptionChannelDescription = T<string>('commands/config:subcommands.announcementChannel.options.channel.description');
-export const SubcommandAnnouncementChannelResponseUpdated = FT<{ channelId: string }, string>('commands/config:subcommands.announcementChannel.responses.updated');
+export const SubcommandAnnouncementChannelOptionChannelDescription = T<string>(
+	'commands/config:subcommands.announcementChannel.options.channel.description'
+);
+export const SubcommandAnnouncementChannelResponseUpdated = FT<{ channelId: string }, string>(
+	'commands/config:subcommands.announcementChannel.responses.updated'
+);
 
 export const SubcommandAnnouncementMessageDescription = T<string>('commands/config:subcommands.announcementMessage.description');
-export const SubcommandAnnouncementMessageOptionMessageDescription = T<string>('commands/config:subcommands.announcementMessage.options.message.description');
+export const SubcommandAnnouncementMessageOptionMessageDescription = T<string>(
+	'commands/config:subcommands.announcementMessage.options.message.description'
+);
 export const SubcommandAnnouncementMessageResponseEmpty = T<string>('commands/config:subcommands.announcementMessage.responses.empty');
 export const SubcommandAnnouncementMessageResponseUpdated = T<string>('commands/config:subcommands.announcementMessage.responses.updated');
 
 export const SubcommandBirthdayPingRoleDescription = T<string>('commands/config:subcommands.birthdayPingRole.description');
 export const SubcommandBirthdayPingRoleOptionRoleDescription = T<string>('commands/config:subcommands.birthdayPingRole.options.role.description');
-export const SubcommandBirthdayPingRoleResponseUpdated = FT<{ roleId: string }, string>('commands/config:subcommands.birthdayPingRole.responses.updated');
+export const SubcommandBirthdayPingRoleResponseUpdated = FT<{ roleId: string }, string>(
+	'commands/config:subcommands.birthdayPingRole.responses.updated'
+);
 
 export const SubcommandBirthdayRoleDescription = T<string>('commands/config:subcommands.birthdayRole.description');
 export const SubcommandBirthdayRoleOptionRoleDescription = T<string>('commands/config:subcommands.birthdayRole.options.role.description');
@@ -37,7 +45,9 @@ export const SubcommandLogChannelResponseUpdated = FT<{ channelId: string }, str
 
 export const SubcommandOverviewChannelDescription = T<string>('commands/config:subcommands.overviewChannel.description');
 export const SubcommandOverviewChannelOptionChannelDescription = T<string>('commands/config:subcommands.overviewChannel.options.channel.description');
-export const SubcommandOverviewChannelResponseUpdated = FT<{ channelId: string }, string>('commands/config:subcommands.overviewChannel.responses.updated');
+export const SubcommandOverviewChannelResponseUpdated = FT<{ channelId: string }, string>(
+	'commands/config:subcommands.overviewChannel.responses.updated'
+);
 
 export const SubcommandOverviewMessageDescription = T<string>('commands/config:subcommands.overviewMessage.description');
 export const SubcommandOverviewMessageOptionMessageDescription = T<string>('commands/config:subcommands.overviewMessage.options.message.description');

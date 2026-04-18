@@ -18,7 +18,11 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 		.addColumn('inviter', 'varchar(20)')
 		.addColumn('announcement_channel', 'varchar(20)')
 		.addColumn('announcement_message', 'varchar(512)', (col) =>
-			col.notNull().defaultTo('<:arrwright:931267038746390578> Today is a special Day!{NEW_LINE}<:gift:931267039094534175> Please wish {MENTION} a happy Birthday <3')
+			col
+				.notNull()
+				.defaultTo(
+					'<:arrwright:931267038746390578> Today is a special Day!{NEW_LINE}<:gift:931267039094534175> Please wish {MENTION} a happy Birthday <3'
+				)
 		)
 		.addColumn('overview_channel', 'varchar(20)')
 		.addColumn('overview_message', 'varchar(20)')

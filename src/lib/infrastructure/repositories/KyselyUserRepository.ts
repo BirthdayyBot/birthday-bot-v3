@@ -19,7 +19,12 @@ export class KyselyUserRepository implements IUserRepository {
 	public async upsert(data: { userId: string; username?: string | null; discriminator?: string | null; lastUpdated: Date }): Promise<void> {
 		await this.#db
 			.insertInto('user')
-			.values({ user_id: data.userId, username: data.username ?? null, discriminator: data.discriminator ?? null, last_updated: data.lastUpdated })
+			.values({
+				user_id: data.userId,
+				username: data.username ?? null,
+				discriminator: data.discriminator ?? null,
+				last_updated: data.lastUpdated
+			})
 			.onDuplicateKeyUpdate({ username: data.username ?? null, discriminator: data.discriminator ?? null, last_updated: data.lastUpdated })
 			.execute();
 	}

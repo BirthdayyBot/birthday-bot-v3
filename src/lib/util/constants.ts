@@ -6,13 +6,12 @@ export const rootFolder = new URL('../../../', import.meta.url);
 export const srcFolder = new URL('src/', rootFolder);
 export const languagesFolder = new URL('languages/', srcFolder);
 
-
 export enum Emojis {
-    RedCross = '❌',
-    Warning = '⚠️',
-    CheckMark = '✅',
-    Info = 'ℹ️',
-    Loading = '⏳'
+	RedCross = '❌',
+	Warning = '⚠️',
+	CheckMark = '✅',
+	Info = 'ℹ️',
+	Loading = '⏳'
 }
 
 export const enum LanguageFormatters {

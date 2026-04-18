@@ -20,7 +20,7 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 							LanguageKeys.Commands.Config.SubcommandOverviewChannelOptionChannelDescription
 						)
 					),
-					LanguageKeys.Commands.Config.SubcommandOverviewChannelDescription
+				LanguageKeys.Commands.Config.SubcommandOverviewChannelDescription
 			)
 	}
 })
@@ -32,6 +32,9 @@ export class ConfigOverviewChannelSubcommand extends Command {
 		const channel = interaction.options.getChannel('channel', true);
 		await saveGuildConfig(guildId, { overviewChannel: channel.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewChannelResponseUpdated, { channelId: channel.id }), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewChannelResponseUpdated, { channelId: channel.id }),
+			ephemeral: true
+		});
 	}
 }

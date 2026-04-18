@@ -12,12 +12,7 @@ export class KyselyBlacklistRepository implements IBlacklistRepository {
 	}
 
 	public async findActiveByGuildId(guildId: string): Promise<BlacklistEntry[]> {
-		const rows = await this.#db
-			.selectFrom('blacklist')
-			.selectAll()
-			.where('guild_id', '=', guildId)
-			.where('disabled', '=', false)
-			.execute();
+		const rows = await this.#db.selectFrom('blacklist').selectAll().where('guild_id', '=', guildId).where('disabled', '=', false).execute();
 		return rows.map(toBlacklistEntryEntity);
 	}
 
@@ -33,18 +28,10 @@ export class KyselyBlacklistRepository implements IBlacklistRepository {
 	}
 
 	public async add(data: { guildId: string; userId: string; addedAt: Date }): Promise<void> {
-		await this.#db
-			.insertInto('blacklist')
-			.values({ guild_id: data.guildId, user_id: data.userId, added_at: data.addedAt })
-			.execute();
+		await this.#db.insertInto('blacklist').values({ guild_id: data.guildId, user_id: data.userId, added_at: data.addedAt }).execute();
 	}
 
 	public async setDisabled(userId: string, guildId: string, disabled: boolean): Promise<void> {
-		await this.#db
-			.updateTable('blacklist')
-			.set({ disabled })
-			.where('user_id', '=', userId)
-			.where('guild_id', '=', guildId)
-			.execute();
+		await this.#db.updateTable('blacklist').set({ disabled }).where('user_id', '=', userId).where('guild_id', '=', guildId).execute();
 	}
 }

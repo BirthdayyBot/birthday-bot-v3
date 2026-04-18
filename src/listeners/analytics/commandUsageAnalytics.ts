@@ -6,12 +6,12 @@ import { Events, type ChatInputCommandSuccessPayload } from '@sapphire/framework
 
 @ApplyOptions<AnalyticsListener.Options>({ event: Events.ChatInputCommandSuccess })
 export class UserAnalyticsEvent extends AnalyticsListener<typeof Events.ChatInputCommandSuccess> {
-  public run(payload: ChatInputCommandSuccessPayload) {
-    const command = new Point(Points.Commands)
-      .tag(Tags.Action, Actions.Addition)
-      .tag('category', payload.command.category!)
-      .intField(payload.command.name.replace(/^time$/, 'case-time'), 1);
+	public run(payload: ChatInputCommandSuccessPayload) {
+		const command = new Point(Points.Commands)
+			.tag(Tags.Action, Actions.Addition)
+			.tag('category', payload.command.category!)
+			.intField(payload.command.name.replace(/^time$/, 'case-time'), 1);
 
-    return this.writePoint(command);
-  }
+		return this.writePoint(command);
+	}
 }

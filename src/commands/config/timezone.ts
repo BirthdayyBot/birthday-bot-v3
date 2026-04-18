@@ -15,16 +15,12 @@ import { getTimeZone } from '#lib/utilities/tz';
 				sub
 					.setName('timezone')
 					.setDescription('Set the guild timezone')
-				.addStringOption((option) =>
-					applyDescriptionLocalizedBuilder(
-						option
-							.setName('timezone')
-							.setDescription('IANA timezone (e.g. Europe/Paris)')
-							.setRequired(true)
-							.setAutocomplete(true),
-						LanguageKeys.Commands.Config.SubcommandTimezoneOptionTimezoneDescription
-					)
-				),
+					.addStringOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option.setName('timezone').setDescription('IANA timezone (e.g. Europe/Paris)').setRequired(true).setAutocomplete(true),
+							LanguageKeys.Commands.Config.SubcommandTimezoneOptionTimezoneDescription
+						)
+					),
 				LanguageKeys.Commands.Config.SubcommandTimezoneDescription
 			)
 	}
@@ -38,16 +34,25 @@ export class ConfigTimezoneSubcommand extends Command {
 		const entry = getTimeZone(value);
 
 		if (!entry) {
-			return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, { timezone: value }), ephemeral: true });
+			return interaction.reply({
+				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, { timezone: value }),
+				ephemeral: true
+			});
 		}
 
 		const current = await this.container.guild.findById(guildId);
 		if (current?.timezone === entry.name) {
-			return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, { timezone: entry.full }), ephemeral: true });
+			return interaction.reply({
+				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, { timezone: entry.full }),
+				ephemeral: true
+			});
 		}
 
 		await saveGuildConfig(guildId, { timezone: entry.name }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseUpdated, { timezone: entry.full }), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseUpdated, { timezone: entry.full }),
+			ephemeral: true
+		});
 	}
 }

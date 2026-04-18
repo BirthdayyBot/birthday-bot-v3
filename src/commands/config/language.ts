@@ -14,16 +14,18 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 				sub
 					.setName('language')
 					.setDescription('Set the guild language')
-				.addStringOption((option) =>
-					applyDescriptionLocalizedBuilder(
-						option
-							.setName('language')
-							.setDescription('Language locale')
-							.setRequired(true)
-							.addChoices(createLocalizedChoice(LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceEnUS, { value: 'en-US' })),
-						LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageDescription
-					)
-				),
+					.addStringOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option
+								.setName('language')
+								.setDescription('Language locale')
+								.setRequired(true)
+								.addChoices(
+									createLocalizedChoice(LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceEnUS, { value: 'en-US' })
+								),
+							LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageDescription
+						)
+					),
 				LanguageKeys.Commands.Config.SubcommandLanguageDescription
 			)
 	}
@@ -36,6 +38,9 @@ export class ConfigLanguageSubcommand extends Command {
 		const language = interaction.options.getString('language', true);
 		await saveGuildConfig(guildId, { language }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLanguageResponseUpdated, { language }), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLanguageResponseUpdated, { language }),
+			ephemeral: true
+		});
 	}
 }

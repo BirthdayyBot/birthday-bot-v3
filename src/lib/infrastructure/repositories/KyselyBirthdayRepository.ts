@@ -32,12 +32,7 @@ export class KyselyBirthdayRepository implements IBirthdayRepository {
 	}
 
 	public async findActiveByGuildId(guildId: string): Promise<Birthday[]> {
-		const rows = await this.#db
-			.selectFrom('birthday')
-			.selectAll()
-			.where('guild_id', '=', guildId)
-			.where('disabled', '=', false)
-			.execute();
+		const rows = await this.#db.selectFrom('birthday').selectAll().where('guild_id', '=', guildId).where('disabled', '=', false).execute();
 		return rows.map(toBirthdayEntity);
 	}
 
@@ -50,12 +45,7 @@ export class KyselyBirthdayRepository implements IBirthdayRepository {
 	}
 
 	public async setDisabled(userId: string, guildId: string, disabled: boolean): Promise<void> {
-		await this.#db
-			.updateTable('birthday')
-			.set({ disabled })
-			.where('user_id', '=', userId)
-			.where('guild_id', '=', guildId)
-			.execute();
+		await this.#db.updateTable('birthday').set({ disabled }).where('user_id', '=', userId).where('guild_id', '=', guildId).execute();
 	}
 
 	public async delete(userId: string, guildId: string): Promise<void> {

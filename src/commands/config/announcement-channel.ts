@@ -14,14 +14,14 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 				sub
 					.setName('announcement-channel')
 					.setDescription('Set the announcement channel')
-				.addChannelOption((option) =>
-					applyDescriptionLocalizedBuilder(
-						option.setName('channel').setDescription('Channel used for birthday announcements').setRequired(true),
-						LanguageKeys.Commands.Config.SubcommandAnnouncementChannelOptionChannelDescription
-					)
-				),
+					.addChannelOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option.setName('channel').setDescription('Channel used for birthday announcements').setRequired(true),
+							LanguageKeys.Commands.Config.SubcommandAnnouncementChannelOptionChannelDescription
+						)
+					),
 				LanguageKeys.Commands.Config.SubcommandAnnouncementChannelDescription
-			)	
+			)
 	}
 })
 export class ConfigAnnouncementChannelSubcommand extends Command {
@@ -32,6 +32,11 @@ export class ConfigAnnouncementChannelSubcommand extends Command {
 		const channel = interaction.options.getChannel('channel', true);
 		await saveGuildConfig(guildId, { announcementChannel: channel.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementChannelResponseUpdated, { channelId: channel.id }), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementChannelResponseUpdated, {
+				channelId: channel.id
+			}),
+			ephemeral: true
+		});
 	}
 }

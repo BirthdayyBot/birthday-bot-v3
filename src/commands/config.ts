@@ -15,14 +15,14 @@ export class ConfigCommand extends Subcommand {
 				this,
 				applyDescriptionLocalizedBuilder(
 					builder
-				.setName(this.name)
-				.setDescription(this.description)
-				.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-				.setContexts(InteractionContextType.Guild),
+						.setName(this.name)
+						.setDescription(this.description)
+						.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+						.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+						.setContexts(InteractionContextType.Guild),
 					LanguageKeys.Commands.Config.CommandDescription
 				)
-			),
+			)
 		);
 	}
 
@@ -37,7 +37,9 @@ export class ConfigCommand extends Subcommand {
 			results.map(async (result) => ({
 				name: await resolveKey(
 					interaction,
-					result.score === 1 ? LanguageKeys.Commands.Config.AutocompleteTimezoneExact : LanguageKeys.Commands.Config.AutocompleteTimezonePartial,
+					result.score === 1
+						? LanguageKeys.Commands.Config.AutocompleteTimezoneExact
+						: LanguageKeys.Commands.Config.AutocompleteTimezonePartial,
 					{ timezone: result.value.full }
 				),
 				value: result.value.name

@@ -22,7 +22,10 @@ export class KyselyPremiumRepository implements IPremiumRepository {
 	}
 
 	public async add(data: { userId: string; guildId?: string | null }): Promise<void> {
-		await this.#db.insertInto('premium').values({ user_id: data.userId, guild_id: data.guildId ?? null }).execute();
+		await this.#db
+			.insertInto('premium')
+			.values({ user_id: data.userId, guild_id: data.guildId ?? null })
+			.execute();
 	}
 
 	public async removeByUserId(userId: string): Promise<void> {

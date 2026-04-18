@@ -37,10 +37,16 @@
     "@commitlint/cli": "^20.3.0",
     "@commitlint/config-conventional": "^20.3.0",
     "@sapphire/cli": "^1.9.3",
+    "@sapphire/eslint-config": "^5.0.5",
     "@sapphire/prettier-config": "^2.0.0",
     "@sapphire/ts-config": "^5.0.1",
     "@types/node": "^22.10.7",
     "@types/ws": "^8.5.13",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.6",
     "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "tsc-watch": "^6.3.0",
@@ -66,6 +72,10 @@
       "@commitlint/config-conventional"
     ]
   },
+  "lint-staged": {
+		"*": "prettier --ignore-unknown --write",
+		"*.{mjs,js,ts}": "eslint --fix --ext mjs,js,ts"
+	},
   "prettier": "@sapphire/prettier-config",
   "packageManager": "yarn@4.12.0"
 }

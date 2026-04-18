@@ -20,7 +20,7 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 							LanguageKeys.Commands.Config.SubcommandBirthdayRoleOptionRoleDescription
 						)
 					),
-					LanguageKeys.Commands.Config.SubcommandBirthdayRoleDescription
+				LanguageKeys.Commands.Config.SubcommandBirthdayRoleDescription
 			)
 	}
 })
@@ -32,6 +32,9 @@ export class ConfigBirthdayRoleSubcommand extends Command {
 		const role = interaction.options.getRole('role', true);
 		await saveGuildConfig(guildId, { birthdayRole: role.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandBirthdayRoleResponseUpdated, { roleId: role.id }), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandBirthdayRoleResponseUpdated, { roleId: role.id }),
+			ephemeral: true
+		});
 	}
 }

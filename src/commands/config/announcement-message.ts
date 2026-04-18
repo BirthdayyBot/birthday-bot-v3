@@ -14,16 +14,12 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 				sub
 					.setName('announcement-message')
 					.setDescription('Set the announcement message template')
-				.addStringOption((option) =>
-					applyDescriptionLocalizedBuilder(
-						option
-							.setName('message')
-							.setDescription('Template text used in announcements')
-							.setRequired(true)
-							.setMaxLength(512),
-						LanguageKeys.Commands.Config.SubcommandAnnouncementMessageOptionMessageDescription
-					)
-				),
+					.addStringOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option.setName('message').setDescription('Template text used in announcements').setRequired(true).setMaxLength(512),
+							LanguageKeys.Commands.Config.SubcommandAnnouncementMessageOptionMessageDescription
+						)
+					),
 				LanguageKeys.Commands.Config.SubcommandAnnouncementMessageDescription
 			)
 	}
@@ -35,11 +31,17 @@ export class ConfigAnnouncementMessageSubcommand extends Command {
 
 		const message = interaction.options.getString('message', true).trim();
 		if (message.length === 0) {
-			return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseEmpty), ephemeral: true });
+			return interaction.reply({
+				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseEmpty),
+				ephemeral: true
+			});
 		}
 
 		await saveGuildConfig(guildId, { announcementMessage: message }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseUpdated), ephemeral: true });
+		return interaction.reply({
+			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseUpdated),
+			ephemeral: true
+		});
 	}
 }

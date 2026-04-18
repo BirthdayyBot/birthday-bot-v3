@@ -16,11 +16,7 @@ export async function getGuildIdOrReply(interaction: Command.ChatInputCommandInt
 	return interaction.guildId;
 }
 
-export async function saveGuildConfig(
-	guildId: string,
-	data: GuildUpdateData,
-	interaction?: Command.ChatInputCommandInteraction
-): Promise<void> {
+export async function saveGuildConfig(guildId: string, data: GuildUpdateData, interaction?: Command.ChatInputCommandInteraction): Promise<void> {
 	const now = new Date();
 	const current = await container.guild.findById(guildId);
 
