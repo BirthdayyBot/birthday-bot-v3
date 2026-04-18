@@ -6,7 +6,7 @@
     "paths": {
       "#lib/*": ["./lib/*.js"],
       "#root/*": ["./*.js"],
-    "#utils/*": ["./lib/util/*.js"]
+      "#utils/*": ["./lib/util/*.js"]
     }
   },
   "include": ["."]
