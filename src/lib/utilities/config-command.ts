@@ -1,6 +1,7 @@
 import { container, type Command } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { Guild } from '#lib/domain/guild/Guild';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import type { GuildUpdateData } from '#lib/domain/guild/IGuildRepository';
 
 export const DEFAULT_TIMEZONE = 'Europe/London';
@@ -8,7 +9,7 @@ export const DEFAULT_LANGUAGE = 'en-US';
 
 export async function getGuildIdOrReply(interaction: Command.ChatInputCommandInteraction): Promise<string | null> {
 	if (!interaction.inGuild() || !interaction.guildId) {
-		await interaction.reply({ content: await resolveKey(interaction, 'commands:config.errors.guildOnly'), ephemeral: true });
+		await interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.ErrorGuildOnly), ephemeral: true });
 		return null;
 	}
 
@@ -29,8 +30,8 @@ export async function saveGuildConfig(
 	}
 
 	const defaultAnnouncementMessage = interaction
-		? await resolveKey(interaction, 'commands:config.defaults.announcementMessage')
-		: container.i18n.format(DEFAULT_LANGUAGE, 'commands:config.defaults.announcementMessage');
+		? await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage)
+		: container.i18n.format(DEFAULT_LANGUAGE, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
 
 	await container.guild.upsert(createDefaultGuild(guildId, { ...data, lastUpdated: now }, defaultAnnouncementMessage));
 }

@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Subcommand } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { searchTimeZone } from '#lib/utilities/tz';
 import { ApplicationIntegrationType, InteractionContextType, PermissionFlagsBits } from 'discord.js';
 
@@ -19,7 +20,7 @@ export class ConfigCommand extends Subcommand {
 				.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
 				.setContexts(InteractionContextType.Guild),
-					'commands:config.command.description'
+					LanguageKeys.Commands.Config.CommandDescription
 				)
 			),
 		);
@@ -36,7 +37,7 @@ export class ConfigCommand extends Subcommand {
 			results.map(async (result) => ({
 				name: await resolveKey(
 					interaction,
-					result.score === 1 ? 'commands:config.autocomplete.timezone.exact' : 'commands:config.autocomplete.timezone.partial',
+					result.score === 1 ? LanguageKeys.Commands.Config.AutocompleteTimezoneExact : LanguageKeys.Commands.Config.AutocompleteTimezonePartial,
 					{ timezone: result.value.full }
 				),
 				value: result.value.name

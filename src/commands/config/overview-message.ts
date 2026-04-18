@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
 
 @ApplyOptions<Command.Options>({
@@ -16,10 +17,10 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 				.addStringOption((option) =>
 					applyDescriptionLocalizedBuilder(
 						option.setName('message').setDescription('Overview message text').setRequired(true).setMaxLength(20),
-						'commands:config.subcommands.overviewMessage.options.message.description'
+						LanguageKeys.Commands.Config.SubcommandOverviewMessageOptionMessageDescription
 					)
 				),
-				'commands:config.subcommands.overviewMessage.description'
+				LanguageKeys.Commands.Config.SubcommandOverviewMessageDescription
 			)
 	}
 })
@@ -30,11 +31,11 @@ export class ConfigOverviewMessageSubcommand extends Command {
 
 		const message = interaction.options.getString('message', true).trim();
 		if (message.length === 0) {
-			return interaction.reply({ content: await resolveKey(interaction, 'commands:config.subcommands.overviewMessage.responses.empty'), ephemeral: true });
+			return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageResponseEmpty), ephemeral: true });
 		}
 
 		await saveGuildConfig(guildId, { overviewMessage: message }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, 'commands:config.subcommands.overviewMessage.responses.updated'), ephemeral: true });
+		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageResponseUpdated), ephemeral: true });
 	}
 }

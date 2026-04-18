@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
 
 @ApplyOptions<Command.Options>({
@@ -16,11 +17,11 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 				.addChannelOption((option) =>
 					applyDescriptionLocalizedBuilder(
 						option.setName('channel').setDescription('Channel used for birthday announcements').setRequired(true),
-						'commands:config.subcommands.announcementChannel.options.channel.description'
+						LanguageKeys.Commands.Config.SubcommandAnnouncementChannelOptionChannelDescription
 					)
 				),
-				'commands:config.subcommands.announcementChannel.description'
-			)
+				LanguageKeys.Commands.Config.SubcommandAnnouncementChannelDescription
+			)	
 	}
 })
 export class ConfigAnnouncementChannelSubcommand extends Command {
@@ -31,6 +32,6 @@ export class ConfigAnnouncementChannelSubcommand extends Command {
 		const channel = interaction.options.getChannel('channel', true);
 		await saveGuildConfig(guildId, { announcementChannel: channel.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, 'commands:config.subcommands.announcementChannel.responses.updated', { channelId: channel.id }), ephemeral: true });
+		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementChannelResponseUpdated, { channelId: channel.id }), ephemeral: true });
 	}
 }

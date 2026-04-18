@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
 
 @ApplyOptions<Command.Options>({
@@ -16,10 +17,10 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 					.addRoleOption((option) =>
 						applyDescriptionLocalizedBuilder(
 							option.setName('role').setDescription('Role assigned on birthdays').setRequired(true),
-							'commands:config.subcommands.birthdayRole.options.role.description'
+							LanguageKeys.Commands.Config.SubcommandBirthdayRoleOptionRoleDescription
 						)
 					),
-				'commands:config.subcommands.birthdayRole.description'
+					LanguageKeys.Commands.Config.SubcommandBirthdayRoleDescription
 			)
 	}
 })
@@ -31,6 +32,6 @@ export class ConfigBirthdayRoleSubcommand extends Command {
 		const role = interaction.options.getRole('role', true);
 		await saveGuildConfig(guildId, { birthdayRole: role.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, 'commands:config.subcommands.birthdayRole.responses.updated', { roleId: role.id }), ephemeral: true });
+		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandBirthdayRoleResponseUpdated, { roleId: role.id }), ephemeral: true });
 	}
 }

@@ -1,5 +1,4 @@
 {
-  "config": {
     "command": {
       "description": "Configure guild settings"
     },
@@ -123,5 +122,4 @@
         }
       }
     }
-  }
 }

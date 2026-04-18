@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
 
 @ApplyOptions<Command.Options>({
@@ -16,10 +17,10 @@ import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-comman
 					.addChannelOption((option) =>
 						applyDescriptionLocalizedBuilder(
 							option.setName('channel').setDescription('Channel used for logs').setRequired(true),
-							'commands:config.subcommands.logChannel.options.channel.description'
+							LanguageKeys.Commands.Config.SubcommandLogChannelOptionChannelDescription
 						)
 					),
-				'commands:config.subcommands.logChannel.description'
+					LanguageKeys.Commands.Config.SubcommandLogChannelDescription
 			)
 	}
 })
@@ -31,6 +32,6 @@ export class ConfigLogChannelSubcommand extends Command {
 		const channel = interaction.options.getChannel('channel', true);
 		await saveGuildConfig(guildId, { logChannel: channel.id }, interaction);
 
-		return interaction.reply({ content: await resolveKey(interaction, 'commands:config.subcommands.logChannel.responses.updated', { channelId: channel.id }), ephemeral: true });
+		return interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLogChannelResponseUpdated, { channelId: channel.id }), ephemeral: true });
 	}
 }
