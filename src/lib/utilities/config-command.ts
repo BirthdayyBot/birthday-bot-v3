@@ -36,18 +36,18 @@ export async function saveGuildConfig(guildId: string, data: GuildUpdateData, in
 function createDefaultGuild(guildId: string, overrides: GuildUpdateData, defaultAnnouncementMessage: string): Guild {
 	return new Guild({
 		guildId,
-		inviter: overrides.inviter === undefined ? null : overrides.inviter,
-		announcementChannel: overrides.announcementChannel === undefined ? null : overrides.announcementChannel,
-		announcementMessage: overrides.announcementMessage === undefined ? defaultAnnouncementMessage : overrides.announcementMessage,
-		overviewChannel: overrides.overviewChannel === undefined ? null : overrides.overviewChannel,
-		overviewMessage: overrides.overviewMessage === undefined ? null : overrides.overviewMessage,
-		birthdayRole: overrides.birthdayRole === undefined ? null : overrides.birthdayRole,
-		birthdayPingRole: overrides.birthdayPingRole === undefined ? null : overrides.birthdayPingRole,
-		logChannel: overrides.logChannel === undefined ? null : overrides.logChannel,
-		timezone: overrides.timezone === undefined ? DEFAULT_TIMEZONE : overrides.timezone,
-		premium: overrides.premium === undefined ? false : overrides.premium,
-		language: overrides.language === undefined ? DEFAULT_LANGUAGE : overrides.language,
-		lastUpdated: overrides.lastUpdated === undefined ? new Date() : overrides.lastUpdated,
-		disabled: overrides.disabled === undefined ? false : overrides.disabled
+		inviter: overrides.inviter ?? null,
+		announcementChannel: overrides.announcementChannel ?? null,
+		announcementMessage: overrides.announcementMessage ?? defaultAnnouncementMessage,
+		overviewChannel: overrides.overviewChannel ?? null,
+		overviewMessage: overrides.overviewMessage ?? null,
+		birthdayRole: overrides.birthdayRole ?? null,
+		birthdayPingRole: overrides.birthdayPingRole ?? null,
+		logChannel: overrides.logChannel ?? null,
+		timezone: overrides.timezone ?? DEFAULT_TIMEZONE,
+		premium: overrides.premium ?? false,
+		language: overrides.language ?? DEFAULT_LANGUAGE,
+		lastUpdated: overrides.lastUpdated ?? new Date(),
+		disabled: overrides.disabled ?? false
 	});
 }

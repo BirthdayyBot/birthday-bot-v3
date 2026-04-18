@@ -1,5 +1,5 @@
 import { OWNERS } from '#root/config';
-import { Emojis, rootFolder, ZeroWidthSpace } from '#utils/constants';
+import { rootFolder, ZeroWidthSpace } from '#utils/constants';
 import { createDefaultInteractionEditReply, createDefaultInteractionReply } from '#lib/utilities/default-embed';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { isMessageInstance } from '@sapphire/discord.js-utilities';
@@ -81,16 +81,16 @@ async function generateUnexpectedErrorMessage(interaction: CommandInteraction, e
 }
 
 function stringError(interaction: CommandInteraction, error: string) {
-	return alert(interaction, `${Emojis.Fail} Dear ${userMention(interaction.user.id)}, ${error}`);
+	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
 function argumentError(interaction: CommandInteraction, error: ArgumentError<unknown>) {
 	return alert(
 		interaction,
 		error.message ||
-		`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-			'https://join.favware.tech'
-		)}`
+			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
+				'https://birthdayy.xyz/discord'
+			)}`
 	);
 }
 
@@ -100,9 +100,9 @@ function userError(interaction: CommandInteraction, error: UserError) {
 	return alert(
 		interaction,
 		error.message ||
-		`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-			'https://join.favware.tech'
-		)}`
+			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
+				'https://birthdayy.xyz/discord'
+			)}`
 	);
 }
 
@@ -121,7 +121,7 @@ async function sendErrorChannel(interaction: ChatInputCommandInteraction | Conte
 	const interactionReply = await interaction.fetchReply();
 
 	const lines = [
-		getLinkLine(interactionReply), //
+		getLinkLine(interactionReply),
 		getCommandLine(command),
 		interaction instanceof ChatInputCommandInteraction ? getOptionsLine(interaction.options) : null,
 		getErrorLine(error)
@@ -132,10 +132,7 @@ async function sendErrorChannel(interaction: ChatInputCommandInteraction | Conte
 		lines.splice(2, 0, getMethodLine(error), getStatusLine(error));
 	}
 
-	const embed = new EmbedBuilder() //
-		.setDescription(lines.join('\n'))
-		.setColor('Red')
-		.setTimestamp();
+	const embed = new EmbedBuilder().setDescription(lines.join('\n')).setColor('Red').setTimestamp();
 
 	try {
 		await webhook.send({ embeds: [embed] });
@@ -144,39 +141,22 @@ async function sendErrorChannel(interaction: ChatInputCommandInteraction | Conte
 	}
 }
 
-/**
- * Formats a command line.
- * @param command The command to format.
- */
 function getCommandLine(command: Command): string {
 	return `**Command**: ${command.location.full.slice(fileURLToPath(rootFolder).length)}`;
 }
 
-/**
- * Formats an options line.
- * @param options The options the user used when running the command.
- */
 function getOptionsLine(options: ChatInputCommandInteraction['options']): string {
 	if (options.data.length === 0) return '**Options**: Not Supplied';
 
-	const mappedOptions = [];
-
-	for (const option of options.data) {
+	const mappedOptions = options.data.map((option) => {
 		let { value } = option;
 		if (typeof value === 'string') value = value.trim().replaceAll('`', '῾');
-
-		mappedOptions.push(`[${option.name} ⫸ ${value || ZeroWidthSpace}]`);
-	}
-
-	if (mappedOptions.length === 0) return '**Options**: Not Supplied';
+		return `[${option.name} ⫸ ${value || ZeroWidthSpace}]`;
+	});
 
 	return `**Options**: ${mappedOptions.join('\n')}`;
 }
 
-/**
- * Formats a message url line.
- * @param url The url to format.
- */
 export function getLinkLine(message: APIMessage | Message): string {
 	if (isMessageInstance(message)) {
 		return bold(hyperlink('Jump to Message!', hideLinkEmbed(message.url)));
@@ -185,32 +165,16 @@ export function getLinkLine(message: APIMessage | Message): string {
 	return '';
 }
 
-/**
- * Formats an error method line.
- * @param error The error to format.
- */
 export function getMethodLine(error: DiscordAPIError | HTTPError): string {
 	return `**Path**: ${error.method.toUpperCase()}`;
 }
 
-/**
- * Formats an error status line.
- * @param error The error to format.
- */
 export function getStatusLine(error: DiscordAPIError | HTTPError): string {
 	return `**Status**: ${error.status}`;
 }
 
-/**
- * Formats an error codeblock.
- * @param error The error to format.
- */
 export function getErrorLine(error: Error): string {
-	if (error instanceof Error) {
-		return `**Error**: ${codeBlock('js', error.stack || error.message)}`;
-	}
-
-	return `**Error**: ${codeBlock('js', error)}`;
+	return `**Error**: ${codeBlock('js', error.stack || error.message)}`;
 }
 
 export function getWarnError(interaction: BaseInteraction) {

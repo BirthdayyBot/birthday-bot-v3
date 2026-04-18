@@ -1,5 +1,5 @@
 import { OWNERS } from '#root/config';
-import { Emojis, rootFolder } from '#utils/constants';
+import { rootFolder } from '#utils/constants';
 import { createDefaultInteractionEditReply, createDefaultInteractionReply } from '#lib/utilities/default-embed';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getErrorLine, getLinkLine, getMethodLine, getStatusLine, getWarnError } from '#utils/functions/errorHelpers';
@@ -15,7 +15,7 @@ import {
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { codeBlock, isNullish } from '@sapphire/utilities';
 import { DiscordAPIError, EmbedBuilder, HTTPError, RESTJSONErrorCodes, hideLinkEmbed, userMention, type Interaction } from 'discord.js';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 
 const ignoredCodes = [RESTJSONErrorCodes.UnknownChannel, RESTJSONErrorCodes.UnknownMessage];
 
@@ -63,7 +63,7 @@ async function generateUnexpectedErrorMessage(interaction: Interaction, error: E
 }
 
 function stringError(interaction: Interaction, error: string) {
-	return alert(interaction, `${Emojis.Fail} Dear ${userMention(interaction.user.id)}, ${error}`);
+	return alert(interaction, `Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
 function argumentError(interaction: Interaction, error: ArgumentError<unknown>) {
@@ -71,7 +71,7 @@ function argumentError(interaction: Interaction, error: ArgumentError<unknown>) 
 		interaction,
 		error.message ??
 			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://join.favware.tech'
+				'https://birthdayy.xyz/discord'
 			)}`
 	);
 }
@@ -83,13 +83,13 @@ function userError(interaction: Interaction, error: UserError) {
 		interaction,
 		error.message ??
 			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://join.favware.tech'
+				'https://birthdayy.xyz/discord'
 			)}`
 	);
 }
 
 function alert(interaction: Interaction, content: string) {
-	if (!interaction.isSelectMenu() && !interaction.isButton()) return;
+	if (!interaction.isAnySelectMenu() && !interaction.isButton()) return;
 
 	if (interaction.replied || interaction.deferred) {
 		return interaction.editReply(createDefaultInteractionEditReply(content, interaction.user, {}, 'error'));
@@ -111,10 +111,7 @@ async function sendErrorChannel(interaction: Interaction, handler: InteractionHa
 		lines.splice(2, 0, getMethodLine(error), getStatusLine(error));
 	}
 
-	const embed = new EmbedBuilder() //
-		.setDescription(lines.join('\n'))
-		.setColor('Red')
-		.setTimestamp();
+	const embed = new EmbedBuilder().setDescription(lines.join('\n')).setColor('Red').setTimestamp();
 
 	try {
 		await webhook.send({ embeds: [embed] });
@@ -123,10 +120,6 @@ async function sendErrorChannel(interaction: Interaction, handler: InteractionHa
 	}
 }
 
-/**
- * Formats a handler line.
- * @param handler The handler to format.
- */
 function getHandlerLine(handler: InteractionHandler): string {
 	return `**Handler**: ${handler.location.full.slice(fileURLToPath(rootFolder).length)}`;
 }
