@@ -3,6 +3,9 @@ services:
     build:
       context: ../
     container_name: birthdayy
+    depends_on:
+      - redis
+      - influxdb
     env_file:
       - src/.env
       - src/.env.development.local
@@ -14,8 +17,40 @@ services:
     networks:
       - birthdayy
     restart: always
+    tty: true
+
+  redis:
+    command: 'redis-server --requirepass redis'
+    container_name: birthdayy-redis
+    image: 'redis:alpine'
+    logging:
+      options:
+        max-size: '20m'
+        max-file: '3'
+    networks:
+      - birthdayy
+    ports:
+      - '6379:6379'
+    restart: always
+
+  influxdb:
+    command: 'influxd run --bolt-path /var/lib/influxdb2/influxd.bolt --engine-path /var/lib/influxdb2/engine --store bolt'
+    container_name: birthdayy-influxdb
+    image: 'influxdb:2.7-alpine'
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks:
+      - birthdayy
+    ports:
+      - '1425:8086'
+    restart: always
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
 
 volumes:
+  influxdb-data:
 
 networks:
   birthdayy:
