@@ -1,28 +1,16 @@
-import './lib/setup';
+import '#lib/setup/all';
+import { CLIENT_OPTIONS } from '#root/config';
+import { SapphireClient } from '@sapphire/framework';
 
-import { LogLevel, SapphireClient } from '@sapphire/framework';
-import { GatewayIntentBits } from 'discord.js';
+import { green } from 'colorette';
 
-const client = new SapphireClient({
-	defaultPrefix: '!',
-	caseInsensitiveCommands: true,
-	logger: {
-		level: LogLevel.Debug
-	},
-	intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildMessages, GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent],
-	loadMessageCommandListeners: true
-});
+const client = new SapphireClient(CLIENT_OPTIONS);
 
-const main = async () => {
-	try {
-		client.logger.info('Logging in');
-		await client.login();
-		client.logger.info('logged in');
-	} catch (error) {
-		client.logger.fatal(error);
-		await client.destroy();
-		process.exit(1);
-	}
-};
-
-void main();
+try {
+  await client.login();
+  client.logger.info(`${green('WS     ')} - Successfully logged in.`);
+} catch (error) {
+  client.logger.error(error);
+  await client.destroy();
+  process.exit(1);
+}

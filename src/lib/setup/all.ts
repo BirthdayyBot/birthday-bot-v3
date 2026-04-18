@@ -1,0 +1,9 @@
+import '#lib/setup/env';
+
+import '#lib/setup/analytics';
+import '#lib/setup/colorette';
+import '#lib/setup/error-webhook';
+import '#lib/setup/inspect';
+import '#lib/setup/registry';
+import '@sapphire/plugin-logger/register';
+import '@sapphire/plugin-scheduled-tasks/register';
