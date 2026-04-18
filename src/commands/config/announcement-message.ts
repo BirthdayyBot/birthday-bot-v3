@@ -3,6 +3,8 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { awaitConfirmation } from '#lib/utilities/confirm';
+import { editReplyInfo, editReplySuccess, replyWarning } from '#lib/utilities/default-embed';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-announcement-message',
@@ -31,17 +33,25 @@ export class ConfigAnnouncementMessageSubcommand extends Command {
 
 		const message = interaction.options.getString('message', true).trim();
 		if (message.length === 0) {
-			return interaction.reply({
-				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseEmpty),
-				ephemeral: true
-			});
+			return interaction.reply(
+				replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseEmpty), interaction.user)
+			);
 		}
 
-		await saveGuildConfig(guildId, { announcementMessage: message }, interaction);
+		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
+		if (!confirmed)
+			return interaction.editReply(
+				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
+			);
 
-		return interaction.reply({
-			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseUpdated),
-			ephemeral: true
-		});
+		await saveGuildConfig(guildId, { announcementMessage: message }, interaction);
+		const preview = message.length > 120 ? `${message.slice(0, 117)}...` : message;
+
+		return interaction.editReply(
+			editReplySuccess(
+				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandAnnouncementMessageResponseUpdated, { message: preview }),
+				interaction.user
+			)
+		);
 	}
 }

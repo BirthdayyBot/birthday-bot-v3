@@ -3,6 +3,8 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { awaitConfirmation } from '#lib/utilities/confirm';
+import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-log-channel',
@@ -30,11 +32,20 @@ export class ConfigLogChannelSubcommand extends Command {
 		if (!guildId) return;
 
 		const channel = interaction.options.getChannel('channel', true);
+
+		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
+		if (!confirmed)
+			return interaction.editReply(
+				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
+			);
+
 		await saveGuildConfig(guildId, { logChannel: channel.id }, interaction);
 
-		return interaction.reply({
-			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLogChannelResponseUpdated, { channelId: channel.id }),
-			ephemeral: true
-		});
+		return interaction.editReply(
+			editReplySuccess(
+				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLogChannelResponseUpdated, { channelId: channel.id }),
+				interaction.user
+			)
+		);
 	}
 }

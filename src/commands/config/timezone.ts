@@ -3,6 +3,8 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { awaitConfirmation } from '#lib/utilities/confirm';
+import { editReplyInfo, editReplySuccess, replyInfo, replyWarning } from '#lib/utilities/default-embed';
 import { getTimeZone } from '#lib/utilities/tz';
 
 @ApplyOptions<Command.Options>({
@@ -34,25 +36,37 @@ export class ConfigTimezoneSubcommand extends Command {
 		const entry = getTimeZone(value);
 
 		if (!entry) {
-			return interaction.reply({
-				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, { timezone: value }),
-				ephemeral: true
-			});
+			return interaction.reply(
+				replyWarning(
+					await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, { timezone: value }),
+					interaction.user
+				)
+			);
 		}
 
 		const current = await this.container.guild.findById(guildId);
 		if (current?.timezone === entry.name) {
-			return interaction.reply({
-				content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, { timezone: entry.full }),
-				ephemeral: true
-			});
+			return interaction.reply(
+				replyInfo(
+					await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, { timezone: entry.full }),
+					interaction.user
+				)
+			);
 		}
+
+		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
+		if (!confirmed)
+			return interaction.editReply(
+				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
+			);
 
 		await saveGuildConfig(guildId, { timezone: entry.name }, interaction);
 
-		return interaction.reply({
-			content: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseUpdated, { timezone: entry.full }),
-			ephemeral: true
-		});
+		return interaction.editReply(
+			editReplySuccess(
+				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseUpdated, { timezone: entry.full }),
+				interaction.user
+			)
+		);
 	}
 }
