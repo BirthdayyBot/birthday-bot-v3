@@ -1,4 +1,5 @@
 import { BirthdayEvents } from '#lib/types/Enums';
+import { getMissingCustomEmojis } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Events, Listener, type Store } from '@sapphire/framework';
 import { envParseBoolean, envParseString } from '@skyra/env-utilities';
@@ -20,6 +21,7 @@ export class UserListener extends Listener<typeof Events.ClientReady> {
 
 		this.printBanner();
 		this.printStoreDebugInformation();
+		this.logMissingEmojis();
 	}
 
 	private get isDev() {
@@ -67,5 +69,13 @@ export class UserListener extends Listener<typeof Events.ClientReady> {
 				client.guilds.cache.reduce((acc, val) => acc + (val.memberCount ?? 0), 0)
 			);
 		}
+	}
+
+	private logMissingEmojis() {
+		const missing = getMissingCustomEmojis();
+		if (missing.length === 0) return;
+
+		const details = missing.map((emoji) => `${emoji.key} (${emoji.id}) -> ${emoji.fallback}`).join(', ');
+		this.container.logger.warn(`[EMOJIS] Missing custom emojis detected, using Unicode fallback: ${details}`);
 	}
 }
