@@ -11,6 +11,10 @@
     "defaults": {
       "announcementMessage": "<:arrwright:931267038746390578> Today is a special Day!{NEW_LINE}<:gift:931267039094534175> Please wish {MENTION} a happy Birthday <3"
     },
+    "confirm": {
+      "question": "Are you sure you want to apply this change?",
+      "cancelled": "Action cancelled."
+    },
     "errors": {
       "guildOnly": "This command can only be used in a server."
     },
@@ -19,7 +23,7 @@
         "description": "Set the guild timezone",
         "options": {
           "timezone": {
-            "description": "IANA timezone (e.g. Europe/Paris)"
+            "description": "Choose an IANA timezone (e.g. Europe/Paris)"
           }
         },
         "responses": {
@@ -32,7 +36,7 @@
         "description": "Set the announcement channel",
         "options": {
           "channel": {
-            "description": "Channel used for birthday announcements"
+            "description": "Choose the channel for birthday announcements"
           }
         },
         "responses": {
@@ -43,19 +47,19 @@
         "description": "Set the announcement message template",
         "options": {
           "message": {
-            "description": "Template text used in announcements"
+            "description": "Set the announcement message text"
           }
         },
         "responses": {
           "empty": "Announcement message cannot be empty.",
-          "updated": "Announcement message updated."
+          "updated": "Announcement message set to `{{message}}`."
         }
       },
       "overviewChannel": {
         "description": "Set the overview channel",
         "options": {
           "channel": {
-            "description": "Channel used for overview posts"
+            "description": "Choose the channel for birthday overviews"
           }
         },
         "responses": {
@@ -66,19 +70,19 @@
         "description": "Set the overview message",
         "options": {
           "message": {
-            "description": "Overview message text"
+            "description": "Set the overview message text"
           }
         },
         "responses": {
           "empty": "Overview message cannot be empty.",
-          "updated": "Overview message updated."
+          "updated": "Overview message set to `{{message}}`."
         }
       },
       "birthdayRole": {
         "description": "Set the birthday role",
         "options": {
           "role": {
-            "description": "Role assigned on birthdays"
+            "description": "Choose the role granted on birthdays"
           }
         },
         "responses": {
@@ -89,7 +93,7 @@
         "description": "Set the birthday ping role",
         "options": {
           "role": {
-            "description": "Role pinged in announcements"
+            "description": "Choose the role mentioned in announcements"
           }
         },
         "responses": {
@@ -100,7 +104,7 @@
         "description": "Set the log channel",
         "options": {
           "channel": {
-            "description": "Channel used for logs"
+            "description": "Choose the channel for birthday logs"
           }
         },
         "responses": {
@@ -111,14 +115,31 @@
         "description": "Set the guild language",
         "options": {
           "language": {
-            "description": "Language locale",
+            "description": "Choose the server language",
             "choices": {
-              "enUS": "English (US)"
+              "enUS": "English (US)",
+              "frFR": "French (France)"
             }
           }
         },
         "responses": {
           "updated": "Guild language set to **{{language}}**."
+        }
+      },
+      "view": {
+        "description": "View the current guild configuration",
+        "labels": {
+          "premium": "Premium",
+          "active": "Active"
+        },
+        "sections": {
+          "core": "Core",
+          "channels": "Channels",
+          "roles": "Roles",
+          "messages": "Messages"
+        },
+        "responses": {
+          "title": "Current server configuration"
         }
       }
     }

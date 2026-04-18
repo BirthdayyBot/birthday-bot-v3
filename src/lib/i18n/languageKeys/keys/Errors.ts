@@ -9,3 +9,4 @@ export const GenericMissingAccess = T('errors:genericMissingAccess');
 export const GenericDiscordInternalServerError = T('errors:genericDiscordInternalServerError');
 export const GenericDiscordGateway = T('errors:genericDiscordGateway');
 export const GenericDiscordUnavailable = T('errors:genericDiscordUnavailable');
+export const UnexpectedIssue = T('errors:unexpectedIssue');

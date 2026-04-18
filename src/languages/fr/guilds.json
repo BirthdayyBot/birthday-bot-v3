@@ -1,0 +1,13 @@
+{
+	"explicitContentFilterDisabled": "Desactive",
+	"explicitContentFilterMembersWithoutRoles": "Membres sans role",
+	"explicitContentFilterAllMembers": "Tous les membres",
+	"defaultMessageNotificationsAllMessages": "Tous les messages",
+	"defaultMessageNotificationsOnlyMentions": "Uniquement les @mentions",
+	"SuppressJoinNotifications": "Notifications d'arrivee des membres",
+	"SuppressJoinNotificationReplies": "Boutons de reponse des stickers d'arrivee",
+	"SuppressPremiumSubscriptions": "Notifications de boost du serveur",
+	"SuppressGuildReminderNotifications": "Conseils de configuration du serveur",
+	"SuppressRoleSubscriptionPurchaseNotifications": "Masquer les notifications d'achat d'abonnement de role",
+	"SuppressRoleSubscriptionPurchaseNotificationReplies": "Masquer les reponses des notifications d'achat d'abonnement de role"
+}

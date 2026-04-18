@@ -1,0 +1,18 @@
+{
+	"genericUnknownChannel": "Desole, j'ai essaye d'effectuer une action sur un salon inconnu de Discord et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericUnknownGuild": "Desole, j'ai essaye d'effectuer une action sur un serveur inconnu de Discord et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericUnknownMember": "Desole, j'ai essaye d'effectuer une action sur un membre inconnu de Discord et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericUnknownMessage": "Desole, j'ai essaye d'effectuer une action sur un message inconnu de Discord et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericUnknownRole": "Desole, j'ai essaye d'effectuer une action sur un role inconnu de Discord et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericMissingAccess": "Desole, j'ai essaye d'effectuer une action sans les permissions necessaires et j'ai echoue. Cette erreur a ete signalee aux developpeurs.",
+	"genericDiscordInternalServerError": "Oups, Discord a rencontre un probleme. Reessaie plus tard.",
+	"genericDiscordGateway": "Oups, le reseau a des difficultes a communiquer avec Discord. Reessaie plus tard.",
+	"genericDiscordUnavailable": "Oups, Discord est actuellement indisponible. Reessaie plus tard.",
+	"guildBansEmpty": "Aucun bannissement n'est enregistre sur ce serveur.",
+	"guildBansNotFound": "Je n'ai pas trouve cet utilisateur dans la liste des bannissements. Es-tu sur qu'il est banni ?",
+	"guildMemberNotVoicechannel": "Je ne peux pas executer cette action sur un membre qui n'est pas connecte a un salon vocal.",
+	"guildWarnNotFound": "Impossible de recuperer cet avertissement. Il n'existe pas, n'est pas de type avertissement, ou a ete conteste.",
+	"modlogTimed": "Ce journal de moderation est deja minute. Expire dans {{remaining, duration}}",
+	"unexpectedIssue": "Une erreur inattendue est survenue ! Arret de securite de la commande...",
+	"userNotInGuild": "Cet utilisateur n'est pas sur ce serveur."
+}
