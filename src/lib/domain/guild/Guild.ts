@@ -8,7 +8,7 @@ export class Guild {
 	public readonly birthdayRole: string | null;
 	public readonly birthdayPingRole: string | null;
 	public readonly logChannel: string | null;
-	public readonly timezone: number;
+	public readonly timezone: string;
 	public readonly premium: boolean;
 	public readonly language: string;
 	public readonly lastUpdated: Date | null;
@@ -24,7 +24,7 @@ export class Guild {
 		birthdayRole: string | null;
 		birthdayPingRole: string | null;
 		logChannel: string | null;
-		timezone: number;
+		timezone: string;
 		premium: boolean;
 		language: string;
 		lastUpdated: Date | null;

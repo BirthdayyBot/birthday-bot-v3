@@ -18,7 +18,7 @@ export interface GuildTable {
 	birthday_role: string | null;
 	birthday_ping_role: string | null;
 	log_channel: string | null;
-	timezone: Generated<number>;
+	timezone: Generated<string>;
 	premium: Generated<boolean>;
 	language: Generated<string>;
 	last_updated: Date | null;
