@@ -1,51 +1,71 @@
+import { BirthdayEvents } from '#lib/types/Enums';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Listener } from '@sapphire/framework';
-import type { StoreRegistryValue } from '@sapphire/pieces';
+import { Events, Listener, type Store } from '@sapphire/framework';
+import { envParseBoolean, envParseString } from '@skyra/env-utilities';
+import { createBanner } from '@skyra/start-banner';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
-
-const dev = process.env.NODE_ENV !== 'production';
+import figlet from 'figlet';
+import { pastel } from 'gradient-string';
 
 @ApplyOptions<Listener.Options>({ once: true })
-export class UserEvent extends Listener {
-	private readonly style = dev ? yellow : blue;
+export class UserListener extends Listener<typeof Events.ClientReady> {
+  private readonly style = this.isDev ? yellow : blue;
 
-	public override run() {
-		this.printBanner();
-		this.printStoreDebugInformation();
-	}
+  public run() {
+    try {
+      this.initAnalytics();
+    } catch (error) {
+      this.container.logger.fatal(error);
+    }
 
-	private printBanner() {
-		const success = green('+');
+    this.printBanner();
+    this.printStoreDebugInformation();
+  }
 
-		const llc = dev ? magentaBright : white;
-		const blc = dev ? magenta : blue;
+  private get isDev() {
+    return envParseString('NODE_ENV') === 'development';
+  }
 
-		const line01 = llc('');
-		const line02 = llc('');
-		const line03 = llc('');
+  private printBanner() {
+    const success = green('+');
 
-		// Offset Pad
-		const pad = ' '.repeat(7);
+    const llc = this.isDev ? magentaBright : white;
+    const blc = this.isDev ? magenta : blue;
 
-		console.log(
-			String.raw`
-${line01} ${pad}${blc('1.0.0')}
-${line02} ${pad}[${success}] Gateway
-${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''}
-		`.trim()
-		);
-	}
+    console.log(
+      createBanner({
+        name: [pastel.multiline(figlet.textSync('Birthdayy', { horizontalLayout: 'full' }))],
+        extra: [
+          blc(envParseString('CLIENT_VERSION')), //
+          `[${success}] Gateway`,
+          this.isDev ? ` ${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''
+        ]
+      })
+    );
+  }
 
-	private printStoreDebugInformation() {
-		const { client, logger } = this.container;
-		const stores = [...client.stores.values()];
-		const last = stores.pop()!;
+  private printStoreDebugInformation() {
+    const { client, logger } = this.container;
+    const stores = [...client.stores.values()];
+    const last = stores.pop()!;
 
-		for (const store of stores) logger.info(this.styleStore(store, false));
-		logger.info(this.styleStore(last, true));
-	}
+    for (const store of stores) logger.info(this.styleStore(store, false));
+    logger.info(this.styleStore(last, true));
+  }
 
-	private styleStore(store: StoreRegistryValue, last: boolean) {
-		return gray(`${last ? '└─' : '├─'} Loaded ${this.style(store.size.toString().padEnd(3, ' '))} ${store.name}.`);
-	}
+  private styleStore(store: Store<any>, last: boolean) {
+    return gray(`${last ? '└─' : '├─'} Loaded ${this.style(store.size.toString().padEnd(3, ' '))} ${store.name}.`);
+  }
+
+  private initAnalytics() {
+    if (envParseBoolean('INFLUX_ENABLED')) {
+      const { client } = this.container;
+
+      client.emit(
+        BirthdayEvents.AnalyticsSync,
+        client.guilds.cache.size,
+        client.guilds.cache.reduce((acc, val) => acc + (val.memberCount ?? 0), 0)
+      );
+    }
+  }
 }
