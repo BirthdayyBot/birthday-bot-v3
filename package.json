@@ -8,9 +8,9 @@
   "private": true,
   "type": "module",
   "imports": {
-    "#lib/*": "./dist/lib/*.js",
-    "#root/*": "./dist/*.js",
-    "#utils/*": "./dist/lib/util/*.js"
+    "#lib/*": "./dist/lib/*.mjs",
+    "#root/*": "./dist/*.mjs",
+    "#utils/*": "./dist/lib/util/*.mjs"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.35.0",
