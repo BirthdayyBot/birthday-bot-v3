@@ -20,6 +20,6 @@ export async function migrateToLatest(): Promise<void> {
 	}
 
 	if (error) {
-		throw error;
+		throw error instanceof Error ? error : new Error(`Migration failed: ${String(error)}`);
 	}
 }
