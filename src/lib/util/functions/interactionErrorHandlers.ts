@@ -104,7 +104,7 @@ function alert(interaction: Interaction, content: string) {
 
 async function sendErrorChannel(interaction: Interaction, handler: InteractionHandler, error: Error) {
   const webhook = container.webhookError;
-  if (isNullish(webhook) || (!interaction.isSelectMenu() && !interaction.isButton())) return;
+  if (isNullish(webhook) || (!interaction.isStringSelectMenu() && !interaction.isButton())) return;
 
   const interactionReply = await interaction.fetchReply();
 
