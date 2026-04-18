@@ -1,5 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { applyDescriptionLocalizedBuilder } from '@sapphire/plugin-i18next';
+import { createDefaultEmbed, createDefaultMessageEdit, createDefaultMessageReply } from '#lib/utilities/default-embed';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { ApplicationCommandType, ApplicationIntegrationType, InteractionContextType, Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -18,12 +21,12 @@ export class UserCommand extends Command {
 		];
 
 		// Register Chat Input command
-		registry.registerChatInputCommand({
-			name: this.name,
-			description: this.description,
-			integrationTypes,
-			contexts
-		});
+		registry.registerChatInputCommand((builder) =>
+			applyDescriptionLocalizedBuilder(
+				builder.setName(this.name).setDescription(this.description).setIntegrationTypes(integrationTypes).setContexts(contexts),
+				LanguageKeys.Commands.Ping.CommandDescription
+			)
+		);
 
 		// Register Context Menu command available from any message
 		registry.registerContextMenuCommand({
@@ -60,21 +63,23 @@ export class UserCommand extends Command {
 	private async sendPing(interactionOrMessage: Message | Command.ChatInputCommandInteraction | Command.ContextMenuCommandInteraction) {
 		const pingMessage =
 			interactionOrMessage instanceof Message
-				? interactionOrMessage.channel?.isSendable() && (await interactionOrMessage.channel.send({ content: 'Ping?' }))
-				: (await interactionOrMessage.reply({ content: 'Ping?' }), await interactionOrMessage.fetchReply());
+				? interactionOrMessage.channel?.isSendable() &&
+					(await interactionOrMessage.channel.send(createDefaultMessageReply('Checking heartbeat...', {}, 'info')))
+				: (await interactionOrMessage.reply({ embeds: [createDefaultEmbed('Checking heartbeat...', 'info')] }),
+					await interactionOrMessage.fetchReply());
 
 		if (!pingMessage) return;
 
-		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
+		const description = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
 			pingMessage.createdTimestamp - interactionOrMessage.createdTimestamp
 		}ms.`;
 
 		if (interactionOrMessage instanceof Message) {
-			return pingMessage.edit({ content });
+			return pingMessage.edit(createDefaultMessageEdit(description, {}, 'success'));
 		}
 
 		return interactionOrMessage.editReply({
-			content
+			embeds: [createDefaultEmbed(description, 'success')]
 		});
 	}
 }
