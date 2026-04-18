@@ -58,5 +58,6 @@ declare module '@skyra/env-utilities' {
     INFLUX_ORG_ANALYTICS_BUCKET: string;
 
     DB_URL: string;
+    DB_AUTO_MIGRATE: BooleanString;
   }
 }

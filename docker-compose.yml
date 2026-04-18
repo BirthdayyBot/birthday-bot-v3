@@ -4,8 +4,19 @@ services:
       context: .
     container_name: birthdayy
     depends_on:
-      - redis
-      - influxdb
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      influxdb:
+        condition: service_started
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: birthdayy
+      DB_PASSWORD: birthdayy
+      DB_NAME: birthdayy
+      DB_AUTO_MIGRATE: true
     env_file:
       - src/.env
       - src/.env.development.local
@@ -18,6 +29,32 @@ services:
       - birthdayy
     restart: always
     tty: true
+
+  mysql:
+    container_name: birthdayy-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: birthdayy
+      MYSQL_USER: birthdayy
+      MYSQL_PASSWORD: birthdayy
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    image: 'mysql:8.4'
+    logging:
+      options:
+        max-size: '20m'
+        max-file: '3'
+    networks:
+      - birthdayy
+    ports:
+      - '3306:3306'
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
 
   redis:
     command: 'redis-server --requirepass redis'
@@ -51,6 +88,7 @@ services:
 
 volumes:
   influxdb-data:
+  mysql-data:
 
 networks:
   birthdayy:
