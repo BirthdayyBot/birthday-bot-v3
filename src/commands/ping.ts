@@ -61,7 +61,7 @@ export class UserCommand extends Command {
 		const pingMessage =
 			interactionOrMessage instanceof Message
 				? interactionOrMessage.channel?.isSendable() && (await interactionOrMessage.channel.send({ content: 'Ping?' }))
-				: await interactionOrMessage.reply({ content: 'Ping?', fetchReply: true });
+				: (await interactionOrMessage.reply({ content: 'Ping?' }), await interactionOrMessage.fetchReply());
 
 		if (!pingMessage) return;
 
