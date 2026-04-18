@@ -1,55 +1,48 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Subcommand } from '@sapphire/plugin-subcommands';
-import { getTimeZone, searchTimeZone } from '#lib/utilities/tz';
+import { Subcommand } from '@kaname-png/plugin-subcommands-advanced';
+import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { searchTimeZone } from '#lib/utilities/tz';
+import { ApplicationIntegrationType, InteractionContextType, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Subcommand.Options>({
-	description: 'Configure guild settings',
-	subcommands: [{ name: 'timezone', chatInputRun: 'chatInputTimezone' }]
+	description: 'Configure guild settings'
 })
 export class ConfigCommand extends Subcommand {
 	public override registerApplicationCommands(registry: Subcommand.Registry) {
 		registry.registerChatInputCommand((builder) =>
-			builder
+			this.hooks.subcommands(
+				this,
+				applyDescriptionLocalizedBuilder(
+					builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.setDefaultMemberPermissions('0')
-				.addSubcommand((sub) =>
-					sub
-						.setName('timezone')
-						.setDescription('Set the guild timezone')
-						.addStringOption((option) =>
-							option
-								.setName('timezone')
-								.setDescription('IANA timezone (e.g. Europe/Paris)')
-								.setRequired(true)
-								.setAutocomplete(true)
-						)
-				),
+				.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+				.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+				.setContexts(InteractionContextType.Guild),
+					'commands:config.command.description'
+				)
+			),
 		);
-	}
-
-	public async chatInputTimezone(interaction: Subcommand.ChatInputCommandInteraction) {
-		const value = interaction.options.getString('timezone', true);
-		const entry = getTimeZone(value);
-
-		if (!entry) {
-			return interaction.reply({ content: `Unknown timezone \`${value}\`. Use the autocomplete to pick a valid one.`, ephemeral: true });
-		}
-
-		await this.container.guild.update(interaction.guildId!, { timezone: entry.name });
-
-		return interaction.reply({ content: `Guild timezone set to **${entry.full}**.`, ephemeral: true });
 	}
 
 	public override async autocompleteRun(interaction: Subcommand.AutocompleteInteraction) {
+		if (interaction.options.getSubcommand(false) !== 'timezone') {
+			return interaction.respond([]);
+		}
+
 		const query = interaction.options.getFocused();
 		const results = searchTimeZone(query);
-
-		return interaction.respond(
-			results.map((result) => ({
-				name: `${result.score === 1 ? '⭐' : '📄'} ${result.value.full}`,
+		const response = await Promise.all(
+			results.map(async (result) => ({
+				name: await resolveKey(
+					interaction,
+					result.score === 1 ? 'commands:config.autocomplete.timezone.exact' : 'commands:config.autocomplete.timezone.partial',
+					{ timezone: result.value.full }
+				),
 				value: result.value.name
 			}))
 		);
+
+		return interaction.respond(response);
 	}
 }

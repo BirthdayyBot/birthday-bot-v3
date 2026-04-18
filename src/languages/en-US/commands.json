@@ -1,0 +1,127 @@
+{
+  "config": {
+    "command": {
+      "description": "Configure guild settings"
+    },
+    "autocomplete": {
+      "timezone": {
+        "exact": "⭐ {{timezone}}",
+        "partial": "📄 {{timezone}}"
+      }
+    },
+    "defaults": {
+      "announcementMessage": "<:arrwright:931267038746390578> Today is a special Day!{NEW_LINE}<:gift:931267039094534175> Please wish {MENTION} a happy Birthday <3"
+    },
+    "errors": {
+      "guildOnly": "This command can only be used in a server."
+    },
+    "subcommands": {
+      "timezone": {
+        "description": "Set the guild timezone",
+        "options": {
+          "timezone": {
+            "description": "IANA timezone (e.g. Europe/Paris)"
+          }
+        },
+        "responses": {
+          "invalid": "Unknown timezone `{{timezone}}`. Use the autocomplete to pick a valid one.",
+          "alreadySet": "Guild timezone is already set to **{{timezone}}**.",
+          "updated": "Guild timezone set to **{{timezone}}**."
+        }
+      },
+      "announcementChannel": {
+        "description": "Set the announcement channel",
+        "options": {
+          "channel": {
+            "description": "Channel used for birthday announcements"
+          }
+        },
+        "responses": {
+          "updated": "Announcement channel set to <#{{channelId}}>."
+        }
+      },
+      "announcementMessage": {
+        "description": "Set the announcement message template",
+        "options": {
+          "message": {
+            "description": "Template text used in announcements"
+          }
+        },
+        "responses": {
+          "empty": "Announcement message cannot be empty.",
+          "updated": "Announcement message updated."
+        }
+      },
+      "overviewChannel": {
+        "description": "Set the overview channel",
+        "options": {
+          "channel": {
+            "description": "Channel used for overview posts"
+          }
+        },
+        "responses": {
+          "updated": "Overview channel set to <#{{channelId}}>."
+        }
+      },
+      "overviewMessage": {
+        "description": "Set the overview message",
+        "options": {
+          "message": {
+            "description": "Overview message text"
+          }
+        },
+        "responses": {
+          "empty": "Overview message cannot be empty.",
+          "updated": "Overview message updated."
+        }
+      },
+      "birthdayRole": {
+        "description": "Set the birthday role",
+        "options": {
+          "role": {
+            "description": "Role assigned on birthdays"
+          }
+        },
+        "responses": {
+          "updated": "Birthday role set to <@&{{roleId}}>."
+        }
+      },
+      "birthdayPingRole": {
+        "description": "Set the birthday ping role",
+        "options": {
+          "role": {
+            "description": "Role pinged in announcements"
+          }
+        },
+        "responses": {
+          "updated": "Birthday ping role set to <@&{{roleId}}>."
+        }
+      },
+      "logChannel": {
+        "description": "Set the log channel",
+        "options": {
+          "channel": {
+            "description": "Channel used for logs"
+          }
+        },
+        "responses": {
+          "updated": "Log channel set to <#{{channelId}}>."
+        }
+      },
+      "language": {
+        "description": "Set the guild language",
+        "options": {
+          "language": {
+            "description": "Language locale",
+            "choices": {
+              "enUS": "English (US)"
+            }
+          }
+        },
+        "responses": {
+          "updated": "Guild language set to **{{language}}**."
+        }
+      }
+    }
+  }
+}

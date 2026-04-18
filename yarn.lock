@@ -626,6 +626,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kaname-png/plugin-subcommands-advanced@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@kaname-png/plugin-subcommands-advanced@npm:2.5.0"
+  dependencies:
+    "@sapphire/decorators": "npm:^6.1.0"
+    tslib: "npm:^2.8.0"
+  checksum: 10/41f0737e664e885457a3e7f575866634fcaf43a1781915c0dbffb92215453019f9052c9a54a1c3b3a52a8c28d543d7110eecf4b7a77919829d7b56b4c5f08b56
+  languageName: node
+  linkType: hard
+
 "@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:3.0.3":
   version: 3.0.3
   resolution: "@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:3.0.3"
@@ -851,7 +861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/decorators@npm:^6.1.1":
+"@sapphire/decorators@npm:^6.1.0, @sapphire/decorators@npm:^6.1.1":
   version: 6.2.0
   resolution: "@sapphire/decorators@npm:6.2.0"
   dependencies:
@@ -1296,6 +1306,7 @@ __metadata:
     "@commitlint/cli": "npm:^20.3.0"
     "@commitlint/config-conventional": "npm:^20.3.0"
     "@influxdata/influxdb-client": "npm:^1.35.0"
+    "@kaname-png/plugin-subcommands-advanced": "npm:^2.5.0"
     "@sapphire/cli": "npm:^1.9.3"
     "@sapphire/decorators": "npm:^6.1.1"
     "@sapphire/discord.js-utilities": "npm:7.3.2"
@@ -3595,7 +3606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.1":
+"tslib@npm:^2.0.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7

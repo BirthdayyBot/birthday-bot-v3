@@ -1,9 +1,11 @@
 import '#lib/setup/env';
-import { LogLevel } from '@sapphire/framework';
+import { container, LogLevel } from '@sapphire/framework';
 import { cast } from '@sapphire/utilities';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
 import type { RedisOptions } from 'bullmq';
 import { ActivityType, GatewayIntentBits, Partials, type WebhookClientData, type ActivitiesOptions, type ClientOptions } from 'discord.js';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 export const OWNERS = ['267614892821970945', '696324357940838492'];
 
@@ -39,6 +41,13 @@ export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'ho
 
 export const WEBHOOK_ERROR = parseWebhookError();
 
+function getLanguageDirectory(): string {
+  const distPath = join(process.cwd(), 'dist', 'languages');
+  if (existsSync(distPath)) return distPath;
+
+  return join(process.cwd(), 'src', 'languages');
+}
+
 export const CLIENT_OPTIONS: ClientOptions = {
   intents: [GatewayIntentBits.Guilds],
   allowedMentions: { users: [], roles: [] },
@@ -47,6 +56,18 @@ export const CLIENT_OPTIONS: ClientOptions = {
   loadScheduledTaskErrorListeners: false,
   logger: { level: envParseString('NODE_ENV') === 'production' ? LogLevel.Info : LogLevel.Debug },
   partials: [Partials.Channel],
+  i18n: {
+    defaultName: 'en-US',
+    defaultLanguageDirectory: getLanguageDirectory(),
+    fetchLanguage: async ({ guild, interactionLocale, interactionGuildLocale }) => {
+      if (guild?.id) {
+        const guildEntry = await container.guild.findById(guild.id);
+        if (guildEntry?.language) return guildEntry.language;
+      }
+
+      return interactionLocale ?? interactionGuildLocale ?? guild?.preferredLocale ?? 'en-US';
+    }
+  },
   tasks: {
     bull: {
       connection: {
