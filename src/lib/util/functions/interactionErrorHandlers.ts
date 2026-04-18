@@ -1,5 +1,7 @@
 import { OWNERS } from '#root/config';
 import { Emojis, rootFolder } from '#utils/constants';
+import { createDefaultInteractionEditReply, createDefaultInteractionReply } from '#lib/utilities/default-embed';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getErrorLine, getLinkLine, getMethodLine, getStatusLine, getWarnError } from '#utils/functions/errorHelpers';
 import {
 	ArgumentError,
@@ -10,6 +12,7 @@ import {
 	type InteractionHandlerError,
 	type InteractionHandlerParseError
 } from '@sapphire/framework';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import { codeBlock, isNullish } from '@sapphire/utilities';
 import { DiscordAPIError, EmbedBuilder, HTTPError, RESTJSONErrorCodes, hideLinkEmbed, userMention, type Interaction } from 'discord.js';
 import { fileURLToPath } from 'url';
@@ -26,7 +29,7 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	// If the error was an AbortError or an Internal Server Error, tell the user to re-try:
 	if (error.name === 'AbortError' || error.message === 'Internal Server Error') {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
-		return alert(interaction, 'I had a small network error when messaging Discord. Please run this command again!');
+		return alert(interaction, await resolveKey(interaction, LanguageKeys.Errors.GenericDiscordGateway));
 	}
 
 	// Extract useful information about the DiscordAPIError
@@ -46,7 +49,7 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${handler.location.full}\n${error.stack || error.message}`);
 	try {
-		await alert(interaction, generateUnexpectedErrorMessage(interaction, error));
+		await alert(interaction, await generateUnexpectedErrorMessage(interaction, error));
 	} catch (err) {
 		client.emit(Events.Error, err as Error);
 	}
@@ -54,13 +57,13 @@ export async function handleInteractionError(error: Error, { handler, interactio
 	return undefined;
 }
 
-function generateUnexpectedErrorMessage(interaction: Interaction, error: Error) {
+async function generateUnexpectedErrorMessage(interaction: Interaction, error: Error) {
 	if (OWNERS.includes(interaction.user.id)) return codeBlock('js', error.stack!);
-	return `${Emojis.RedCross} I found an unexpected error, please report the steps you have taken to my developers!`;
+	return resolveKey(interaction, LanguageKeys.Errors.UnexpectedIssue);
 }
 
 function stringError(interaction: Interaction, error: string) {
-	return alert(interaction, `${Emojis.RedCross} Dear ${userMention(interaction.user.id)}, ${error}`);
+	return alert(interaction, `${Emojis.Fail} Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
 function argumentError(interaction: Interaction, error: ArgumentError<unknown>) {
@@ -89,17 +92,10 @@ function alert(interaction: Interaction, content: string) {
 	if (!interaction.isSelectMenu() && !interaction.isButton()) return;
 
 	if (interaction.replied || interaction.deferred) {
-		return interaction.editReply({
-			content,
-			allowedMentions: { users: [interaction.user.id], roles: [] }
-		});
+		return interaction.editReply(createDefaultInteractionEditReply(content, interaction.user, {}, 'error'));
 	}
 
-	return interaction.reply({
-		content,
-		allowedMentions: { users: [interaction.user.id], roles: [] },
-		ephemeral: true
-	});
+	return interaction.reply(createDefaultInteractionReply(content, interaction.user, { ephemeral: true }, 'error'));
 }
 
 async function sendErrorChannel(interaction: Interaction, handler: InteractionHandler, error: Error) {

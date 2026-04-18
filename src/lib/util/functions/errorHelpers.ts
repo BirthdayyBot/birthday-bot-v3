@@ -1,6 +1,9 @@
 import { OWNERS } from '#root/config';
 import { Emojis, rootFolder, ZeroWidthSpace } from '#utils/constants';
+import { createDefaultInteractionEditReply, createDefaultInteractionReply } from '#lib/utilities/default-embed';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { isMessageInstance } from '@sapphire/discord.js-utilities';
+import { resolveKey } from '@sapphire/plugin-i18next';
 import {
 	ArgumentError,
 	container,
@@ -44,7 +47,7 @@ export async function handleChatInputOrContextMenuCommandError(
 	// If the error was an AbortError or an Internal Server Error, tell the user to re-try:
 	if (error.name === 'AbortError' || error.message === 'Internal Server Error') {
 		logger.warn(`${getWarnError(interaction)} (${interaction.user.id}) | ${error.constructor.name}`);
-		return alert(interaction, 'I had a small network error when messaging Discord. Please run this command again!');
+		return alert(interaction, await resolveKey(interaction, LanguageKeys.Errors.GenericDiscordGateway));
 	}
 
 	// Extract useful information about the DiscordAPIError
@@ -64,7 +67,7 @@ export async function handleChatInputOrContextMenuCommandError(
 	// Emit where the error was emitted
 	logger.fatal(`[COMMAND] ${command.location.full}\n${error.stack || error.message}`);
 	try {
-		await alert(interaction, generateUnexpectedErrorMessage(interaction, error));
+		await alert(interaction, await generateUnexpectedErrorMessage(interaction, error));
 	} catch (err) {
 		client.emit(Events.Error, err as Error);
 	}
@@ -72,22 +75,22 @@ export async function handleChatInputOrContextMenuCommandError(
 	return undefined;
 }
 
-function generateUnexpectedErrorMessage(interaction: CommandInteraction, error: Error) {
+async function generateUnexpectedErrorMessage(interaction: CommandInteraction, error: Error) {
 	if (OWNERS.includes(interaction.user.id)) return codeBlock('js', error.stack!);
-	return `${Emojis.RedCross} I found an unexpected error, please report the steps you have taken to my developers!`;
+	return resolveKey(interaction, LanguageKeys.Errors.UnexpectedIssue);
 }
 
 function stringError(interaction: CommandInteraction, error: string) {
-	return alert(interaction, `${Emojis.RedCross} Dear ${userMention(interaction.user.id)}, ${error}`);
+	return alert(interaction, `${Emojis.Fail} Dear ${userMention(interaction.user.id)}, ${error}`);
 }
 
 function argumentError(interaction: CommandInteraction, error: ArgumentError<unknown>) {
 	return alert(
 		interaction,
 		error.message ||
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://join.favware.tech'
-			)}`
+		`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
+			'https://join.favware.tech'
+		)}`
 	);
 }
 
@@ -97,25 +100,18 @@ function userError(interaction: CommandInteraction, error: UserError) {
 	return alert(
 		interaction,
 		error.message ||
-			`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
-				'https://join.favware.tech'
-			)}`
+		`An error occurred that I was not able to identify. Please try again. If the issue keeps showing up, you can get in touch with the developers by joining my support server through ${hideLinkEmbed(
+			'https://join.favware.tech'
+		)}`
 	);
 }
 
 async function alert(interaction: CommandInteraction, content: string) {
 	if (interaction.replied || interaction.deferred) {
-		return interaction.editReply({
-			content,
-			allowedMentions: { users: [interaction.user.id], roles: [] }
-		});
+		return interaction.editReply(createDefaultInteractionEditReply(content, interaction.user, {}, 'error'));
 	}
 
-	return interaction.reply({
-		content,
-		allowedMentions: { users: [interaction.user.id], roles: [] },
-		ephemeral: true
-	});
+	return interaction.reply(createDefaultInteractionReply(content, interaction.user, { ephemeral: true }, 'error'));
 }
 
 async function sendErrorChannel(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, command: Command, error: Error) {

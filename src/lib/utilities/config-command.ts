@@ -2,6 +2,7 @@ import { container, type Command } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { Guild } from '#lib/domain/guild/Guild';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
+import { replyError } from '#lib/utilities/default-embed';
 import type { GuildUpdateData } from '#lib/domain/guild/IGuildRepository';
 
 export const DEFAULT_TIMEZONE = 'Europe/London';
@@ -9,7 +10,7 @@ export const DEFAULT_LANGUAGE = 'en-US';
 
 export async function getGuildIdOrReply(interaction: Command.ChatInputCommandInteraction): Promise<string | null> {
 	if (!interaction.inGuild() || !interaction.guildId) {
-		await interaction.reply({ content: await resolveKey(interaction, LanguageKeys.Commands.Config.ErrorGuildOnly), ephemeral: true });
+		await interaction.reply(replyError(await resolveKey(interaction, LanguageKeys.Commands.Config.ErrorGuildOnly), interaction.user));
 		return null;
 	}
 
