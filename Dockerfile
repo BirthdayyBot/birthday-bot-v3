@@ -2,7 +2,7 @@
 #    Base Stage    #
 # ================ #
 
-FROM node:22-bullseye-slim as base
+FROM node:22-bullseye-slim AS base
 
 WORKDIR /usr/src/app
 
@@ -28,12 +28,12 @@ ENTRYPOINT ["dumb-init", "--"]
 #   Builder Stage  #
 # ================ #
 
-FROM base as builder
+FROM base AS builder
 
 ENV NODE_ENV="development"
 
 COPY --chown=node:node tsconfig.base.json tsconfig.base.json
-COPY --chown=node:node tsup.config.ts .
+COPY --chown=node:node tsdown.config.ts .
 COPY --chown=node:node src/ src/
 
 RUN yarn install --immutable
