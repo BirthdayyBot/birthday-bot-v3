@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db } from '../src/lib/database/client.js';
 
-const migrationFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), '../migrations');
+const migrationFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/migrations');
 
 const migrator = new Migrator({
 	db,
