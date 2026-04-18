@@ -49,6 +49,7 @@ ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--enable-source-maps"
 
 COPY --chown=node:node src/.env src/.env
+COPY --chown=node:node --from=builder /usr/src/app/src/generated src/generated
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 
 RUN yarn workspaces focus --all --production
