@@ -31,6 +31,7 @@ export interface UserTable {
 	username: string | null;
 	discriminator: string | null;
 	premium: Generated<boolean>;
+	patreon_max_slots: Generated<number>;
 	last_updated: Date;
 }
 
@@ -53,4 +54,14 @@ export interface TiersTable {
 	id: Generated<number>;
 	name: string | null;
 	last_updated: Date;
+}
+
+export interface SubscriptionHistoryTable {
+	id: Generated<number>;
+	user_id: string;
+	tier: string;
+	slots: number;
+	source: string;
+	started_at: Generated<Date>;
+	ended_at: Date | null;
 }

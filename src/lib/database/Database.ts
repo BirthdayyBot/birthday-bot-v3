@@ -1,4 +1,4 @@
-import type { BirthdayTable, BlacklistTable, GuildTable, PremiumTable, TiersTable, UserTable } from './types.js';
+import type { BirthdayTable, BlacklistTable, GuildTable, PremiumTable, SubscriptionHistoryTable, TiersTable, UserTable } from './types.js';
 
 export interface Database {
 	birthday: BirthdayTable;
@@ -7,4 +7,5 @@ export interface Database {
 	blacklist: BlacklistTable;
 	premium: PremiumTable;
 	tiers: TiersTable;
+	subscription_history: SubscriptionHistoryTable;
 }
