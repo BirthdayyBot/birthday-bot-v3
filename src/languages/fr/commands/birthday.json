@@ -118,6 +118,13 @@
             "options": {
                 "page": {
                     "description": "Numero de page a afficher"
+                },
+                "sort": {
+                    "description": "Trier les anniversaires par mois ou par prochaine date",
+                    "choices": {
+                        "month": "Par mois",
+                        "upcoming": "Les plus proches d'abord"
+                    }
                 }
             },
             "responses": {

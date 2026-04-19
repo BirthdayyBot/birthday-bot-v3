@@ -118,6 +118,13 @@
             "options": {
                 "page": {
                     "description": "Page number to open"
+                },
+                "sort": {
+                    "description": "Sort birthdays by month or by upcoming date",
+                    "choices": {
+                        "month": "By month",
+                        "upcoming": "Upcoming first"
+                    }
                 }
             },
             "responses": {

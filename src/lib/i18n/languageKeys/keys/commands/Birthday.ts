@@ -76,6 +76,9 @@ export const SubcommandViewResponseDateWithAgeOther = FT<{ date: string; userId:
 
 export const SubcommandListDescription = T<string>('commands/birthday:subcommands.list.description');
 export const SubcommandListOptionPageDescription = T<string>('commands/birthday:subcommands.list.options.page.description');
+export const SubcommandListOptionSortDescription = T<string>('commands/birthday:subcommands.list.options.sort.description');
+export const SubcommandListOptionSortChoiceMonth = T<string>('commands/birthday:subcommands.list.options.sort.choices.month');
+export const SubcommandListOptionSortChoiceUpcoming = T<string>('commands/birthday:subcommands.list.options.sort.choices.upcoming');
 export const SubcommandListResponseEmpty = T<string>('commands/birthday:subcommands.list.responses.empty');
 export const SubcommandListResponseTitle = FT<{ page: number; totalPages: number }, string>('commands/birthday:subcommands.list.responses.title');
 export const SubcommandListResponseDescription = FT<{ total: number }, string>('commands/birthday:subcommands.list.responses.description');

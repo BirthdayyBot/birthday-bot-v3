@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
-import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createDefaultEmbed, replyInfo } from '#lib/utilities/default-embed';
@@ -15,6 +15,10 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'dis
 
 const ITEMS_PER_PAGE = 10;
 const BUTTON_TIMEOUT_MS = 120_000;
+const SORT_MONTH = 'month';
+const SORT_UPCOMING = 'upcoming';
+
+type SortMode = typeof SORT_MONTH | typeof SORT_UPCOMING;
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-list',
@@ -30,6 +34,23 @@ const BUTTON_TIMEOUT_MS = 120_000;
 						applyDescriptionLocalizedBuilder(
 							option.setName('page').setDescription('Page number to open').setRequired(false).setMinValue(1),
 							LanguageKeys.Commands.Birthday.SubcommandListOptionPageDescription
+						)
+					)
+					.addStringOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option
+								.setName('sort')
+								.setDescription('Sort birthdays by month or by upcoming date')
+								.setRequired(false)
+								.addChoices(
+									createLocalizedChoice(LanguageKeys.Commands.Birthday.SubcommandListOptionSortChoiceMonth, {
+										value: SORT_MONTH
+									}),
+									createLocalizedChoice(LanguageKeys.Commands.Birthday.SubcommandListOptionSortChoiceUpcoming, {
+										value: SORT_UPCOMING
+									})
+								),
+							LanguageKeys.Commands.Birthday.SubcommandListOptionSortDescription
 						)
 					),
 				LanguageKeys.Commands.Birthday.SubcommandListDescription
@@ -50,15 +71,23 @@ export class BirthdayListSubcommand extends Command {
 		}
 
 		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
+		const sortMode = (interaction.options.getString('sort') ?? SORT_MONTH) as SortMode;
 		const sortedBirthdays = birthdays
 			.map((birthday) => ({
 				birthday,
+				month: birthday.getMonth(),
+				day: birthday.getDay(),
 				nextDate: getNextBirthdayDate(birthday.birthday, timeZone)
 			}))
 			.sort((a, b) => {
-				const left = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-				const right = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-				if (left !== right) return left - right;
+				if (sortMode === SORT_UPCOMING) {
+					const leftNextDate = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+					const rightNextDate = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+					if (leftNextDate !== rightNextDate) return leftNextDate - rightNextDate;
+				}
+
+				if (a.month !== b.month) return a.month - b.month;
+				if (a.day !== b.day) return a.day - b.day;
 				return a.birthday.userId.localeCompare(b.birthday.userId);
 			});
 
