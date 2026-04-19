@@ -116,16 +116,22 @@ export async function upsertBirthdayOverviewMessage(guildId: string): Promise<vo
 	if (payload.guildConfig.overviewMessage) {
 		const existingMessage = await channel.messages.fetch(payload.guildConfig.overviewMessage).catch(() => null);
 		if (existingMessage) {
-			await existingMessage
+			const editSucceeded = await existingMessage
 				.edit({
 					embeds: [payload.embed],
 					allowedMentions: { users: [], roles: [] }
 				})
-				.catch(() => null);
-			return;
-		}
+				.then(() => true)
+				.catch(() => false);
 
-		await container.guild.update(guildId, { overviewMessage: null });
+			if (editSucceeded) {
+				return;
+			}
+
+			await container.guild.update(guildId, { overviewMessage: null });
+		} else {
+			await container.guild.update(guildId, { overviewMessage: null });
+		}
 	}
 
 	const sent = await channel
