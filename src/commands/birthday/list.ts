@@ -1,0 +1,168 @@
+import { ApplyOptions } from '@sapphire/decorators';
+import { Command } from '@kaname-png/plugin-subcommands-advanced';
+import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
+import { createDefaultEmbed, replyInfo } from '#lib/utilities/default-embed';
+import {
+	formatBirthdayDate,
+	formatTimeUntilNextBirthday,
+	getAgeAtNextBirthday,
+	getGuildLocaleAndTimezone,
+	getNextBirthdayDate
+} from '#lib/utilities/birthday-command';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js';
+
+const ITEMS_PER_PAGE = 10;
+const BUTTON_TIMEOUT_MS = 120_000;
+
+@ApplyOptions<Command.Options>({
+	name: 'birthday-list',
+	description: 'List birthdays in this server',
+	registerSubCommand: {
+		parentCommandName: 'birthday',
+		slashSubcommand: (sub) =>
+			applyDescriptionLocalizedBuilder(
+				sub
+					.setName('list')
+					.setDescription('List birthdays in this server')
+					.addIntegerOption((option) =>
+						applyDescriptionLocalizedBuilder(
+							option.setName('page').setDescription('Page number to open').setRequired(false).setMinValue(1),
+							LanguageKeys.Commands.Birthday.SubcommandListOptionPageDescription
+						)
+					),
+				LanguageKeys.Commands.Birthday.SubcommandListDescription
+			)
+	}
+})
+export class BirthdayListSubcommand extends Command {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+		const guildId = await getGuildIdOrReply(interaction);
+		if (!guildId) return;
+
+		const birthdays = await this.container.birthday.findActiveByGuildId(guildId);
+		if (birthdays.length === 0) {
+			await interaction.reply(
+				replyInfo(await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEmpty), interaction.user)
+			);
+			return;
+		}
+
+		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
+		const sortedBirthdays = birthdays
+			.map((birthday) => ({
+				birthday,
+				nextDate: getNextBirthdayDate(birthday.birthday, timeZone)
+			}))
+			.sort((a, b) => {
+				const left = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+				const right = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+				if (left !== right) return left - right;
+				return a.birthday.userId.localeCompare(b.birthday.userId);
+			});
+
+		const rows = await Promise.all(
+			sortedBirthdays.map(async ({ birthday }) => {
+				const date = formatBirthdayDate(birthday.birthday, language);
+				const timeUntil = formatTimeUntilNextBirthday(birthday.birthday, timeZone);
+				const age = getAgeAtNextBirthday(birthday.birthday, timeZone);
+
+				if (age !== null) {
+					return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
+						userId: birthday.userId,
+						date,
+						age,
+						timeUntil
+					});
+				}
+
+				return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithoutAge, {
+					userId: birthday.userId,
+					date,
+					timeUntil
+				});
+			})
+		);
+
+		const pages = chunk(rows, ITEMS_PER_PAGE);
+		let currentPage = Math.min(Math.max((interaction.options.getInteger('page') ?? 1) - 1, 0), pages.length - 1);
+		const previousCustomId = `birthday_list_prev_${interaction.id}`;
+		const nextCustomId = `birthday_list_next_${interaction.id}`;
+		const wrongUserMessage = await resolveKey(interaction, LanguageKeys.Globals.PaginatedMessageWrongUserInteractionReply, {
+			user: `<@${interaction.user.id}>`
+		});
+
+		await interaction.reply({
+			embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length)],
+			components: [this.buildPaginationRow(currentPage, pages.length, previousCustomId, nextCustomId)],
+			ephemeral: true,
+			allowedMentions: { users: [interaction.user.id], roles: [] }
+		});
+
+		const message = await interaction.fetchReply();
+		const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: BUTTON_TIMEOUT_MS });
+
+		collector.on('collect', async (buttonInteraction) => {
+			if (buttonInteraction.user.id !== interaction.user.id) {
+				await buttonInteraction.reply(replyInfo(wrongUserMessage, buttonInteraction.user));
+				return;
+			}
+
+			if (buttonInteraction.customId === previousCustomId && currentPage > 0) {
+				currentPage -= 1;
+			} else if (buttonInteraction.customId === nextCustomId && currentPage < pages.length - 1) {
+				currentPage += 1;
+			}
+
+			await buttonInteraction.update({
+				embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length)],
+				components: [this.buildPaginationRow(currentPage, pages.length, previousCustomId, nextCustomId)]
+			});
+		});
+
+		collector.on('end', async () => {
+			try {
+				await interaction.editReply({
+					components: [this.buildPaginationRow(currentPage, pages.length, previousCustomId, nextCustomId, true)]
+				});
+			} catch {
+				// Ignore failures if the interaction response is no longer editable.
+			}
+		});
+	}
+
+	private async buildPageEmbed(interaction: Command.ChatInputCommandInteraction, pages: string[][], currentPage: number, total: number) {
+		const title = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseTitle, {
+			page: currentPage + 1,
+			totalPages: pages.length
+		});
+		const description = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseDescription, { total });
+
+		return createDefaultEmbed(`${description}\n\n${pages[currentPage].join('\n')}`, 'info').setTitle(title);
+	}
+
+	private buildPaginationRow(currentPage: number, totalPages: number, previousCustomId: string, nextCustomId: string, disabled = false) {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder()
+				.setCustomId(previousCustomId)
+				.setLabel('Previous')
+				.setStyle(ButtonStyle.Secondary)
+				.setDisabled(disabled || currentPage <= 0),
+			new ButtonBuilder()
+				.setCustomId(nextCustomId)
+				.setLabel('Next')
+				.setStyle(ButtonStyle.Secondary)
+				.setDisabled(disabled || currentPage >= totalPages - 1)
+		);
+	}
+}
+
+function chunk<T>(entries: T[], size: number): T[][] {
+	const chunks: T[][] = [];
+	for (let index = 0; index < entries.length; index += size) {
+		chunks.push(entries.slice(index, index + size));
+	}
+
+	return chunks;
+}

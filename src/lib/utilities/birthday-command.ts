@@ -70,7 +70,8 @@ function parseBirthdayParts(birthday: string): BirthdayParts | null {
 	return { month, day, year };
 }
 
-function getNextBirthdayDate(birthday: string, timeZone: string): Date | null {
+/** Returns the next celebration date in the provided timezone, or null for invalid values. */
+export function getNextBirthdayDate(birthday: string, timeZone: string): Date | null {
 	const parsed = parseBirthdayParts(birthday);
 	if (!parsed) return null;
 

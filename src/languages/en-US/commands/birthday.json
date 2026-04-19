@@ -113,6 +113,21 @@
                 }
             }
         },
+        "list": {
+            "description": "List all upcoming birthdays in this server",
+            "options": {
+                "page": {
+                    "description": "Page number to open"
+                }
+            },
+            "responses": {
+                "empty": "There are no active birthdays registered in this server yet.",
+                "title": "Upcoming Birthdays (Page {{page}}/{{totalPages}})",
+                "description": "Showing {{total}} active birthdays.",
+                "entryWithAge": "<@{{userId}}> - **{{date}}** - turning **{{age}}** {{timeUntil}}",
+                "entryWithoutAge": "<@{{userId}}> - **{{date}}** - {{timeUntil}}"
+            }
+        },
         "test": {
             "description": "Send a test birthday announcement",
             "options": {

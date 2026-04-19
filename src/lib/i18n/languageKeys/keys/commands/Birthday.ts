@@ -74,6 +74,18 @@ export const SubcommandViewResponseDateWithAgeOther = FT<{ date: string; userId:
 	'commands/birthday:subcommands.view.responses.dateWithAge.other'
 );
 
+export const SubcommandListDescription = T<string>('commands/birthday:subcommands.list.description');
+export const SubcommandListOptionPageDescription = T<string>('commands/birthday:subcommands.list.options.page.description');
+export const SubcommandListResponseEmpty = T<string>('commands/birthday:subcommands.list.responses.empty');
+export const SubcommandListResponseTitle = FT<{ page: number; totalPages: number }, string>('commands/birthday:subcommands.list.responses.title');
+export const SubcommandListResponseDescription = FT<{ total: number }, string>('commands/birthday:subcommands.list.responses.description');
+export const SubcommandListResponseEntryWithAge = FT<{ userId: string; date: string; age: number; timeUntil: string }, string>(
+	'commands/birthday:subcommands.list.responses.entryWithAge'
+);
+export const SubcommandListResponseEntryWithoutAge = FT<{ userId: string; date: string; timeUntil: string }, string>(
+	'commands/birthday:subcommands.list.responses.entryWithoutAge'
+);
+
 export const SubcommandTestDescription = T<string>('commands/birthday:subcommands.test.description');
 export const SubcommandTestOptionMemberDescription = T<string>('commands/birthday:subcommands.test.options.member.description');
 export const SubcommandTestResponseMissingPermission = T<string>('commands/birthday:subcommands.test.responses.missingPermission');

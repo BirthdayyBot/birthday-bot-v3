@@ -113,6 +113,21 @@
                 }
             }
         },
+        "list": {
+            "description": "Lister les prochains anniversaires du serveur",
+            "options": {
+                "page": {
+                    "description": "Numero de page a afficher"
+                }
+            },
+            "responses": {
+                "empty": "Aucun anniversaire actif n'est enregistre sur ce serveur pour le moment.",
+                "title": "Anniversaires a venir (Page {{page}}/{{totalPages}})",
+                "description": "Affichage de {{total}} anniversaires actifs.",
+                "entryWithAge": "<@{{userId}}> - **{{date}}** - **{{age}} ans** {{timeUntil}}",
+                "entryWithoutAge": "<@{{userId}}> - **{{date}}** - {{timeUntil}}"
+            }
+        },
         "test": {
             "description": "Envoyer une annonce d'anniversaire de test",
             "options": {
