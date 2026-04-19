@@ -68,7 +68,8 @@
     "test:watch": "vitest",
     "dev": "tsdown --watch --onSuccess \"yarn start\"",
     "migrate": "node --env-file=src/.env --import tsx/esm scripts/migrate.ts up",
-    "migrate:down": "node --env-file=src/.env --import tsx/esm scripts/migrate.ts down"
+    "migrate:down": "node --env-file=src/.env --import tsx/esm scripts/migrate.ts down",
+    "import:birthdays:fixture": "node --env-file=src/.env scripts/import-birthdays-fixture.mjs"
   },
   "commitlint": {
     "extends": [
