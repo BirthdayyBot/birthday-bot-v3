@@ -40,11 +40,13 @@ export interface Labels {
 	btnBirthdayRole: string;
 	btnOverviewLogs: string;
 	btnBack: string;
+	btnPremium: string;
 	// Panel titles
 	editGeneralTitle: string;
 	editAnnouncementsTitle: string;
 	editBirthdayRoleTitle: string;
 	editOverviewLogsTitle: string;
+	editPremiumTitle: string;
 	// Select placeholders
 	plhLang: string;
 	plhSort: string;
@@ -62,10 +64,19 @@ export interface Labels {
 	// Action buttons
 	removeChannel: string;
 	removeRole: string;
+	// Premium panel
+	pmActivateHere: string;
+	pmDeactivateHere: string;
+	pmSlotsLabel: string;
+	pmServersLabel: string;
+	pmNotPatron: string;
+	pmNotPatronDescription: string;
+	pmPatreonButton: string;
 }
 
 export interface PanelContext {
 	guildId: string;
+	userId: string;
 	labels: Labels;
 	viewController: ConfigViewController;
 	guildRepository: IGuildRepository;

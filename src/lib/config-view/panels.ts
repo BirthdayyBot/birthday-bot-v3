@@ -1,6 +1,8 @@
 import { createDefaultEmbed, createOverviewEmbed } from '#lib/utilities/default-embed';
 import { getTimeZonesByPrefix } from '#lib/utilities/tz';
 import type { Guild } from '#lib/domain/guild/Guild';
+import type { PremiumGrant } from '#lib/domain/premium/PremiumGrant';
+import { CdnUrls, Emojis, resolveEmoji } from '#utils/constants';
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -32,7 +34,8 @@ export function buildMainRow(labels: Labels, disabled = false) {
 		new ButtonBuilder().setCustomId('cfg-general').setLabel(labels.btnGeneral).setStyle(ButtonStyle.Secondary).setDisabled(disabled),
 		new ButtonBuilder().setCustomId('cfg-announcements').setLabel(labels.btnAnnouncements).setStyle(ButtonStyle.Secondary).setDisabled(disabled),
 		new ButtonBuilder().setCustomId('cfg-birthday-role').setLabel(labels.btnBirthdayRole).setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-		new ButtonBuilder().setCustomId('cfg-overview-logs').setLabel(labels.btnOverviewLogs).setStyle(ButtonStyle.Secondary).setDisabled(disabled)
+		new ButtonBuilder().setCustomId('cfg-overview-logs').setLabel(labels.btnOverviewLogs).setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+		new ButtonBuilder().setCustomId('cfg-premium').setLabel(labels.btnPremium).setStyle(ButtonStyle.Primary).setDisabled(disabled)
 	);
 }
 
@@ -272,6 +275,80 @@ export function buildOverviewLogsPanel(labels: Labels, guild: Guild | null, over
 					.setChannelTypes([ChannelType.GuildText])
 			),
 			...(actionBtns.length > 0 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(...actionBtns)] : [])
+		]
+	};
+}
+
+// ── Premium panel ─────────────────────────────────────────────────────────────
+
+export function buildPremiumPanel(
+	labels: Labels,
+	patreonMaxSlots: number,
+	usedSlots: number,
+	grants: PremiumGrant[],
+	currentGuildId: string,
+	guildNames: Map<string, string>
+): InteractionUpdateOptions {
+	const isActive = grants.some((g) => g.guildId === currentGuildId);
+	const hasSlots = usedSlots < patreonMaxSlots;
+	const isPatron = patreonMaxSlots > 0;
+
+	const slotBar = isPatron
+		? Array.from({ length: patreonMaxSlots }, (_, i) => (i < usedSlots ? resolveEmoji(Emojis.Online) : resolveEmoji(Emojis.Offline))).join(' ')
+		: resolveEmoji(Emojis.Offline);
+
+	// Build the servers list: always show current guild first, then other active grants
+	const currentGuildName = guildNames.get(currentGuildId) ?? currentGuildId;
+	const currentGuildLine = isActive
+		? `${resolveEmoji(Emojis.Success)} **${currentGuildName}** ← current`
+		: `${resolveEmoji(Emojis.Offline)} ~~${currentGuildName}~~ ← current`;
+
+	const otherGrants = grants.filter((g) => g.guildId !== null && g.guildId !== currentGuildId);
+	const otherLines = otherGrants.map((g) => `${resolveEmoji(Emojis.Crown)} **${guildNames.get(g.guildId!) ?? g.guildId}**`);
+	const activeGuildsList = [currentGuildLine, ...otherLines].join('\n');
+
+	const currentGuildStatus = isActive
+		? `${resolveEmoji(Emojis.Success)} ${resolveEmoji(Emojis.Crown)} **${labels.yes}**`
+		: `${resolveEmoji(Emojis.Offline)} **${labels.no}**`;
+
+	if (!isPatron) {
+		const embed = createDefaultEmbed(labels.pmNotPatron, 'info')
+			.setDescription(`${resolveEmoji(Emojis.Crown)} **${labels.pmNotPatron}**\n\n${labels.pmNotPatronDescription}`)
+			.setThumbnail(CdnUrls.CupCake);
+
+		return {
+			embeds: [embed],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder().setLabel(labels.pmPatreonButton).setStyle(ButtonStyle.Link).setURL('https://www.patreon.com/birthdayy'),
+					buildBackBtn(labels)
+				)
+			]
+		};
+	}
+
+	const embed = createDefaultEmbed(`${resolveEmoji(Emojis.Crown)} **${labels.editPremiumTitle}**`, 'info').addFields(
+		{ name: `${resolveEmoji(Emojis.People)} ${labels.pmSlotsLabel}`, value: `${slotBar}  **${usedSlots}/${patreonMaxSlots}**`, inline: true },
+		{ name: `${resolveEmoji(Emojis.Crown)} ${labels.lPremium}`, value: currentGuildStatus, inline: true },
+		{ name: `${resolveEmoji(Emojis.News)} ${labels.pmServersLabel}`, value: activeGuildsList }
+	);
+
+	return {
+		embeds: [embed],
+		components: [
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder()
+					.setCustomId('pm-activate')
+					.setLabel(labels.pmActivateHere)
+					.setStyle(ButtonStyle.Success)
+					.setDisabled(isActive || !hasSlots),
+				new ButtonBuilder()
+					.setCustomId('pm-deactivate')
+					.setLabel(labels.pmDeactivateHere)
+					.setStyle(ButtonStyle.Danger)
+					.setDisabled(!isActive),
+				buildBackBtn(labels)
+			)
 		]
 	};
 }

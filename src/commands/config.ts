@@ -3,7 +3,6 @@ import { Command } from '@sapphire/framework';
 import { applyDescriptionLocalizedBuilder } from '@sapphire/plugin-i18next';
 import { ConfigViewController } from '#lib/application/config-commands/ConfigViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { handleButton, handleChannelSelect, handleRoleSelect, handleStringSelect } from '#lib/config-view/handlers';
 import { resolveLabels } from '#lib/config-view/labels';
 import { buildMainRow, buildMainView } from '#lib/config-view/panels';
@@ -11,7 +10,8 @@ import { VIEW_TIMEOUT_MS, type PanelContext } from '#lib/config-view/types';
 import { ApplicationIntegrationType, InteractionContextType, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
-	description: 'Configure guild settings'
+	description: 'Configure guild settings',
+	preconditions: ['GuildOnly']
 })
 export class ConfigCommand extends Command {
 	public override registerApplicationCommands(registry: Command.Registry) {
@@ -29,11 +29,11 @@ export class ConfigCommand extends Command {
 	}
 
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const guildId = await getGuildIdOrReply(interaction);
-		if (!guildId) return;
+		const guildId = interaction.guildId!;
 
 		const ctx: PanelContext = {
 			guildId,
+			userId: interaction.user.id,
 			labels: await resolveLabels(interaction),
 			viewController: new ConfigViewController(this.container.guild),
 			guildRepository: this.container.guild,

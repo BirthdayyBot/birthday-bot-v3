@@ -167,13 +167,15 @@
 				"announcements": "Annonces",
 				"birthdayRole": "Role anniversaire",
 				"overviewAndLogs": "Apercu & Logs",
-				"back": "← Retour"
+				"back": "← Retour",
+				"premium": "👑 Premium"
 			},
 			"edit": {
 				"generalTitle": "Modifier les parametres generaux",
 				"announcementsTitle": "Modifier les annonces d'anniversaires",
 				"birthdayRoleTitle": "Modifier le role anniversaire",
 				"overviewAndLogsTitle": "Modifier l'apercu & les logs",
+				"premiumTitle": "Premium",
 				"updated": "✅ Parametres mis a jour.",
 				"selectLanguagePlaceholder": "Choisir une langue...",
 				"selectSortPlaceholder": "Choisir le mode de tri...",
@@ -188,7 +190,14 @@
 				"selectTimezoneRegionPlaceholder": "Selectionner une region...",
 				"selectTimezonePlaceholder": "Selectionner un fuseau...",
 				"removeChannel": "Retirer le salon",
-				"removeRole": "Retirer le role"
+				"removeRole": "Retirer le role",
+				"premiumActivateHere": "✅ Activer ici",
+				"premiumDeactivateHere": "❌ Desactiver ici",
+				"premiumSlotsLabel": "Slots",
+				"premiumServersLabel": "Serveurs actifs",
+				"premiumNotPatron": "Vous n'avez aucun abonnement premium.",
+				"premiumNotPatronDescription": "En soutenant **Birthdayy** sur Patreon, vous debloquez des slots premium a activer sur vos serveurs et contribuez a maintenir le bot en ligne !",
+				"premiumPatreonButton": "Acceder a la page Patreon"
 			},
 			"responses": {
 				"title": "Configuration actuelle du serveur"

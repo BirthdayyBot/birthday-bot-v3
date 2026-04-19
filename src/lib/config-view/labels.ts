@@ -34,10 +34,12 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		btnBirthdayRole,
 		btnOverviewLogs,
 		btnBack,
+		btnPremium,
 		editGeneralTitle,
 		editAnnouncementsTitle,
 		editBirthdayRoleTitle,
 		editOverviewLogsTitle,
+		editPremiumTitle,
 		plhLang,
 		plhSort,
 		plhAnnChannel,
@@ -51,7 +53,14 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		plhTimezoneRegion,
 		plhTimezone,
 		removeChannel,
-		removeRole
+		removeRole,
+		pmActivateHere,
+		pmDeactivateHere,
+		pmSlotsLabel,
+		pmServersLabel,
+		pmNotPatron,
+		pmNotPatronDescription,
+		pmPatreonButton
 	] = await Promise.all([
 		resolveKey(interaction, LanguageKeys.Globals.Yes),
 		resolveKey(interaction, LanguageKeys.Globals.No),
@@ -82,10 +91,12 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewButtonBirthdayRole),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewButtonOverviewAndLogs),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewButtonBack),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewButtonPremium),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditGeneralTitle),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditAnnouncementsTitle),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditBirthdayRoleTitle),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditOverviewAndLogsTitle),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumTitle),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditSelectLanguagePlaceholder),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditSelectSortPlaceholder),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditSelectChannelPlaceholder),
@@ -99,7 +110,14 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditSelectTimezoneRegionPlaceholder),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditSelectTimezonePlaceholder),
 		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditRemoveChannel),
-		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditRemoveRole)
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditRemoveRole),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumActivateHere),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumDeactivateHere),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumSlotsLabel),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumServersLabel),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumNotPatron),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumNotPatronDescription),
+		resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewEditPremiumPatreonButton)
 	]);
 
 	return {
@@ -132,10 +150,12 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		btnBirthdayRole,
 		btnOverviewLogs,
 		btnBack,
+		btnPremium,
 		editGeneralTitle,
 		editAnnouncementsTitle,
 		editBirthdayRoleTitle,
 		editOverviewLogsTitle,
+		editPremiumTitle,
 		plhLang,
 		plhSort,
 		plhAnnChannel,
@@ -149,6 +169,13 @@ export async function resolveLabels(interaction: Command.ChatInputCommandInterac
 		plhTimezoneRegion,
 		plhTimezone,
 		removeChannel,
-		removeRole
+		removeRole,
+		pmActivateHere,
+		pmDeactivateHere,
+		pmSlotsLabel,
+		pmServersLabel,
+		pmNotPatron,
+		pmNotPatronDescription,
+		pmPatreonButton
 	};
 }

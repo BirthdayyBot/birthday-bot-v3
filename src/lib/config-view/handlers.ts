@@ -1,3 +1,4 @@
+import { container } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { ConfigAnnouncementChannelController } from '#lib/application/config-commands/ConfigAnnouncementChannelController';
 import { ConfigAnnouncementMessageController } from '#lib/application/config-commands/ConfigAnnouncementMessageController';
@@ -22,6 +23,7 @@ import {
 	type RoleSelectMenuInteraction,
 	type StringSelectMenuInteraction
 } from 'discord.js';
+import type { PremiumGrant } from '#lib/domain/premium/PremiumGrant';
 import type { PanelContext } from './types';
 import {
 	buildAnnouncementsPanel,
@@ -29,6 +31,7 @@ import {
 	buildGeneralPanel,
 	buildMainView,
 	buildOverviewLogsPanel,
+	buildPremiumPanel,
 	buildTimezoneSelectPanel
 } from './panels';
 
@@ -64,6 +67,47 @@ export async function handleButton(component: ButtonInteraction, ctx: PanelConte
 		case 'cfg-overview-logs': {
 			const { guild, overviewSort } = (await viewController.execute({ guildId })).data;
 			await component.update(buildOverviewLogsPanel(labels, guild, overviewSort));
+			break;
+		}
+
+		case 'cfg-premium': {
+			const [user, grants] = await Promise.all([container.user.findById(ctx.userId), container.premium.findByUserId(ctx.userId)]);
+			const guildNames = resolveGrantGuildNames(grants, component, guildId);
+			await component.update(
+				buildPremiumPanel(labels, user?.patreonMaxSlots ?? 0, grants.filter((g) => g.guildId !== null).length, grants, guildId, guildNames)
+			);
+			break;
+		}
+
+		case 'pm-activate': {
+			const [user, grants] = await Promise.all([container.user.findById(ctx.userId), container.premium.findByUserId(ctx.userId)]);
+			const maxSlots = user?.patreonMaxSlots ?? 0;
+			const usedSlots = grants.filter((g) => g.guildId !== null).length;
+			if (maxSlots > 0 && usedSlots < maxSlots && !grants.some((g) => g.guildId === guildId)) {
+				await container.premium.add({ userId: ctx.userId, guildId });
+				await container.guild.update(guildId, { premium: true });
+			}
+			const updatedGrants = await container.premium.findByUserId(ctx.userId);
+			const guildNames = resolveGrantGuildNames(updatedGrants, component, guildId);
+			await component.update(
+				buildPremiumPanel(labels, maxSlots, updatedGrants.filter((g) => g.guildId !== null).length, updatedGrants, guildId, guildNames)
+			);
+			break;
+		}
+
+		case 'pm-deactivate': {
+			const [user, grants] = await Promise.all([container.user.findById(ctx.userId), container.premium.findByUserId(ctx.userId)]);
+			const maxSlots = user?.patreonMaxSlots ?? 0;
+			if (grants.some((g) => g.guildId === guildId)) {
+				await container.premium.removeByUserAndGuild(ctx.userId, guildId);
+				const remainingGrant = await container.premium.findByGuildId(guildId);
+				if (!remainingGrant) await container.guild.update(guildId, { premium: false });
+			}
+			const updatedGrants = await container.premium.findByUserId(ctx.userId);
+			const guildNames = resolveGrantGuildNames(updatedGrants, component, guildId);
+			await component.update(
+				buildPremiumPanel(labels, maxSlots, updatedGrants.filter((g) => g.guildId !== null).length, updatedGrants, guildId, guildNames)
+			);
 			break;
 		}
 
@@ -211,4 +255,18 @@ export async function handleRoleSelect(component: RoleSelectMenuInteraction, ctx
 	}
 
 	await component.update(await buildMainView(ctx));
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function resolveGrantGuildNames(grants: PremiumGrant[], component: ButtonInteraction, currentGuildId: string): Map<string, string> {
+	const map = new Map<string, string>();
+	const currentName = component.guild?.name ?? currentGuildId;
+	map.set(currentGuildId, currentName);
+	for (const grant of grants) {
+		if (!grant.guildId) continue;
+		const name = component.client.guilds.cache.get(grant.guildId)?.name ?? grant.guildId;
+		map.set(grant.guildId, name);
+	}
+	return map;
 }

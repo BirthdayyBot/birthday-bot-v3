@@ -167,13 +167,15 @@
           "announcements": "Announcements",
           "birthdayRole": "Birthday Role",
           "overviewAndLogs": "Overview & Logs",
-          "back": "← Back"
+          "back": "← Back",
+          "premium": "👑 Premium"
         },
         "edit": {
           "generalTitle": "Edit General Settings",
           "announcementsTitle": "Edit Birthday Announcements",
           "birthdayRoleTitle": "Edit Birthday Role",
           "overviewAndLogsTitle": "Edit Overview & Logs",
+          "premiumTitle": "Premium",
           "updated": "✅ Settings updated.",
           "selectLanguagePlaceholder": "Choose a language...",
           "selectSortPlaceholder": "Choose sort mode...",
@@ -188,7 +190,14 @@
           "selectTimezoneRegionPlaceholder": "Select a region...",
           "selectTimezonePlaceholder": "Select a timezone...",
           "removeChannel": "Remove Channel",
-          "removeRole": "Remove Role"
+          "removeRole": "Remove Role",
+          "premiumActivateHere": "✅ Activate here",
+          "premiumDeactivateHere": "❌ Deactivate here",
+          "premiumSlotsLabel": "Slots",
+          "premiumServersLabel": "Active Servers",
+          "premiumNotPatron": "You do not have a premium subscription.",
+          "premiumNotPatronDescription": "By supporting **Birthdayy** on Patreon, you unlock premium slots to activate on your servers and help keep the bot running!",
+          "premiumPatreonButton": "Access the Patreon page"
         },
         "responses": {
           "title": "Current server configuration"
