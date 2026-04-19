@@ -15,7 +15,10 @@ export class BirthdayOverviewAutoUpdateListener extends Listener<typeof Events.C
 		const isBirthdayMutation =
 			(commandName === BIRTHDAY_COMMAND_NAME && subcommandName !== null && BIRTHDAY_MUTATION_SUBCOMMANDS.has(subcommandName)) ||
 			LEGACY_COMMAND_NAMES.has(commandName);
-		if (!isBirthdayMutation) return;
+
+		const isConfigMutation = commandName === 'config' && subcommandName !== null && ['timezone', 'language'].includes(subcommandName);
+
+		if (!isBirthdayMutation && !isConfigMutation) return;
 
 		const { guildId } = payload.interaction;
 		if (!guildId) return;
