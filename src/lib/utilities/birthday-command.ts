@@ -81,7 +81,7 @@ export function getNextBirthdayDate(birthday: string, timeZone: string): Date | 
 	const day = getCelebrationDayForYear(parsed.month, parsed.day, year);
 
 	if (current.year === year && current.month === parsed.month && current.day === day) {
-		return new Date();
+		return new Date(Date.UTC(year, parsed.month - 1, day, 23, 59, 59));
 	}
 
 	return new Date(Date.UTC(year, parsed.month - 1, day, 12, 0, 0));
@@ -168,12 +168,7 @@ export function applyBirthdayOptions(sub: SlashCommandSubcommandBuilder, memberD
 		)
 		.addIntegerOption((option) =>
 			applyDescriptionLocalizedBuilder(
-				option
-					.setName('year')
-					.setDescription('Birth year (optional)')
-					.setRequired(false)
-					.setMinValue(1900)
-					.setMaxValue(new Date().getFullYear()),
+				option.setName('year').setDescription('Birth year (optional)').setRequired(false).setMinValue(1900).setMaxValue(2100),
 				LanguageKeys.Commands.Birthday.SubcommandOptionYearDescription
 			)
 		)
