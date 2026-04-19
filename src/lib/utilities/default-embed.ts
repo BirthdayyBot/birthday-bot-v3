@@ -14,10 +14,11 @@ import {
 type EmbedTone = 'success' | 'error' | 'warning' | 'info';
 
 enum EmbedColors {
-	Success = 0x57f287,
+	Success = 0x78c2ad,
 	Error = 0xed4245,
 	Warning = 0xfee75c,
-	Info = 0x5865f2
+	// eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+	Info = 0x78c2ad
 }
 
 function parsePrimaryColorFromEnv(fallback: ColorResolvable): ColorResolvable {

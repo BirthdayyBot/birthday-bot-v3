@@ -5,7 +5,7 @@ import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { replyError } from '#lib/utilities/default-embed';
 import type { IGuildRepository, GuildUpdateData } from '#lib/domain/guild/IGuildRepository';
 
-export const DEFAULT_TIMEZONE = 'Europe/London';
+export const DEFAULT_TIMEZONE = 'UTC';
 export const DEFAULT_LANGUAGE = 'en-US';
 export const DEFAULT_OVERVIEW_SORT = 'month';
 
