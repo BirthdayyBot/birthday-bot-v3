@@ -5,6 +5,7 @@ export class Guild {
 	public readonly announcementMessage: string;
 	public readonly overviewChannel: string | null;
 	public readonly overviewMessage: string | null;
+	public readonly overviewSort: string;
 	public readonly birthdayRole: string | null;
 	public readonly birthdayPingRole: string | null;
 	public readonly logChannel: string | null;
@@ -21,6 +22,7 @@ export class Guild {
 		announcementMessage: string;
 		overviewChannel: string | null;
 		overviewMessage: string | null;
+		overviewSort: string;
 		birthdayRole: string | null;
 		birthdayPingRole: string | null;
 		logChannel: string | null;
@@ -36,6 +38,7 @@ export class Guild {
 		this.announcementMessage = props.announcementMessage;
 		this.overviewChannel = props.overviewChannel;
 		this.overviewMessage = props.overviewMessage;
+		this.overviewSort = props.overviewSort;
 		this.birthdayRole = props.birthdayRole;
 		this.birthdayPingRole = props.birthdayPingRole;
 		this.logChannel = props.logChannel;

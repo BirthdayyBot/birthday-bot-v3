@@ -7,6 +7,7 @@ import type { GuildUpdateData } from '#lib/domain/guild/IGuildRepository';
 
 export const DEFAULT_TIMEZONE = 'Europe/London';
 export const DEFAULT_LANGUAGE = 'en-US';
+export const DEFAULT_OVERVIEW_SORT = 'month';
 
 export async function getGuildIdOrReply(interaction: Command.ChatInputCommandInteraction): Promise<string | null> {
 	if (!interaction.inGuild() || !interaction.guildId) {
@@ -41,6 +42,7 @@ function createDefaultGuild(guildId: string, overrides: GuildUpdateData, default
 		announcementMessage: overrides.announcementMessage ?? defaultAnnouncementMessage,
 		overviewChannel: overrides.overviewChannel ?? null,
 		overviewMessage: overrides.overviewMessage ?? null,
+		overviewSort: overrides.overviewSort ?? DEFAULT_OVERVIEW_SORT,
 		birthdayRole: overrides.birthdayRole ?? null,
 		birthdayPingRole: overrides.birthdayPingRole ?? null,
 		logChannel: overrides.logChannel ?? null,
