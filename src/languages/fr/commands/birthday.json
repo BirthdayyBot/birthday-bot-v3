@@ -131,8 +131,12 @@
                 "empty": "Aucun anniversaire actif n'est enregistre sur ce serveur pour le moment.",
                 "title": "Anniversaires a venir (Page {{page}}/{{totalPages}})",
                 "description": "Affichage de {{total}} anniversaires actifs.",
-                "entryWithAge": "<@{{userId}}> - **{{date}}** - **{{age}} ans** {{timeUntil}}",
-                "entryWithoutAge": "<@{{userId}}> - **{{date}}** - {{timeUntil}}"
+                "entryWithAge": "**{{displayName}}** (@{{username}}) : {{date}} ({{age}} ans, {{timeUntil}}) 🎉",
+                "entryWithoutAge": "**{{displayName}}** (@{{username}}) : {{date}} ({{timeUntil}}) 🎉",
+                "footer": "Gérez votre anniversaire avec /birthday register • update • delete • view",
+                "timeUntilToday": "Aujourd'hui !",
+                "timeUntilTomorrow": "Demain !",
+                "timeUntilDays": "dans {{days}} jours"
             }
         },
         "test": {

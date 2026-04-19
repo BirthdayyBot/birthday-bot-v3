@@ -29,6 +29,31 @@ function getDaysInMonth(month: number, year: number | null): number {
 	return DAYS_IN_MONTH[month - 1] ?? 0;
 }
 
+/** Converts a local date + time in the given timezone to a UTC Date. Uses offset interpolation via Intl. */
+function localToUtc(year: number, month: number, day: number, hour: number, minute: number, second: number, timeZone: string): Date {
+	const approx = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+	const parts = new Intl.DateTimeFormat('en-CA', {
+		timeZone,
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false
+	}).formatToParts(approx);
+
+	const lYear = Number(parts.find((p) => p.type === 'year')?.value);
+	const lMonth = Number(parts.find((p) => p.type === 'month')?.value);
+	const lDay = Number(parts.find((p) => p.type === 'day')?.value);
+	const lHour = Number(parts.find((p) => p.type === 'hour')?.value);
+	const lMinute = Number(parts.find((p) => p.type === 'minute')?.value);
+	const lSecond = Number(parts.find((p) => p.type === 'second')?.value);
+
+	const offset = approx.getTime() - Date.UTC(lYear, lMonth - 1, lDay, lHour, lMinute, lSecond);
+	return new Date(Date.UTC(year, month - 1, day, hour, minute, second) + offset);
+}
+
 function getZonedDateParts(timeZone: string): { year: number; month: number; day: number } {
 	const parts = new Intl.DateTimeFormat('en-CA', {
 		timeZone,
@@ -118,11 +143,7 @@ export function getNextBirthdayDate(birthday: string, timeZone: string): Date | 
 	const year = getNextCelebrationYear(parsed.month, parsed.day, current);
 	const day = getCelebrationDayForYear(parsed.month, parsed.day, year);
 
-	if (current.year === year && current.month === parsed.month && current.day === day) {
-		return new Date(Date.UTC(year, parsed.month - 1, day, 23, 59, 59));
-	}
-
-	return new Date(Date.UTC(year, parsed.month - 1, day, 12, 0, 0));
+	return localToUtc(year, parsed.month, day, 0, 0, 0, timeZone);
 }
 
 /** Builds a "MM-DD-XXXX" or "MM-DD-YYYY" string. Returns null if the day is invalid for the month. */
@@ -155,6 +176,26 @@ export function formatTimeUntilNextBirthday(birthday: string, timeZone: string):
 	const next = getNextBirthdayDate(birthday, timeZone);
 	if (!next) return '<t:0:R>';
 	return `<t:${Math.floor(next.getTime() / 1000)}:R>`;
+}
+
+/** Returns the number of days until the next birthday (0 = today). */
+export function getDaysUntilNextBirthday(birthday: string, timeZone: string): number | null {
+	const next = getNextBirthdayDate(birthday, timeZone);
+	if (!next) return null;
+	const current = getZonedDateParts(timeZone);
+	const todayMidnight = localToUtc(current.year, current.month, current.day, 0, 0, 0, timeZone);
+	return Math.round((next.getTime() - todayMidnight.getTime()) / 86_400_000);
+}
+
+/** Formats a birthday date with the next celebration year, e.g. "21 avril 2026". */
+export function formatBirthdayDateWithYear(birthday: string, timeZone: string, locale: string): string {
+	const parsed = parseBirthdayParts(birthday);
+	if (!parsed) return birthday;
+	const current = getZonedDateParts(timeZone);
+	const year = getNextCelebrationYear(parsed.month, parsed.day, current);
+	const day = getCelebrationDayForYear(parsed.month, parsed.day, year);
+	const date = new Date(Date.UTC(year, parsed.month - 1, day));
+	return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }).format(date);
 }
 
 interface GuildLocaleSource {

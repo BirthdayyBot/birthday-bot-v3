@@ -82,12 +82,16 @@ export const SubcommandListOptionSortChoiceUpcoming = T<string>('commands/birthd
 export const SubcommandListResponseEmpty = T<string>('commands/birthday:subcommands.list.responses.empty');
 export const SubcommandListResponseTitle = FT<{ page: number; totalPages: number }, string>('commands/birthday:subcommands.list.responses.title');
 export const SubcommandListResponseDescription = FT<{ total: number }, string>('commands/birthday:subcommands.list.responses.description');
-export const SubcommandListResponseEntryWithAge = FT<{ userId: string; date: string; age: number; timeUntil: string }, string>(
+export const SubcommandListResponseEntryWithAge = FT<{ displayName: string; username: string; date: string; age: number; timeUntil: string }, string>(
 	'commands/birthday:subcommands.list.responses.entryWithAge'
 );
-export const SubcommandListResponseEntryWithoutAge = FT<{ userId: string; date: string; timeUntil: string }, string>(
+export const SubcommandListResponseEntryWithoutAge = FT<{ displayName: string; username: string; date: string; timeUntil: string }, string>(
 	'commands/birthday:subcommands.list.responses.entryWithoutAge'
 );
+export const SubcommandListResponseFooter = T<string>('commands/birthday:subcommands.list.responses.footer');
+export const SubcommandListTimeUntilToday = T<string>('commands/birthday:subcommands.list.responses.timeUntilToday');
+export const SubcommandListTimeUntilTomorrow = T<string>('commands/birthday:subcommands.list.responses.timeUntilTomorrow');
+export const SubcommandListTimeUntilDays = FT<{ days: number }, string>('commands/birthday:subcommands.list.responses.timeUntilDays');
 
 export const SubcommandTestDescription = T<string>('commands/birthday:subcommands.test.description');
 export const SubcommandTestOptionMemberDescription = T<string>('commands/birthday:subcommands.test.options.member.description');

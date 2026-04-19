@@ -6,7 +6,7 @@ import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createDefaultEmbed, replyInfo } from '#lib/utilities/default-embed';
 import { BIRTHDAY_SORT_MONTH, BIRTHDAY_SORT_UPCOMING } from '#lib/utilities/birthday-command';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection, ComponentType, type GuildMember } from 'discord.js';
 
 const ITEMS_PER_PAGE = 10;
 const BUTTON_TIMEOUT_MS = 120_000;
@@ -62,25 +62,49 @@ export class BirthdayListSubcommand extends Command {
 			return;
 		}
 
+		const { entries } = result.data;
+
+		const userIds = entries.map((e: { userId: string }) => e.userId);
+		const members = (await interaction.guild!.members.fetch({ user: userIds }).catch(() => new Collection<string, GuildMember>())) as Collection<
+			string,
+			GuildMember
+		>;
+
 		const rows = await Promise.all(
-			result.data.entries.map(async (entry) => {
+			entries.map(async (entry) => {
+				const member = members.get(entry.userId);
+				const displayName = member?.displayName ?? `<@${entry.userId}>`;
+				const username = member?.user.username ?? entry.userId;
+				const days = entry.daysUntil;
+				const timeUntil =
+					days === null
+						? '?'
+						: days === 0
+							? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilToday)
+							: days === 1
+								? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilTomorrow)
+								: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilDays, { days });
+
 				if (entry.age !== null) {
 					return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
-						userId: entry.userId,
+						displayName,
+						username,
 						date: entry.date,
 						age: entry.age,
-						timeUntil: entry.timeUntil
+						timeUntil
 					});
 				}
 
 				return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithoutAge, {
-					userId: entry.userId,
+					displayName,
+					username,
 					date: entry.date,
-					timeUntil: entry.timeUntil
+					timeUntil
 				});
 			})
 		);
 
+		const footer = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseFooter);
 		const pages = chunk(rows, ITEMS_PER_PAGE);
 		let currentPage = Math.min(Math.max((interaction.options.getInteger('page') ?? 1) - 1, 0), pages.length - 1);
 		const previousCustomId = `birthday_list_prev_${interaction.id}`;
@@ -90,7 +114,7 @@ export class BirthdayListSubcommand extends Command {
 		});
 
 		await interaction.reply({
-			embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length)],
+			embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length, footer)],
 			components: [this.buildPaginationRow(currentPage, pages.length, previousCustomId, nextCustomId)],
 			ephemeral: true,
 			allowedMentions: { users: [interaction.user.id], roles: [] }
@@ -112,7 +136,7 @@ export class BirthdayListSubcommand extends Command {
 			}
 
 			await buttonInteraction.update({
-				embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length)],
+				embeds: [await this.buildPageEmbed(interaction, pages, currentPage, rows.length, footer)],
 				components: [this.buildPaginationRow(currentPage, pages.length, previousCustomId, nextCustomId)]
 			});
 		});
@@ -128,14 +152,22 @@ export class BirthdayListSubcommand extends Command {
 		});
 	}
 
-	private async buildPageEmbed(interaction: Command.ChatInputCommandInteraction, pages: string[][], currentPage: number, total: number) {
+	private async buildPageEmbed(
+		interaction: Command.ChatInputCommandInteraction,
+		pages: string[][],
+		currentPage: number,
+		total: number,
+		footer: string
+	) {
 		const title = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseTitle, {
 			page: currentPage + 1,
 			totalPages: pages.length
 		});
 		const description = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseDescription, { total });
 
-		return createDefaultEmbed(`${description}\n\n${pages[currentPage].join('\n')}`, 'info').setTitle(title);
+		return createDefaultEmbed(`${description}\n\n${pages[currentPage].join('\n')}`, 'info')
+			.setTitle(title)
+			.setFooter({ text: footer });
 	}
 
 	private buildPaginationRow(currentPage: number, totalPages: number, previousCustomId: string, nextCustomId: string, disabled = false) {
