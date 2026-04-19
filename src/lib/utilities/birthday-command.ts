@@ -60,7 +60,8 @@ function parseBirthdayParts(birthday: string): BirthdayParts | null {
 
 	const month = Number(parts[0]);
 	const day = Number(parts[1]);
-	const year = parts.length === 3 ? Number(parts[2]) : null;
+	const yearToken = parts.length === 3 ? parts[2] : null;
+	const year = yearToken && yearToken.toUpperCase() !== 'XXXX' ? Number(yearToken) : null;
 
 	if (!Number.isInteger(month) || !Number.isInteger(day)) return null;
 	if (year !== null && (!Number.isInteger(year) || year < 1)) return null;
@@ -86,14 +87,14 @@ export function getNextBirthdayDate(birthday: string, timeZone: string): Date | 
 	return new Date(Date.UTC(year, parsed.month - 1, day, 12, 0, 0));
 }
 
-/** Builds a "MM-DD" or "MM-DD-YYYY" string. Returns null if the day is invalid for the month. */
+/** Builds a "MM-DD-XXXX" or "MM-DD-YYYY" string. Returns null if the day is invalid for the month. */
 export function buildBirthday(month: number, day: number, year?: number | null): string | null {
 	if (month < 1 || month > 12 || day < 1 || day > getDaysInMonth(month, year ?? null)) return null;
 	const mmdd = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-	return year ? `${mmdd}-${year}` : mmdd;
+	return year ? `${mmdd}-${year}` : `${mmdd}-XXXX`;
 }
 
-/** Formats a stored birthday ("MM-DD" or "MM-DD-YYYY") into a locale-aware string, e.g. "21 mars" or "March 21". */
+/** Formats a stored birthday ("MM-DD", "MM-DD-YYYY", or "MM-DD-XXXX") into a locale-aware string, e.g. "21 mars" or "March 21". */
 export function formatBirthdayDate(birthday: string, locale: string): string {
 	const parsed = parseBirthdayParts(birthday);
 	if (!parsed) return birthday;

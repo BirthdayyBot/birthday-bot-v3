@@ -2,7 +2,7 @@ export class Birthday {
 	public readonly id: bigint;
 	public readonly userId: string;
 	public readonly guildId: string;
-	/** Stored as "MM-DD" or "MM-DD-YYYY". */
+	/** Stored as "MM-DD", "MM-DD-YYYY", or "MM-DD-XXXX" for unknown year. */
 	public readonly birthday: string;
 	public readonly disabled: boolean;
 
@@ -44,7 +44,8 @@ export class Birthday {
 
 		const month = Number(parts[0]);
 		const day = Number(parts[1]);
-		const year = parts.length === 3 ? Number(parts[2]) : null;
+		const yearToken = parts.length === 3 ? parts[2] : null;
+		const year = yearToken && yearToken.toUpperCase() !== 'XXXX' ? Number(yearToken) : null;
 
 		if (!Number.isInteger(month) || !Number.isInteger(day)) return null;
 		if (year !== null && !Number.isInteger(year)) return null;
