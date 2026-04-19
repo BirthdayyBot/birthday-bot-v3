@@ -3,7 +3,6 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
 import { BirthdayListController } from '#lib/application/birthday-commands/BirthdayListController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createDefaultEmbed, replyInfo } from '#lib/utilities/default-embed';
 import { BIRTHDAY_SORT_MONTH, BIRTHDAY_SORT_UPCOMING } from '#lib/utilities/birthday-command';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection, ComponentType, type GuildMember } from 'discord.js';
@@ -14,6 +13,7 @@ const BUTTON_TIMEOUT_MS = 120_000;
 @ApplyOptions<Command.Options>({
 	name: 'birthday-list',
 	description: 'List birthdays in this server',
+	preconditions: ['GuildOnly'],
 	registerSubCommand: {
 		parentCommandName: 'birthday',
 		slashSubcommand: (sub) =>
@@ -50,8 +50,7 @@ const BUTTON_TIMEOUT_MS = 120_000;
 })
 export class BirthdayListSubcommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const guildId = await getGuildIdOrReply(interaction);
-		if (!guildId) return;
+		const guildId = interaction.guildId!;
 		const controller = new BirthdayListController(this.container.birthday, this.container.guild);
 		const result = await controller.execute({ guildId, sortMode: interaction.options.getString('sort') });
 

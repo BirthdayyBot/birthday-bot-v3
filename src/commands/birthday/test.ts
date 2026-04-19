@@ -4,13 +4,12 @@ import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { sendBirthdayAnnouncement } from '#lib/utilities/announcement-message';
 import { applyMemberOption } from '#lib/utilities/birthday-command';
-import { getGuildIdOrReply } from '#lib/utilities/config-command';
-import { replyError, replySuccess, replyWarning } from '#lib/utilities/default-embed';
-import { PermissionFlagsBits } from 'discord.js';
+import { replySuccess, replyWarning } from '#lib/utilities/default-embed';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-test',
 	description: 'Send a test birthday announcement',
+	preconditions: ['GuildOnly', 'ManageGuild'],
 	registerSubCommand: {
 		parentCommandName: 'birthday',
 		slashSubcommand: (sub) =>
@@ -25,14 +24,7 @@ import { PermissionFlagsBits } from 'discord.js';
 })
 export class BirthdayTestSubcommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const guildId = await getGuildIdOrReply(interaction);
-		if (!guildId) return;
-
-		if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
-			return interaction.reply(
-				replyError(await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandTestResponseMissingPermission), interaction.user)
-			);
-		}
+		const guildId = interaction.guildId!;
 
 		const guildConfig = await this.container.guild.findById(guildId);
 		if (!guildConfig || !guildConfig.isActive() || !guildConfig.hasAnnouncementChannel()) {

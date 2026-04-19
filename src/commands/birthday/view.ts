@@ -3,13 +3,13 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { BirthdayViewController } from '#lib/application/birthday-commands/BirthdayViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { replyInfo, replyWarning } from '#lib/utilities/default-embed';
 import { applyMemberOption, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-view',
 	description: 'View a registered birthday',
+	preconditions: ['GuildOnly'],
 	registerSubCommand: {
 		parentCommandName: 'birthday',
 		slashSubcommand: (sub) =>
@@ -24,8 +24,7 @@ import { applyMemberOption, resolveBirthdayTarget } from '#lib/utilities/birthda
 })
 export class BirthdayViewSubcommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const guildId = await getGuildIdOrReply(interaction);
-		if (!guildId) return;
+		const guildId = interaction.guildId!;
 
 		const target = await resolveBirthdayTarget(interaction);
 		if (!target) return;

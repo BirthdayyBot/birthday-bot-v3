@@ -3,7 +3,6 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { BirthdayUpdateController } from '#lib/application/birthday-commands/BirthdayUpdateController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess, replyWarning } from '#lib/utilities/default-embed';
 import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
@@ -11,6 +10,7 @@ import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birt
 @ApplyOptions<Command.Options>({
 	name: 'birthday-update',
 	description: 'Update a registered birthday',
+	preconditions: ['GuildOnly'],
 	registerSubCommand: {
 		parentCommandName: 'birthday',
 		slashSubcommand: (sub) =>
@@ -25,8 +25,7 @@ import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birt
 })
 export class BirthdayUpdateSubcommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const guildId = await getGuildIdOrReply(interaction);
-		if (!guildId) return;
+		const guildId = interaction.guildId!;
 
 		const target = await resolveBirthdayTarget(interaction);
 		if (!target) return;
