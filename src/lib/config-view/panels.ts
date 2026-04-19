@@ -77,6 +77,7 @@ function buildMainEmbed(labels: Labels, guild: Guild | null, timezone: string, l
 			value: [
 				`> **${labels.lAnnChannel}:** ${guild?.announcementChannel ? `<#${guild.announcementChannel}>` : labels.none}`,
 				`> **${labels.lAnnMessage}:** ${formatCodePreview(annMsg)}`,
+				`> **${labels.lAnnHour}:** ${formatHour(guild?.announcementHour ?? 9)}`,
 				`> **${labels.lPingRole}:** ${guild?.birthdayPingRole ? `<@&${guild.birthdayPingRole}>` : labels.none}`
 			].join('\n')
 		},
@@ -175,6 +176,9 @@ export function buildAnnouncementsPanel(labels: Labels, guild: Guild | null): In
 	const actionBtns: ButtonBuilder[] = [
 		new ButtonBuilder().setCustomId('edit-ann-message').setLabel(labels.msgBtnLabel).setStyle(ButtonStyle.Primary)
 	];
+	if (guild?.announcementMessage) {
+		actionBtns.push(new ButtonBuilder().setCustomId('rm-ann-message').setLabel(labels.resetMessage).setStyle(ButtonStyle.Danger));
+	}
 	if (guild?.announcementChannel) {
 		actionBtns.push(new ButtonBuilder().setCustomId('rm-ann-channel').setLabel(labels.removeChannel).setStyle(ButtonStyle.Danger));
 	}
@@ -188,6 +192,7 @@ export function buildAnnouncementsPanel(labels: Labels, guild: Guild | null): In
 			buildPanelEmbed(labels.editAnnouncementsTitle, [
 				`> **${labels.lAnnChannel}:** ${guild?.announcementChannel ? `<#${guild.announcementChannel}>` : labels.none}`,
 				`> **${labels.lAnnMessage}:** ${formatCodePreview(annMsg)}`,
+				`> **${labels.lAnnHour}:** ${formatHour(guild?.announcementHour ?? 9)}`,
 				`> **${labels.lPingRole}:** ${guild?.birthdayPingRole ? `<@&${guild.birthdayPingRole}>` : labels.none}`
 			])
 		],
@@ -197,6 +202,18 @@ export function buildAnnouncementsPanel(labels: Labels, guild: Guild | null): In
 					.setCustomId('edit-ann-channel')
 					.setPlaceholder(labels.plhAnnChannel)
 					.setChannelTypes([ChannelType.GuildText, ChannelType.GuildAnnouncement])
+			),
+			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+				new StringSelectMenuBuilder()
+					.setCustomId('edit-ann-hour')
+					.setPlaceholder(labels.plhAnnHour)
+					.addOptions(
+						Array.from({ length: 24 }, (_, h) => ({
+							label: formatHour(h),
+							value: String(h),
+							default: (guild?.announcementHour ?? 9) === h
+						}))
+					)
 			),
 			new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
 				new RoleSelectMenuBuilder().setCustomId('edit-pingrole').setPlaceholder(labels.plhPingRole)
@@ -354,6 +371,10 @@ export function buildPremiumPanel(
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
+
+export function formatHour(hour: number): string {
+	return `${String(hour).padStart(2, '0')}:00`;
+}
 
 export function formatCodePreview(text: string) {
 	const normalized = text.replaceAll('```', "'''");

@@ -148,6 +148,10 @@ export async function handleButton(component: ButtonInteraction, ctx: PanelConte
 			break;
 		}
 
+		case 'rm-ann-message':
+			await saveGuildConfig(guildRepository, guildId, { announcementMessage: labels.defaultMsg }, labels.defaultMsg);
+			await component.update(buildAnnouncementsPanel(labels, (await viewController.execute({ guildId })).data.guild));
+			break;
 		case 'rm-ann-channel':
 			await saveGuildConfig(guildRepository, guildId, { announcementChannel: null }, labels.defaultMsg);
 			await component.update(await buildMainView(ctx));
@@ -184,6 +188,16 @@ export async function handleStringSelect(component: StringSelectMenuInteraction,
 			await ctrl.apply({ guildId, language: lang, languageLabel: await resolveKey(component, ctrl.resolveLabelKey(lang)) });
 			await component.update(await buildMainView(ctx));
 			break;
+		}
+
+		case 'edit-ann-hour': {
+			const hour = Number(component.values[0]);
+			if (Number.isInteger(hour) && hour >= 0 && hour <= 23) {
+				await saveGuildConfig(guildRepository, guildId, { announcementHour: hour }, labels.defaultMsg);
+			}
+			const { guild } = (await viewController.execute({ guildId })).data;
+			await component.update(buildAnnouncementsPanel(labels, guild));
+			return;
 		}
 
 		case 'edit-overview-sort': {

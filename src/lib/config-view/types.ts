@@ -30,6 +30,7 @@ export interface Labels {
 	lPremium: string;
 	lAnnChannel: string;
 	lAnnMessage: string;
+	lAnnHour: string;
 	lPingRole: string;
 	lBirthdayRole: string;
 	lOverviewChannel: string;
@@ -51,6 +52,7 @@ export interface Labels {
 	plhLang: string;
 	plhSort: string;
 	plhAnnChannel: string;
+	plhAnnHour: string;
 	plhPingRole: string;
 	plhBirthdayRole: string;
 	plhOverviewChannel: string;
@@ -64,6 +66,7 @@ export interface Labels {
 	// Action buttons
 	removeChannel: string;
 	removeRole: string;
+	resetMessage: string;
 	// Premium panel
 	pmActivateHere: string;
 	pmDeactivateHere: string;
