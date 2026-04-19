@@ -1,17 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { BirthdayViewController } from '#lib/application/birthday-commands/BirthdayViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { replyInfo, replyWarning } from '#lib/utilities/default-embed';
-import {
-	applyMemberOption,
-	formatBirthdayDate,
-	formatTimeUntilNextBirthday,
-	getAgeAtNextBirthday,
-	getGuildLocaleAndTimezone,
-	resolveBirthdayTarget
-} from '#lib/utilities/birthday-command';
+import { applyMemberOption, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-view',
@@ -37,39 +31,17 @@ export class BirthdayViewSubcommand extends Command {
 		if (!target) return;
 
 		const { targetId, isSelf } = target;
+		const controller = new BirthdayViewController(this.container.birthday, this.container.guild);
+		const result = await controller.execute({ guildId, targetId, isSelf });
 
-		const existing = await this.container.birthday.findByUserAndGuild(targetId, guildId);
-		if (!existing || !existing.isActive()) {
+		if (result.status === 'warning') {
 			const key = isSelf
 				? LanguageKeys.Commands.Birthday.SubcommandViewResponseNotFoundSelf
 				: LanguageKeys.Commands.Birthday.SubcommandViewResponseNotFoundOther;
 			return interaction.reply(replyWarning(await resolveKey(interaction, key), interaction.user));
 		}
 
-		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
-		const date = formatBirthdayDate(existing.birthday, language);
-		const timeUntil = formatTimeUntilNextBirthday(existing.birthday, timeZone);
-		const age = getAgeAtNextBirthday(existing.birthday, timeZone);
-
-		let text: string;
-		if (age !== null && isSelf) {
-			text = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewResponseDateWithAgeSelf, { date, age, timeUntil });
-		} else if (age !== null) {
-			text = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewResponseDateWithAgeOther, {
-				date,
-				age,
-				timeUntil,
-				userId: targetId
-			});
-		} else if (isSelf) {
-			text = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewResponseDateSelf, { date, timeUntil });
-		} else {
-			text = await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewResponseDateOther, {
-				date,
-				timeUntil,
-				userId: targetId
-			});
-		}
+		const text = await resolveKey(interaction, result.key, result.args as unknown as Record<string, unknown>);
 
 		return interaction.reply(replyInfo(text, interaction.user));
 	}

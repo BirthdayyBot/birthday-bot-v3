@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigOverviewChannelController } from '#lib/application/config-commands/ConfigOverviewChannelController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
-import { upsertBirthdayOverviewMessage } from '#lib/utilities/overview-message';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-overview-channel',
@@ -40,14 +40,10 @@ export class ConfigOverviewChannelSubcommand extends Command {
 				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
 			);
 
-		await saveGuildConfig(guildId, { overviewChannel: channel.id }, interaction);
-		await upsertBirthdayOverviewMessage(guildId);
+		const defaultAnnouncementMessage = await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
+		const controller = new ConfigOverviewChannelController(this.container.guild, { defaultAnnouncementMessage });
+		const applied = await controller.apply({ guildId, channelId: channel.id });
 
-		return interaction.editReply(
-			editReplySuccess(
-				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewChannelResponseUpdated, { channelId: channel.id }),
-				interaction.user
-			)
-		);
+		return interaction.editReply(editReplySuccess(await resolveKey(interaction, applied.key, applied.args), interaction.user));
 	}
 }

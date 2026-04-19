@@ -1,11 +1,10 @@
 import { container } from '@sapphire/framework';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { createDefaultEmbed } from '#lib/utilities/default-embed';
-import { formatBirthdayDate, formatTimeUntilNextBirthday, getAgeAtNextBirthday, getNextBirthdayDate } from '#lib/utilities/birthday-command';
+import { formatBirthdayDate, formatTimeUntilNextBirthday, getAgeAtNextBirthday, sortBirthdaysForDisplay } from '#lib/utilities/birthday-command';
 
 const MAX_OVERVIEW_LINES = 50;
 const MAX_DESCRIPTION_LENGTH = 3900;
-const OVERVIEW_SORT_UPCOMING = 'upcoming';
 
 function truncateText(text: string, limit: number): string {
 	if (text.length <= limit) return text;
@@ -33,27 +32,10 @@ async function buildOverviewEmbed(guildId: string) {
 	if (!guildConfig || !guildConfig.isActive() || !guildConfig.hasOverviewChannel()) return null;
 
 	const birthdays = await container.birthday.findActiveByGuildId(guildId);
-	const sortedBirthdays = birthdays
-		.map((birthday) => ({
-			birthday,
-			month: birthday.getMonth(),
-			day: birthday.getDay(),
-			nextDate: getNextBirthdayDate(birthday.birthday, guildConfig.timezone)
-		}))
-		.sort((a, b) => {
-			if (guildConfig.overviewSort === OVERVIEW_SORT_UPCOMING) {
-				const leftNextDate = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-				const rightNextDate = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-				if (leftNextDate !== rightNextDate) return leftNextDate - rightNextDate;
-			}
-
-			if (a.month !== b.month) return a.month - b.month;
-			if (a.day !== b.day) return a.day - b.day;
-			return a.birthday.userId.localeCompare(b.birthday.userId);
-		});
+	const sortedBirthdays = sortBirthdaysForDisplay(birthdays, guildConfig.overviewSort, guildConfig.timezone);
 
 	const rows = await Promise.all(
-		sortedBirthdays.slice(0, MAX_OVERVIEW_LINES).map(async ({ birthday }) => {
+		sortedBirthdays.slice(0, MAX_OVERVIEW_LINES).map(async (birthday) => {
 			const date = formatBirthdayDate(birthday.birthday, guildConfig.language);
 			const timeUntil = formatTimeUntilNextBirthday(birthday.birthday, guildConfig.timezone);
 			const age = getAgeAtNextBirthday(birthday.birthday, guildConfig.timezone);

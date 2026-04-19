@@ -1,9 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigViewController } from '#lib/application/config-commands/ConfigViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { Emojis, resolveEmoji } from '#utils/constants';
-import { DEFAULT_LANGUAGE, DEFAULT_TIMEZONE, getGuildIdOrReply } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createOverviewEmbed } from '#lib/utilities/default-embed';
 
 @ApplyOptions<Command.Options>({
@@ -23,24 +24,24 @@ export class ConfigViewSubcommand extends Command {
 		const guildId = await getGuildIdOrReply(interaction);
 		if (!guildId) return;
 
-		const guild = await this.container.guild.findById(guildId);
+		const controller = new ConfigViewController(this.container.guild);
+		const result = await controller.execute({ guildId });
+		const { guild, timezone, language, overviewSort } = result.data;
 		const none = await resolveKey(interaction, LanguageKeys.Globals.None);
 
 		const announcementMessage =
 			guild?.announcementMessage ?? (await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage));
-		const languageCode = guild?.language ?? DEFAULT_LANGUAGE;
 		const languageLabel = await resolveKey(
 			interaction,
-			languageCode === 'fr'
+			language === 'fr'
 				? LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceFrFR
 				: LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceEnUS
 		);
 		const yes = await resolveKey(interaction, LanguageKeys.Globals.Yes);
 		const no = await resolveKey(interaction, LanguageKeys.Globals.No);
-		const overviewSortCode = guild?.overviewSort ?? 'month';
 		const overviewSortLabel = await resolveKey(
 			interaction,
-			overviewSortCode === 'upcoming'
+			overviewSort === 'upcoming'
 				? LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceUpcoming
 				: LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceMonth
 		);
@@ -70,7 +71,7 @@ export class ConfigViewSubcommand extends Command {
 				{
 					name: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewSectionCore),
 					value: [
-						`${arrow} ${timezoneLabel}: **${guild?.timezone ?? DEFAULT_TIMEZONE}**`,
+						`${arrow} ${timezoneLabel}: **${timezone}**`,
 						`${arrow} ${languageOptionLabel}: **${languageLabel}**`,
 						`${arrow} ${overviewSortOptionLabel}: **${overviewSortLabel}**`,
 						`${arrow} ${premiumLabel}: **${guild?.premium ? yes : no}**`,

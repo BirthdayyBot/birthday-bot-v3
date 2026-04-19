@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigTimezoneController } from '#lib/application/config-commands/ConfigTimezoneController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess, replyInfo, replyWarning } from '#lib/utilities/default-embed';
-import { getTimeZone } from '#lib/utilities/tz';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-timezone',
@@ -33,25 +33,18 @@ export class ConfigTimezoneSubcommand extends Command {
 		if (!guildId) return;
 
 		const value = interaction.options.getString('timezone', true);
-		const entry = getTimeZone(value);
+		const defaultAnnouncementMessage = await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
+		const controller = new ConfigTimezoneController(this.container.guild, { defaultAnnouncementMessage });
 
-		if (!entry) {
-			return interaction.reply(
-				replyWarning(
-					await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, { timezone: value }),
-					interaction.user
-				)
-			);
-		}
+		const preparation = await controller.prepare({ guildId, value });
+		if (preparation.status === 'warning') {
+			if (preparation.code === 'invalid') {
+				const text = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseInvalid, preparation.args);
+				return interaction.reply(replyWarning(text, interaction.user));
+			}
 
-		const current = await this.container.guild.findById(guildId);
-		if (current?.timezone === entry.name) {
-			return interaction.reply(
-				replyInfo(
-					await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, { timezone: entry.full }),
-					interaction.user
-				)
-			);
+			const text = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseAlreadySet, preparation.args);
+			return interaction.reply(replyInfo(text, interaction.user));
 		}
 
 		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
@@ -60,13 +53,8 @@ export class ConfigTimezoneSubcommand extends Command {
 				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
 			);
 
-		await saveGuildConfig(guildId, { timezone: entry.name }, interaction);
+		const applied = await controller.apply({ guildId, timezone: preparation.data!.timezone, label: preparation.data!.label });
 
-		return interaction.editReply(
-			editReplySuccess(
-				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneResponseUpdated, { timezone: entry.full }),
-				interaction.user
-			)
-		);
+		return interaction.editReply(editReplySuccess(await resolveKey(interaction, applied.key, applied.args), interaction.user));
 	}
 }

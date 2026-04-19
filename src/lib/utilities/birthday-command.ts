@@ -1,14 +1,18 @@
 import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
-import { container } from '@sapphire/framework';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { replyError } from '#lib/utilities/default-embed';
 import { PermissionFlagsBits, type GuildMember, type SlashCommandSubcommandBuilder } from 'discord.js';
 import type { Command } from '@kaname-png/plugin-subcommands-advanced';
 import type { TypedT } from '#lib/types/Utils';
+import type { Birthday } from '#lib/domain/birthday/Birthday';
 
 const DAYS_IN_MONTH = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const DEFAULT_GUILD_LANGUAGE = 'en-US';
 const DEFAULT_GUILD_TIMEZONE = 'Europe/London';
+export const BIRTHDAY_SORT_MONTH = 'month';
+export const BIRTHDAY_SORT_UPCOMING = 'upcoming';
+
+export type BirthdaySortMode = typeof BIRTHDAY_SORT_MONTH | typeof BIRTHDAY_SORT_UPCOMING;
 
 interface BirthdayParts {
 	month: number;
@@ -71,6 +75,40 @@ function parseBirthdayParts(birthday: string): BirthdayParts | null {
 	return { month, day, year };
 }
 
+/** Normalizes user or DB-provided birthday sort mode to a known safe value. */
+export function normalizeBirthdaySortMode(mode: string | null | undefined): BirthdaySortMode {
+	return mode === BIRTHDAY_SORT_UPCOMING ? BIRTHDAY_SORT_UPCOMING : BIRTHDAY_SORT_MONTH;
+}
+
+/** Returns birthdays sorted deterministically for display, with invalid dates pushed to the end. */
+export function sortBirthdaysForDisplay(birthdays: Birthday[], mode: string | null | undefined, timeZone: string): Birthday[] {
+	const sortMode = normalizeBirthdaySortMode(mode);
+	return birthdays
+		.map((birthday) => {
+			const month = birthday.getMonth();
+			const day = birthday.getDay();
+
+			return {
+				birthday,
+				month: Number.isFinite(month) ? month : Number.MAX_SAFE_INTEGER,
+				day: Number.isFinite(day) ? day : Number.MAX_SAFE_INTEGER,
+				nextDate: getNextBirthdayDate(birthday.birthday, timeZone)
+			};
+		})
+		.sort((a, b) => {
+			if (sortMode === BIRTHDAY_SORT_UPCOMING) {
+				const leftNextDate = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+				const rightNextDate = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+				if (leftNextDate !== rightNextDate) return leftNextDate - rightNextDate;
+			}
+
+			if (a.month !== b.month) return a.month - b.month;
+			if (a.day !== b.day) return a.day - b.day;
+			return a.birthday.userId.localeCompare(b.birthday.userId);
+		})
+		.map((entry) => entry.birthday);
+}
+
 /** Returns the next celebration date in the provided timezone, or null for invalid values. */
 export function getNextBirthdayDate(birthday: string, timeZone: string): Date | null {
 	const parsed = parseBirthdayParts(birthday);
@@ -119,15 +157,16 @@ export function formatTimeUntilNextBirthday(birthday: string, timeZone: string):
 	return `<t:${Math.floor(next.getTime() / 1000)}:R>`;
 }
 
-/** Fetches the guild's configured language, falling back to en-US. */
-export async function getGuildLanguage(guildId: string): Promise<string> {
-	const guild = await container.guild.findById(guildId);
-	return guild?.language ?? DEFAULT_GUILD_LANGUAGE;
+interface GuildLocaleSource {
+	findById(guildId: string): Promise<{ language?: string | null; timezone?: string | null } | null>;
 }
 
 /** Fetches the guild's configured language and timezone with safe defaults. */
-export async function getGuildLocaleAndTimezone(guildId: string): Promise<{ language: string; timeZone: string }> {
-	const guild = await container.guild.findById(guildId);
+export async function getGuildLocaleAndTimezone(
+	guildRepository: GuildLocaleSource,
+	guildId: string
+): Promise<{ language: string; timeZone: string }> {
+	const guild = await guildRepository.findById(guildId);
 	return {
 		language: guild?.language ?? DEFAULT_GUILD_LANGUAGE,
 		timeZone: guild?.timezone ?? DEFAULT_GUILD_TIMEZONE

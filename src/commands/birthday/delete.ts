@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { BirthdayDeleteController } from '#lib/application/birthday-commands/BirthdayDeleteController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
@@ -31,9 +32,10 @@ export class BirthdayDeleteSubcommand extends Command {
 		if (!target) return;
 
 		const { targetId, isSelf } = target;
+		const controller = new BirthdayDeleteController(this.container.birthday);
+		const preparation = await controller.prepare({ guildId, targetId });
 
-		const existing = await this.container.birthday.findByUserAndGuild(targetId, guildId);
-		if (!existing || !existing.isActive()) {
+		if (preparation.status === 'warning') {
 			const key = isSelf
 				? LanguageKeys.Commands.Birthday.SubcommandDeleteResponseNotFoundSelf
 				: LanguageKeys.Commands.Birthday.SubcommandDeleteResponseNotFoundOther;
@@ -47,11 +49,8 @@ export class BirthdayDeleteSubcommand extends Command {
 			);
 		}
 
-		await this.container.birthday.setDisabled(targetId, guildId, true);
-
-		const text = isSelf
-			? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandDeleteResponseDeletedSelf)
-			: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandDeleteResponseDeletedOther, { userId: targetId });
+		const applied = await controller.apply({ guildId, targetId, isSelf });
+		const text = await resolveKey(interaction, applied.key, applied.args);
 
 		return interaction.editReply(editReplySuccess(text, interaction.user));
 	}
