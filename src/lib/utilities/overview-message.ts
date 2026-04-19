@@ -2,6 +2,7 @@ import { container } from '@sapphire/framework';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { createDefaultEmbed } from '#lib/utilities/default-embed';
 import { formatBirthdayDate, formatTimeUntilNextBirthday, getAgeAtNextBirthday, sortBirthdaysForDisplay } from '#lib/utilities/birthday-command';
+import { Collection, type GuildMember } from 'discord.js';
 
 const MAX_OVERVIEW_LINES = 50;
 const MAX_DESCRIPTION_LENGTH = 3900;
@@ -34,15 +35,25 @@ async function buildOverviewEmbed(guildId: string) {
 	const birthdays = await container.birthday.findActiveByGuildId(guildId);
 	const sortedBirthdays = sortBirthdaysForDisplay(birthdays, guildConfig.overviewSort, guildConfig.timezone);
 
+	const guild = await container.client.guilds.fetch(guildId).catch(() => null);
+	const members =
+		guild && sortedBirthdays.length > 0
+			? await guild.members.fetch({ user: sortedBirthdays.map((b) => b.userId) }).catch(() => new Collection<string, GuildMember>())
+			: new Collection<string, GuildMember>();
+
 	const rows = await Promise.all(
 		sortedBirthdays.slice(0, MAX_OVERVIEW_LINES).map(async (birthday) => {
+			const member = members.get(birthday.userId);
+			const displayName = member?.displayName ?? `<@${birthday.userId}>`;
+			const username = member?.user.username ?? birthday.userId;
 			const date = formatBirthdayDate(birthday.birthday, guildConfig.language);
 			const timeUntil = formatTimeUntilNextBirthday(birthday.birthday, guildConfig.timezone);
 			const age = getAgeAtNextBirthday(birthday.birthday, guildConfig.timezone);
 
 			if (age !== null) {
 				return localize(guildConfig.language, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
-					userId: birthday.userId,
+					displayName,
+					username,
 					date,
 					age,
 					timeUntil
@@ -50,7 +61,8 @@ async function buildOverviewEmbed(guildId: string) {
 			}
 
 			return localize(guildConfig.language, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithoutAge, {
-				userId: birthday.userId,
+				displayName,
+				username,
 				date,
 				timeUntil
 			});
