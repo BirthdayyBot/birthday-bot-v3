@@ -1,0 +1,132 @@
+{
+    "command": {
+        "description": "Register and manage birthdays"
+    },
+    "confirm": {
+        "question": "Are you sure you want to save this change?",
+        "cancelled": "No changes were made."
+    },
+    "errors": {
+        "guildOnly": "This command can only be used in a server.",
+        "missingPermission": "You need the **Manage Server** permission to manage another member's birthday.",
+        "invalidDate": "That date doesn't exist. Double-check the day for the month you selected."
+    },
+    "options": {
+        "month": {
+            "description": "Month of birth"
+        },
+        "day": {
+            "description": "Day of birth"
+        },
+        "year": {
+            "description": "Year of birth (optional)"
+        }
+    },
+    "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+    },
+    "subcommands": {
+        "register": {
+            "description": "Save your birthday (or another member's)",
+            "options": {
+                "member": {
+                    "description": "Member to register the birthday for — requires Manage Server"
+                }
+            },
+            "responses": {
+                "alreadyExists": {
+                    "self": "You already have a birthday saved. Use `/birthday update` to change it.",
+                    "other": "A birthday is already saved for this member. Use `/birthday update` to change it."
+                },
+                "registered": {
+                    "self": "🎂 Your birthday has been saved for **{{date}}** — {{timeUntil}}!",
+                    "other": "🎂 <@{{userId}}>'s birthday has been saved for **{{date}}** — {{timeUntil}}!"
+                }
+            }
+        },
+        "update": {
+            "description": "Change a saved birthday",
+            "options": {
+                "member": {
+                    "description": "Member whose birthday to update — requires Manage Server"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "You don't have a birthday saved yet. Use `/birthday register` first.",
+                    "other": "No birthday found for this member. Use `/birthday register` first."
+                },
+                "updated": {
+                    "self": "✅ Birthday updated to **{{date}}** — {{timeUntil}}!",
+                    "other": "✅ <@{{userId}}>'s birthday updated to **{{date}}** — {{timeUntil}}!"
+                }
+            }
+        },
+        "delete": {
+            "description": "Remove a saved birthday",
+            "options": {
+                "member": {
+                    "description": "Member whose birthday to remove — requires Manage Server"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "You don't have a birthday saved.",
+                    "other": "No birthday is saved for this member."
+                },
+                "deleted": {
+                    "self": "🗑️ Your birthday has been disabled.",
+                    "other": "🗑️ <@{{userId}}>'s birthday has been disabled."
+                }
+            }
+        },
+        "view": {
+            "description": "Look up a member's birthday",
+            "options": {
+                "member": {
+                    "description": "Member to look up (leave empty to see your own)"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "You haven't saved your birthday yet.",
+                    "other": "This member hasn't saved their birthday yet."
+                },
+                "date": {
+                    "self": "🎂 Your birthday is on **{{date}}** — {{timeUntil}}.",
+                    "other": "🎂 <@{{userId}}>'s birthday is on **{{date}}** — {{timeUntil}}."
+                },
+                "dateWithAge": {
+                    "self": "🎂 Your birthday is on **{{date}}** — you'll be turning **{{age}}** {{timeUntil}}! 🎉",
+                    "other": "🎂 <@{{userId}}>'s birthday is on **{{date}}** — they'll be turning **{{age}}** {{timeUntil}}! 🎉"
+                }
+            }
+        },
+        "test": {
+            "description": "Send a test birthday announcement",
+            "options": {
+                "member": {
+                    "description": "Member to use in the test announcement (leave empty to use yourself)"
+                }
+            },
+            "responses": {
+                "missingPermission": "You need the **Manage Server** permission to use this test command.",
+                "missingAnnouncementChannel": "Configure an announcement channel first with `/config announcement-channel`.",
+                "channelUnavailable": "I can't access the configured announcement channel right now.",
+                "embedTitle": "🧪 Birthday Announcement Test",
+                "sent": "✅ Test announcement sent in <#{{channelId}}> for <@{{userId}}>"
+            }
+        }
+    }
+}
