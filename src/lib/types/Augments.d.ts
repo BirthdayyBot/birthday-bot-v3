@@ -31,6 +31,18 @@ declare module '@sapphire/framework' {
 	}
 }
 
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		birthdayAnnouncements: never;
+		birthdayRoleReset: {
+			guildId: string;
+			userId: string;
+			roleId: string;
+			dateKey: string;
+		};
+	}
+}
+
 declare module '@skyra/env-utilities' {
 	interface Env {
 		CLIENT_ID: string;
