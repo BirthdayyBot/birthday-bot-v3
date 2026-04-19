@@ -146,13 +146,49 @@
         "labels": {
           "premium": "Premium",
           "active": "Active",
-          "overviewSort": "Overview sort"
+          "overviewSort": "Overview sort",
+          "timezone": "Timezone",
+          "language": "Language",
+          "announcementChannel": "Announcement channel",
+          "announcementMessage": "Announcement message",
+          "birthdayPingRole": "Ping role",
+          "birthdayRole": "Birthday role",
+          "overviewChannel": "Overview channel",
+          "logChannel": "Log channel"
         },
         "sections": {
-          "core": "Core",
-          "channels": "Channels",
-          "roles": "Roles",
-          "messages": "Messages"
+          "general": "⚙️ General",
+          "announcements": "📢 Birthday Announcements",
+          "birthdayRole": "🎂 Birthday Role",
+          "overviewAndLogs": "📊 Overview & Logs"
+        },
+        "buttons": {
+          "general": "General",
+          "announcements": "Announcements",
+          "birthdayRole": "Birthday Role",
+          "overviewAndLogs": "Overview & Logs",
+          "back": "← Back"
+        },
+        "edit": {
+          "generalTitle": "Edit General Settings",
+          "announcementsTitle": "Edit Birthday Announcements",
+          "birthdayRoleTitle": "Edit Birthday Role",
+          "overviewAndLogsTitle": "Edit Overview & Logs",
+          "updated": "✅ Settings updated.",
+          "selectLanguagePlaceholder": "Choose a language...",
+          "selectSortPlaceholder": "Choose sort mode...",
+          "selectChannelPlaceholder": "Set announcement channel...",
+          "selectPingRolePlaceholder": "Set ping role...",
+          "selectRolePlaceholder": "Set birthday role...",
+          "selectOverviewChannelPlaceholder": "Set overview channel...",
+          "selectLogChannelPlaceholder": "Set log channel...",
+          "modalMessageButtonLabel": "Set Message",
+          "modalMessageTitle": "Set Announcement Message",
+          "modalMessageLabel": "Message",
+          "selectTimezoneRegionPlaceholder": "Select a region...",
+          "selectTimezonePlaceholder": "Select a timezone...",
+          "removeChannel": "Remove Channel",
+          "removeRole": "Remove Role"
         },
         "responses": {
           "title": "Current server configuration"

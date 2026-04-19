@@ -146,13 +146,49 @@
 			"labels": {
 				"premium": "Premium",
 				"active": "Actif",
-				"overviewSort": "Tri de l'apercu"
+				"overviewSort": "Tri de l'apercu",
+				"timezone": "Fuseau horaire",
+				"language": "Langue",
+				"announcementChannel": "Salon d'annonce",
+				"announcementMessage": "Message d'annonce",
+				"birthdayPingRole": "Role de mention",
+				"birthdayRole": "Role anniversaire",
+				"overviewChannel": "Salon d'apercu",
+				"logChannel": "Salon de logs"
 			},
 			"sections": {
-				"core": "Base",
-				"channels": "Salons",
-				"roles": "Roles",
-				"messages": "Messages"
+				"general": "⚙️ General",
+				"announcements": "📢 Annonces d'anniversaires",
+				"birthdayRole": "🎂 Role anniversaire",
+				"overviewAndLogs": "📊 Apercu & Logs"
+			},
+			"buttons": {
+				"general": "General",
+				"announcements": "Annonces",
+				"birthdayRole": "Role anniversaire",
+				"overviewAndLogs": "Apercu & Logs",
+				"back": "← Retour"
+			},
+			"edit": {
+				"generalTitle": "Modifier les parametres generaux",
+				"announcementsTitle": "Modifier les annonces d'anniversaires",
+				"birthdayRoleTitle": "Modifier le role anniversaire",
+				"overviewAndLogsTitle": "Modifier l'apercu & les logs",
+				"updated": "✅ Parametres mis a jour.",
+				"selectLanguagePlaceholder": "Choisir une langue...",
+				"selectSortPlaceholder": "Choisir le mode de tri...",
+				"selectChannelPlaceholder": "Definir le salon d'annonce...",
+				"selectPingRolePlaceholder": "Definir le role de mention...",
+				"selectRolePlaceholder": "Definir le role anniversaire...",
+				"selectOverviewChannelPlaceholder": "Definir le salon d'apercu...",
+				"selectLogChannelPlaceholder": "Definir le salon de logs...",
+				"modalMessageButtonLabel": "Definir le message",
+				"modalMessageTitle": "Definir le message d'annonce",
+				"modalMessageLabel": "Message",
+				"selectTimezoneRegionPlaceholder": "Selectionner une region...",
+				"selectTimezonePlaceholder": "Selectionner un fuseau...",
+				"removeChannel": "Retirer le salon",
+				"removeRole": "Retirer le role"
 			},
 			"responses": {
 				"title": "Configuration actuelle du serveur"

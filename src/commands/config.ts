@@ -1,51 +1,70 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Subcommand } from '@kaname-png/plugin-subcommands-advanced';
-import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { Command } from '@sapphire/framework';
+import { applyDescriptionLocalizedBuilder } from '@sapphire/plugin-i18next';
+import { ConfigViewController } from '#lib/application/config-commands/ConfigViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { searchTimeZone } from '#lib/utilities/tz';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
+import { handleButton, handleChannelSelect, handleRoleSelect, handleStringSelect } from '#lib/config-view/handlers';
+import { resolveLabels } from '#lib/config-view/labels';
+import { buildMainRow, buildMainView } from '#lib/config-view/panels';
+import { VIEW_TIMEOUT_MS, type PanelContext } from '#lib/config-view/types';
 import { ApplicationIntegrationType, InteractionContextType, PermissionFlagsBits } from 'discord.js';
 
-@ApplyOptions<Subcommand.Options>({
+@ApplyOptions<Command.Options>({
 	description: 'Configure guild settings'
 })
-export class ConfigCommand extends Subcommand {
-	public override registerApplicationCommands(registry: Subcommand.Registry) {
+export class ConfigCommand extends Command {
+	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand((builder) =>
-			this.hooks.subcommands(
-				this,
-				applyDescriptionLocalizedBuilder(
-					builder
-						.setName(this.name)
-						.setDescription(this.description)
-						.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-						.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
-						.setContexts(InteractionContextType.Guild),
-					LanguageKeys.Commands.Config.CommandDescription
-				)
+			applyDescriptionLocalizedBuilder(
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+					.setIntegrationTypes(ApplicationIntegrationType.GuildInstall)
+					.setContexts(InteractionContextType.Guild),
+				LanguageKeys.Commands.Config.CommandDescription
 			)
 		);
 	}
 
-	public override async autocompleteRun(interaction: Subcommand.AutocompleteInteraction) {
-		if (interaction.options.getSubcommand(false) !== 'timezone') {
-			return interaction.respond([]);
-		}
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+		const guildId = await getGuildIdOrReply(interaction);
+		if (!guildId) return;
 
-		const query = interaction.options.getFocused();
-		const results = searchTimeZone(query);
-		const response = await Promise.all(
-			results.map(async (result) => ({
-				name: await resolveKey(
-					interaction,
-					result.score === 1
-						? LanguageKeys.Commands.Config.AutocompleteTimezoneExact
-						: LanguageKeys.Commands.Config.AutocompleteTimezonePartial,
-					{ timezone: result.value.full }
-				),
-				value: result.value.name
-			}))
-		);
+		const ctx: PanelContext = {
+			guildId,
+			labels: await resolveLabels(interaction),
+			viewController: new ConfigViewController(this.container.guild),
+			guildRepository: this.container.guild,
+			interaction
+		};
 
-		return interaction.respond(response);
+		const initialView = await buildMainView(ctx);
+		await interaction.reply({
+			embeds: initialView.embeds,
+			components: initialView.components,
+			ephemeral: false,
+			allowedMentions: { users: [interaction.user.id], roles: [] }
+		});
+
+		const message = await interaction.fetchReply();
+		const collector = message.createMessageComponentCollector({
+			time: VIEW_TIMEOUT_MS,
+			filter: (i) => i.user.id === interaction.user.id
+		});
+
+		collector.on('collect', async (component) => {
+			if (component.isButton()) await handleButton(component, ctx);
+			else if (component.isStringSelectMenu()) await handleStringSelect(component, ctx);
+			else if (component.isChannelSelectMenu()) await handleChannelSelect(component, ctx);
+			else if (component.isRoleSelectMenu()) await handleRoleSelect(component, ctx);
+		});
+
+		collector.on('end', async () => {
+			try {
+				await interaction.editReply({ components: [buildMainRow(ctx.labels, true)] });
+			} catch {}
+		});
 	}
 }
