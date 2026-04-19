@@ -64,4 +64,5 @@ export interface SubscriptionHistoryTable {
 	source: string;
 	started_at: Generated<Date>;
 	ended_at: Date | null;
+	expires_at: Date | null;
 }

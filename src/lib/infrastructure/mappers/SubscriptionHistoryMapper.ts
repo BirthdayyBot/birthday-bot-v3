@@ -10,6 +10,7 @@ export function toSubscriptionHistoryEntity(row: Selectable<SubscriptionHistoryT
 		slots: row.slots,
 		source: row.source as SubscriptionSource,
 		startedAt: row.started_at,
-		endedAt: row.ended_at
+		endedAt: row.ended_at,
+		expiresAt: row.expires_at
 	});
 }

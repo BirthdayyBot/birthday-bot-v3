@@ -8,6 +8,7 @@ export class SubscriptionHistory {
 	public readonly source: SubscriptionSource;
 	public readonly startedAt: Date;
 	public readonly endedAt: Date | null;
+	public readonly expiresAt: Date | null;
 
 	public constructor(props: {
 		id: number;
@@ -17,6 +18,7 @@ export class SubscriptionHistory {
 		source: SubscriptionSource;
 		startedAt: Date;
 		endedAt: Date | null;
+		expiresAt: Date | null;
 	}) {
 		this.id = props.id;
 		this.userId = props.userId;
@@ -25,9 +27,12 @@ export class SubscriptionHistory {
 		this.source = props.source;
 		this.startedAt = props.startedAt;
 		this.endedAt = props.endedAt;
+		this.expiresAt = props.expiresAt;
 	}
 
 	public isActive(): boolean {
-		return this.endedAt === null;
+		if (this.endedAt !== null) return false;
+		if (this.expiresAt !== null && this.expiresAt <= new Date()) return false;
+		return true;
 	}
 }

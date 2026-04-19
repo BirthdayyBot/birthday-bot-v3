@@ -44,6 +44,7 @@ declare module '@sapphire/framework' {
 declare module '@sapphire/plugin-scheduled-tasks' {
 	interface ScheduledTasks {
 		birthdayAnnouncements: never;
+		subscriptionExpiry: never;
 		birthdayRoleReset: {
 			guildId: string;
 			userId: string;

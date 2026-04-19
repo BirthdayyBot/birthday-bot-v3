@@ -2,6 +2,7 @@ import { FetchResultTypes, fetch } from '@sapphire/fetch';
 import { HttpCodes, Route } from '@sapphire/plugin-api';
 import { envParseString } from '@skyra/env-utilities';
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { sendPremiumGrantDM, sendPremiumRevokedDM } from '#lib/utilities/premium-dm';
 
 type PatronStatus = 'active_patron' | 'declined_patron' | 'former_patron';
 
@@ -87,12 +88,14 @@ export class PatreonWebhookRoute extends Route {
 			const activeEntry = await this.container.subscriptionHistory.findActiveByUserId(discordUserId);
 			if (!activeEntry) {
 				await this.container.subscriptionHistory.start({ userId: discordUserId, tier: resolvedTier, slots, source: 'patreon' });
+				await sendPremiumGrantDM(discordUserId, slots, resolvedTier, null);
 			}
 		} else {
 			await this.container.premium.removeUserGrantByUserId(discordUserId);
 			await this.container.user.setPremium(discordUserId, false);
 			await this.container.user.setPatreonSlots(discordUserId, 0);
 			await this.container.subscriptionHistory.end(discordUserId);
+			await sendPremiumRevokedDM(discordUserId);
 		}
 
 		return response.noContent();
