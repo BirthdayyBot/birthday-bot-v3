@@ -4,7 +4,7 @@ import { LanguageFormatters, languagesFolder } from '#lib/util/constants';
 import { container, LogLevel } from '@sapphire/framework';
 import { i18next, type I18nextFormatter, type InternationalizationOptions } from '@sapphire/plugin-i18next';
 import { cast } from '@sapphire/utilities';
-import { envParseInteger, envParseString } from '@skyra/env-utilities';
+import { envIsDefined, envParseArray, envParseBoolean, envParseInteger, envParseString } from '@skyra/env-utilities';
 import type { RedisOptions } from 'bullmq';
 import {
 	type ActivitiesOptions,
@@ -15,6 +15,7 @@ import {
 	GuildExplicitContentFilter,
 	GuildVerificationLevel,
 	Locale,
+	OAuth2Scopes,
 	Partials,
 	PermissionFlagsBits,
 	time,
@@ -23,6 +24,8 @@ import {
 } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 import type { InterpolationOptions } from 'i18next';
+import type { ServerOptions, ServerOptionsAuth } from '@sapphire/plugin-api';
+import { transformOauthGuildsAndUser } from '#lib/api/utils';
 
 export const OWNERS = ['267614892821970945', '696324357940838492'];
 
@@ -36,6 +39,31 @@ function parsePresenceActivity(): ActivitiesOptions[] {
 			type: cast<Exclude<ActivityType, ActivityType.Custom>>(envParseString('CLIENT_PRESENCE_TYPE', 'WATCHING'))
 		}
 	];
+}
+
+function parseApiAuth(): ServerOptionsAuth | undefined {
+	if (!envIsDefined('OAUTH_SECRET')) return undefined;
+
+	return {
+		id: envParseString('CLIENT_ID'),
+		secret: envParseString('OAUTH_SECRET'),
+		cookie: envParseString('OAUTH_COOKIE'),
+		redirect: envParseString('OAUTH_REDIRECT_URI'),
+		scopes: envParseArray('OAUTH_SCOPE') as OAuth2Scopes[],
+		transformers: [transformOauthGuildsAndUser],
+		domainOverwrite: envParseString('OAUTH_DOMAIN_OVERWRITE')
+	};
+}
+
+function parseApi(): ServerOptions | undefined {
+	if (!envParseBoolean('API_ENABLED', false)) return undefined;
+
+	return {
+		auth: parseApiAuth(),
+		prefix: envParseString('API_PREFIX', '/'),
+		origin: envParseString('API_ORIGIN'),
+		listenOptions: { port: envParseInteger('API_PORT') }
+	};
 }
 
 function parseWebhookError(): WebhookClientData | null {
@@ -184,5 +212,6 @@ export const CLIENT_OPTIONS: ClientOptions = {
 				db: envParseInteger('REDIS_TASK_DB')
 			}
 		}
-	}
+	},
+	api: parseApi()
 };

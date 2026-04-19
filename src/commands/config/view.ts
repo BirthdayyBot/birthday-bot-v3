@@ -1,9 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigViewController } from '#lib/application/config-commands/ConfigViewController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { Emojis, resolveEmoji } from '#utils/constants';
-import { DEFAULT_LANGUAGE, DEFAULT_TIMEZONE, getGuildIdOrReply } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createOverviewEmbed } from '#lib/utilities/default-embed';
 
 @ApplyOptions<Command.Options>({
@@ -23,21 +24,27 @@ export class ConfigViewSubcommand extends Command {
 		const guildId = await getGuildIdOrReply(interaction);
 		if (!guildId) return;
 
-		const guild = await this.container.guild.findById(guildId);
+		const controller = new ConfigViewController(this.container.guild);
+		const result = await controller.execute({ guildId });
+		const { guild, timezone, language, overviewSort } = result.data;
 		const none = await resolveKey(interaction, LanguageKeys.Globals.None);
 
 		const announcementMessage =
 			guild?.announcementMessage ?? (await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage));
-		const overviewMessage = guild?.overviewMessage ?? none;
-		const languageCode = guild?.language ?? DEFAULT_LANGUAGE;
 		const languageLabel = await resolveKey(
 			interaction,
-			languageCode === 'fr'
+			language === 'fr'
 				? LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceFrFR
 				: LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceEnUS
 		);
 		const yes = await resolveKey(interaction, LanguageKeys.Globals.Yes);
 		const no = await resolveKey(interaction, LanguageKeys.Globals.No);
+		const overviewSortLabel = await resolveKey(
+			interaction,
+			overviewSort === 'upcoming'
+				? LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceUpcoming
+				: LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceMonth
+		);
 
 		const timezoneLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneOptionTimezoneDescription);
 		const languageOptionLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageDescription);
@@ -53,7 +60,7 @@ export class ConfigViewSubcommand extends Command {
 			interaction,
 			LanguageKeys.Commands.Config.SubcommandAnnouncementMessageOptionMessageDescription
 		);
-		const overviewMessageLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageOptionMessageDescription);
+		const overviewSortOptionLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelOverviewSort);
 		const premiumLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelPremium);
 		const activeLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelActive);
 		const arrow = resolveEmoji(Emojis.ArrowRight);
@@ -64,8 +71,9 @@ export class ConfigViewSubcommand extends Command {
 				{
 					name: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewSectionCore),
 					value: [
-						`${arrow} ${timezoneLabel}: **${guild?.timezone ?? DEFAULT_TIMEZONE}**`,
+						`${arrow} ${timezoneLabel}: **${timezone}**`,
 						`${arrow} ${languageOptionLabel}: **${languageLabel}**`,
+						`${arrow} ${overviewSortOptionLabel}: **${overviewSortLabel}**`,
 						`${arrow} ${premiumLabel}: **${guild?.premium ? yes : no}**`,
 						`${arrow} ${activeLabel}: **${guild?.disabled ? no : yes}**`
 					].join('\n')
@@ -87,10 +95,7 @@ export class ConfigViewSubcommand extends Command {
 				},
 				{
 					name: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewSectionMessages),
-					value: [
-						`${arrow} ${announcementMessageLabel}: ${formatCodePreview(announcementMessage)}`,
-						`${arrow} ${overviewMessageLabel}: ${formatCodePreview(overviewMessage)}`
-					].join('\n\n')
+					value: [`${arrow} ${announcementMessageLabel}: ${formatCodePreview(announcementMessage)}`].join('\n\n')
 				}
 			],
 			'info'

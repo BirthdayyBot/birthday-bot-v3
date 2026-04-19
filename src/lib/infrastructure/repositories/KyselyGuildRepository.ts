@@ -25,6 +25,7 @@ export class KyselyGuildRepository implements IGuildRepository {
 			announcement_message: data.announcementMessage,
 			overview_channel: data.overviewChannel,
 			overview_message: data.overviewMessage,
+			overview_sort: data.overviewSort,
 			birthday_role: data.birthdayRole,
 			birthday_ping_role: data.birthdayPingRole,
 			log_channel: data.logChannel,

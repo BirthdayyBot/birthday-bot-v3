@@ -11,6 +11,7 @@ export function toGuildEntity(row: Selectable<GuildTable>): Guild {
 		announcementMessage: row.announcement_message,
 		overviewChannel: row.overview_channel,
 		overviewMessage: row.overview_message,
+		overviewSort: row.overview_sort,
 		birthdayRole: row.birthday_role,
 		birthdayPingRole: row.birthday_ping_role,
 		logChannel: row.log_channel,
@@ -29,6 +30,7 @@ export function toGuildRow(data: GuildUpdateData): Updateable<GuildTable> {
 	if (data.announcementMessage !== undefined) row.announcement_message = data.announcementMessage;
 	if (data.overviewChannel !== undefined) row.overview_channel = data.overviewChannel;
 	if (data.overviewMessage !== undefined) row.overview_message = data.overviewMessage;
+	if (data.overviewSort !== undefined) row.overview_sort = data.overviewSort;
 	if (data.birthdayRole !== undefined) row.birthday_role = data.birthdayRole;
 	if (data.birthdayPingRole !== undefined) row.birthday_ping_role = data.birthdayPingRole;
 	if (data.logChannel !== undefined) row.log_channel = data.logChannel;

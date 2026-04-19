@@ -1,0 +1,154 @@
+{
+    "command": {
+        "description": "Enregistrer et gérer les anniversaires"
+    },
+    "confirm": {
+        "question": "Confirmer la modification ?",
+        "cancelled": "Aucune modification effectuée."
+    },
+    "errors": {
+        "guildOnly": "Cette commande ne peut être utilisée que sur un serveur.",
+        "missingPermission": "Il vous faut la permission **Gérer le serveur** pour modifier l'anniversaire d'un autre membre.",
+        "invalidDate": "Cette date n'existe pas. Vérifiez le jour saisi pour le mois choisi."
+    },
+    "options": {
+        "month": {
+            "description": "Mois de naissance"
+        },
+        "day": {
+            "description": "Jour de naissance"
+        },
+        "year": {
+            "description": "Année de naissance (facultatif)"
+        }
+    },
+    "months": {
+        "january": "Janvier",
+        "february": "Février",
+        "march": "Mars",
+        "april": "Avril",
+        "may": "Mai",
+        "june": "Juin",
+        "july": "Juillet",
+        "august": "Août",
+        "september": "Septembre",
+        "october": "Octobre",
+        "november": "Novembre",
+        "december": "Décembre"
+    },
+    "subcommands": {
+        "register": {
+            "description": "Enregistrer votre anniversaire (ou celui d'un membre)",
+            "options": {
+                "member": {
+                    "description": "Membre pour lequel enregistrer l'anniversaire — nécessite Gérer le serveur"
+                }
+            },
+            "responses": {
+                "alreadyExists": {
+                    "self": "Vous avez déjà un anniversaire enregistré. Utilisez `/birthday update` pour le modifier.",
+                    "other": "Un anniversaire est déjà enregistré pour ce membre. Utilisez `/birthday update` pour le modifier."
+                },
+                "registered": {
+                    "self": "🎂 Anniversaire enregistré le **{{date}}** — {{timeUntil}} !",
+                    "other": "🎂 L'anniversaire de <@{{userId}}> a été enregistré le **{{date}}** — {{timeUntil}} !"
+                }
+            }
+        },
+        "update": {
+            "description": "Modifier un anniversaire enregistré",
+            "options": {
+                "member": {
+                    "description": "Membre dont l'anniversaire doit être modifié — nécessite Gérer le serveur"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "Vous n'avez pas encore enregistré votre anniversaire. Utilisez d'abord `/birthday register`.",
+                    "other": "Aucun anniversaire trouvé pour ce membre. Utilisez d'abord `/birthday register`."
+                },
+                "updated": {
+                    "self": "✅ Anniversaire mis à jour au **{{date}}** — {{timeUntil}} !",
+                    "other": "✅ L'anniversaire de <@{{userId}}> mis à jour au **{{date}}** — {{timeUntil}} !"
+                }
+            }
+        },
+        "delete": {
+            "description": "Supprimer un anniversaire enregistré",
+            "options": {
+                "member": {
+                    "description": "Membre dont l'anniversaire doit être supprimé — nécessite Gérer le serveur"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "Vous n'avez pas d'anniversaire enregistré.",
+                    "other": "Aucun anniversaire n'est enregistré pour ce membre."
+                },
+                "deleted": {
+                    "self": "🗑️ Votre anniversaire a bien été désactivé.",
+                    "other": "🗑️ L'anniversaire de <@{{userId}}> a bien été désactivé."
+                }
+            }
+        },
+        "view": {
+            "description": "Consulter l'anniversaire d'un membre",
+            "options": {
+                "member": {
+                    "description": "Membre à consulter (laissez vide pour voir le vôtre)"
+                }
+            },
+            "responses": {
+                "notFound": {
+                    "self": "Vous n'avez pas encore enregistré votre anniversaire.",
+                    "other": "Ce membre n'a pas encore enregistré son anniversaire."
+                },
+                "date": {
+                    "self": "🎂 Votre anniversaire est le **{{date}}** — {{timeUntil}}.",
+                    "other": "🎂 L'anniversaire de <@{{userId}}> est le **{{date}}** — {{timeUntil}}."
+                },
+                "dateWithAge": {
+                    "self": "🎂 Votre anniversaire est le **{{date}}** — vous aurez **{{age}} ans** {{timeUntil}} ! 🎉",
+                    "other": "🎂 L'anniversaire de <@{{userId}}> est le **{{date}}** — ils auront **{{age}} ans** {{timeUntil}} ! 🎉"
+                }
+            }
+        },
+        "list": {
+            "description": "Lister les prochains anniversaires du serveur",
+            "options": {
+                "page": {
+                    "description": "Numero de page a afficher"
+                },
+                "sort": {
+                    "description": "Trier les anniversaires par mois ou par prochaine date",
+                    "choices": {
+                        "month": "Par mois",
+                        "upcoming": "Les plus proches d'abord"
+                    }
+                }
+            },
+            "responses": {
+                "empty": "Aucun anniversaire actif n'est enregistre sur ce serveur pour le moment.",
+                "title": "Anniversaires a venir (Page {{page}}/{{totalPages}})",
+                "description": "Affichage de {{total}} anniversaires actifs.",
+                "entryWithAge": "<@{{userId}}> - **{{date}}** - **{{age}} ans** {{timeUntil}}",
+                "entryWithoutAge": "<@{{userId}}> - **{{date}}** - {{timeUntil}}"
+            }
+        },
+        "test": {
+            "description": "Envoyer une annonce d'anniversaire de test",
+            "options": {
+                "member": {
+                    "description": "Membre à utiliser dans l'annonce de test (laissez vide pour vous)"
+                }
+            },
+            "responses": {
+                "missingPermission": "Il vous faut la permission **Gérer le serveur** pour utiliser cette commande de test.",
+                "missingAnnouncementChannel": "Configurez d'abord un salon d'annonce avec `/config announcement-channel`.",
+                "channelUnavailable": "Je ne peux pas accéder au salon d'annonce configuré pour le moment.",
+                "embedTitle": "🧪 Test d'annonce d'anniversaire",
+                "sent": "✅ Annonce de test envoyée dans <#{{channelId}}> pour <@{{userId}}>"
+            }
+        }
+    }
+}

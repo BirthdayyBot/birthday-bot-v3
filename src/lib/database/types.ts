@@ -15,6 +15,7 @@ export interface GuildTable {
 	announcement_message: string;
 	overview_channel: string | null;
 	overview_message: string | null;
+	overview_sort: Generated<string>;
 	birthday_role: string | null;
 	birthday_ping_role: string | null;
 	log_channel: string | null;

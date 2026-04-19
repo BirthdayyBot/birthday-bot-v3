@@ -9,9 +9,11 @@ import type { IUserRepository } from '#lib/domain/user/IUserRepository';
 import type { ArrayString, BooleanString, IntegerString } from '@skyra/env-utilities';
 import type { Kysely } from 'kysely';
 import { WebhookClient } from 'discord.js';
+import type { API } from '@discordjs/core/http-only';
 
 declare module '@sapphire/pieces' {
 	interface Container {
+		api?: API;
 		/** The InfluxDB Analytics controller. */
 		analytics: AnalyticsData | Nullish;
 		/** The webhook to use for the error event. */
@@ -31,6 +33,18 @@ declare module '@sapphire/framework' {
 	}
 }
 
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		birthdayAnnouncements: never;
+		birthdayRoleReset: {
+			guildId: string;
+			userId: string;
+			roleId: string;
+			dateKey: string;
+		};
+	}
+}
+
 declare module '@skyra/env-utilities' {
 	interface Env {
 		CLIENT_ID: string;
@@ -38,7 +52,16 @@ declare module '@skyra/env-utilities' {
 		CLIENT_PRESENCE_NAME: string;
 		CLIENT_PRESENCE_TYPE: string;
 
-		POKEMON_API_URL: string;
+		API_ENABLED: BooleanString;
+		API_ORIGIN: string;
+		API_PORT: IntegerString;
+		API_PREFIX: string;
+
+		OAUTH_COOKIE: string;
+		OAUTH_DOMAIN_OVERWRITE: string;
+		OAUTH_REDIRECT_URI: string;
+		OAUTH_SCOPE: ArrayString;
+		OAUTH_SECRET: string;
 
 		COMMAND_GUILD_IDS: ArrayString;
 

@@ -78,6 +78,21 @@
 				"updated": "Message d'apercu defini sur `{{message}}`."
 			}
 		},
+		"overviewSort": {
+			"description": "Definir le mode de tri de l'apercu",
+			"options": {
+				"sort": {
+					"description": "Trier l'apercu par mois ou par prochaine date",
+					"choices": {
+						"month": "Par mois",
+						"upcoming": "Les plus proches d'abord"
+					}
+				}
+			},
+			"responses": {
+				"updated": "Mode de tri de l'apercu defini sur **{{mode}}**."
+			}
+		},
 		"birthdayRole": {
 			"description": "Definir le role anniversaire",
 			"options": {
@@ -130,7 +145,8 @@
 			"description": "Afficher la configuration actuelle du serveur",
 			"labels": {
 				"premium": "Premium",
-				"active": "Actif"
+				"active": "Actif",
+				"overviewSort": "Tri de l'apercu"
 			},
 			"sections": {
 				"core": "Base",
