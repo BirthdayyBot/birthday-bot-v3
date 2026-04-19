@@ -51,12 +51,7 @@ export class KyselyPremiumRepository implements IPremiumRepository {
 	}
 
 	public async findByUserAndGuild(userId: string, guildId: string): Promise<PremiumGrant | null> {
-		const row = await this.#db
-			.selectFrom('premium')
-			.selectAll()
-			.where('user_id', '=', userId)
-			.where('guild_id', '=', guildId)
-			.executeTakeFirst();
+		const row = await this.#db.selectFrom('premium').selectAll().where('user_id', '=', userId).where('guild_id', '=', guildId).executeTakeFirst();
 		return row ? toPremiumGrantEntity(row) : null;
 	}
 

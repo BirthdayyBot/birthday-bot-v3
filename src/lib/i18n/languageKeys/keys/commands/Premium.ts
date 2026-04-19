@@ -28,8 +28,12 @@ export const SubcommandDeactivateResponseManageButton = T<string>('commands/prem
 export const SubcommandInfosDescription = T<string>('commands/premium:subcommands.infos.description');
 export const SubcommandInfosResponseTitle = T<string>('commands/premium:subcommands.infos.responses.title');
 export const SubcommandInfosResponseActive = T<string>('commands/premium:subcommands.infos.responses.active');
-export const SubcommandInfosResponseServersCount = FT<{ used: number; max: number }, string>('commands/premium:subcommands.infos.responses.serversCount');
-export const SubcommandInfosResponseServerEntry = FT<{ name: string; id: string }, string>('commands/premium:subcommands.infos.responses.serverEntry');
+export const SubcommandInfosResponseServersCount = FT<{ used: number; max: number }, string>(
+	'commands/premium:subcommands.infos.responses.serversCount'
+);
+export const SubcommandInfosResponseServerEntry = FT<{ name: string; id: string }, string>(
+	'commands/premium:subcommands.infos.responses.serverEntry'
+);
 export const SubcommandInfosResponseServerEntryCurrent = FT<{ name: string; id: string }, string>(
 	'commands/premium:subcommands.infos.responses.serverEntryCurrent'
 );
