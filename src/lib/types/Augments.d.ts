@@ -6,6 +6,7 @@ import type { IBlacklistRepository } from '#lib/domain/blacklist/IBlacklistRepos
 import type { IGuildRepository } from '#lib/domain/guild/IGuildRepository';
 import type { IPremiumRepository } from '#lib/domain/premium/IPremiumRepository';
 import type { IUserRepository } from '#lib/domain/user/IUserRepository';
+import type { ISubscriptionHistoryRepository } from '#lib/domain/subscription/ISubscriptionHistoryRepository';
 import type { ArrayString, BooleanString, IntegerString } from '@skyra/env-utilities';
 import type { Kysely } from 'kysely';
 import { WebhookClient } from 'discord.js';
@@ -24,10 +25,17 @@ declare module '@sapphire/pieces' {
 		guild: IGuildRepository;
 		premium: IPremiumRepository;
 		user: IUserRepository;
+		subscriptionHistory: ISubscriptionHistoryRepository;
 	}
 }
 
 declare module '@sapphire/framework' {
+	interface Preconditions {
+		OwnerOnly: never;
+		ManageGuild: never;
+		UserIsPatreon: never;
+	}
+
 	interface ScheduledTasks {
 		postStats: never;
 	}
@@ -82,5 +90,8 @@ declare module '@skyra/env-utilities' {
 
 		DB_URL: string;
 		DB_AUTO_MIGRATE: BooleanString;
+
+		PATREON_WEBHOOK_SECRET: string;
+		PATREON_CREATOR_ACCESS_TOKEN: string;
 	}
 }

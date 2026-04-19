@@ -32,4 +32,8 @@ export class KyselyUserRepository implements IUserRepository {
 	public async setPremium(userId: string, premium: boolean): Promise<void> {
 		await this.#db.updateTable('user').set({ premium }).where('user_id', '=', userId).execute();
 	}
+
+	public async setPatreonSlots(userId: string, maxSlots: number): Promise<void> {
+		await this.#db.updateTable('user').set({ patreon_max_slots: maxSlots }).where('user_id', '=', userId).execute();
+	}
 }

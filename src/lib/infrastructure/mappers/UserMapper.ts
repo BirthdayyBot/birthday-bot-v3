@@ -8,6 +8,7 @@ export function toUserEntity(row: Selectable<UserTable>): User {
 		username: row.username,
 		discriminator: row.discriminator,
 		premium: row.premium,
+		patreonMaxSlots: row.patreon_max_slots,
 		lastUpdated: row.last_updated
 	});
 }

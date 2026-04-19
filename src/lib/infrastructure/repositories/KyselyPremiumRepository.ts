@@ -35,4 +35,32 @@ export class KyselyPremiumRepository implements IPremiumRepository {
 	public async removeByGuildId(guildId: string): Promise<void> {
 		await this.#db.deleteFrom('premium').where('guild_id', '=', guildId).execute();
 	}
+
+	public async removeUserGrantByUserId(userId: string): Promise<void> {
+		await this.#db.deleteFrom('premium').where('user_id', '=', userId).where('guild_id', 'is', null).execute();
+	}
+
+	public async countGuildGrantsByUserId(userId: string): Promise<number> {
+		const result = await this.#db
+			.selectFrom('premium')
+			.select((eb) => eb.fn.countAll<number>().as('count'))
+			.where('user_id', '=', userId)
+			.where('guild_id', 'is not', null)
+			.executeTakeFirstOrThrow();
+		return Number(result.count);
+	}
+
+	public async findByUserAndGuild(userId: string, guildId: string): Promise<PremiumGrant | null> {
+		const row = await this.#db
+			.selectFrom('premium')
+			.selectAll()
+			.where('user_id', '=', userId)
+			.where('guild_id', '=', guildId)
+			.executeTakeFirst();
+		return row ? toPremiumGrantEntity(row) : null;
+	}
+
+	public async removeByUserAndGuild(userId: string, guildId: string): Promise<void> {
+		await this.#db.deleteFrom('premium').where('user_id', '=', userId).where('guild_id', '=', guildId).execute();
+	}
 }

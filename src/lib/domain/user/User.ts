@@ -3,13 +3,22 @@ export class User {
 	public readonly username: string | null;
 	public readonly discriminator: string | null;
 	public readonly premium: boolean;
+	public readonly patreonMaxSlots: number;
 	public readonly lastUpdated: Date;
 
-	public constructor(props: { userId: string; username: string | null; discriminator: string | null; premium: boolean; lastUpdated: Date }) {
+	public constructor(props: {
+		userId: string;
+		username: string | null;
+		discriminator: string | null;
+		premium: boolean;
+		patreonMaxSlots: number;
+		lastUpdated: Date;
+	}) {
 		this.userId = props.userId;
 		this.username = props.username;
 		this.discriminator = props.discriminator;
 		this.premium = props.premium;
+		this.patreonMaxSlots = props.patreonMaxSlots;
 		this.lastUpdated = props.lastUpdated;
 	}
 
