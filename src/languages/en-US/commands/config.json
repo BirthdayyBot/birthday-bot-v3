@@ -78,6 +78,21 @@
           "updated": "Overview message set to `{{message}}`."
         }
       },
+      "overviewSort": {
+        "description": "Set the overview sort mode",
+        "options": {
+          "sort": {
+            "description": "Sort overview by month or upcoming date",
+            "choices": {
+              "month": "By month",
+              "upcoming": "Upcoming first"
+            }
+          }
+        },
+        "responses": {
+          "updated": "Overview sort mode set to **{{mode}}**."
+        }
+      },
       "birthdayRole": {
         "description": "Set the birthday role",
         "options": {
@@ -130,7 +145,8 @@
         "description": "View the current guild configuration",
         "labels": {
           "premium": "Premium",
-          "active": "Active"
+          "active": "Active",
+          "overviewSort": "Overview sort"
         },
         "sections": {
           "core": "Core",

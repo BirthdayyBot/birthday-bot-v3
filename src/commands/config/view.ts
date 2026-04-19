@@ -28,7 +28,6 @@ export class ConfigViewSubcommand extends Command {
 
 		const announcementMessage =
 			guild?.announcementMessage ?? (await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage));
-		const overviewMessage = guild?.overviewMessage ?? none;
 		const languageCode = guild?.language ?? DEFAULT_LANGUAGE;
 		const languageLabel = await resolveKey(
 			interaction,
@@ -38,6 +37,13 @@ export class ConfigViewSubcommand extends Command {
 		);
 		const yes = await resolveKey(interaction, LanguageKeys.Globals.Yes);
 		const no = await resolveKey(interaction, LanguageKeys.Globals.No);
+		const overviewSortCode = guild?.overviewSort ?? 'month';
+		const overviewSortLabel = await resolveKey(
+			interaction,
+			overviewSortCode === 'upcoming'
+				? LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceUpcoming
+				: LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceMonth
+		);
 
 		const timezoneLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandTimezoneOptionTimezoneDescription);
 		const languageOptionLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageDescription);
@@ -53,7 +59,7 @@ export class ConfigViewSubcommand extends Command {
 			interaction,
 			LanguageKeys.Commands.Config.SubcommandAnnouncementMessageOptionMessageDescription
 		);
-		const overviewMessageLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageOptionMessageDescription);
+		const overviewSortOptionLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelOverviewSort);
 		const premiumLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelPremium);
 		const activeLabel = await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewLabelActive);
 		const arrow = resolveEmoji(Emojis.ArrowRight);
@@ -66,6 +72,7 @@ export class ConfigViewSubcommand extends Command {
 					value: [
 						`${arrow} ${timezoneLabel}: **${guild?.timezone ?? DEFAULT_TIMEZONE}**`,
 						`${arrow} ${languageOptionLabel}: **${languageLabel}**`,
+						`${arrow} ${overviewSortOptionLabel}: **${overviewSortLabel}**`,
 						`${arrow} ${premiumLabel}: **${guild?.premium ? yes : no}**`,
 						`${arrow} ${activeLabel}: **${guild?.disabled ? no : yes}**`
 					].join('\n')
@@ -87,10 +94,7 @@ export class ConfigViewSubcommand extends Command {
 				},
 				{
 					name: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandViewSectionMessages),
-					value: [
-						`${arrow} ${announcementMessageLabel}: ${formatCodePreview(announcementMessage)}`,
-						`${arrow} ${overviewMessageLabel}: ${formatCodePreview(overviewMessage)}`
-					].join('\n\n')
+					value: [`${arrow} ${announcementMessageLabel}: ${formatCodePreview(announcementMessage)}`].join('\n\n')
 				}
 			],
 			'info'

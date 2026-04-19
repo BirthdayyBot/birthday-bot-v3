@@ -62,6 +62,12 @@ export const SubcommandOverviewMessageResponseUpdated = FT<{ message: string }, 
 	'commands/config:subcommands.overviewMessage.responses.updated'
 );
 
+export const SubcommandOverviewSortDescription = T<string>('commands/config:subcommands.overviewSort.description');
+export const SubcommandOverviewSortOptionSortDescription = T<string>('commands/config:subcommands.overviewSort.options.sort.description');
+export const SubcommandOverviewSortOptionSortChoiceMonth = T<string>('commands/config:subcommands.overviewSort.options.sort.choices.month');
+export const SubcommandOverviewSortOptionSortChoiceUpcoming = T<string>('commands/config:subcommands.overviewSort.options.sort.choices.upcoming');
+export const SubcommandOverviewSortResponseUpdated = FT<{ mode: string }, string>('commands/config:subcommands.overviewSort.responses.updated');
+
 export const SubcommandTimezoneDescription = T<string>('commands/config:subcommands.timezone.description');
 export const SubcommandTimezoneOptionTimezoneDescription = T<string>('commands/config:subcommands.timezone.options.timezone.description');
 export const SubcommandTimezoneResponseAlreadySet = FT<{ timezone: string }, string>('commands/config:subcommands.timezone.responses.alreadySet');
@@ -76,3 +82,4 @@ export const SubcommandViewSectionRoles = T<string>('commands/config:subcommands
 export const SubcommandViewSectionMessages = T<string>('commands/config:subcommands.view.sections.messages');
 export const SubcommandViewLabelPremium = T<string>('commands/config:subcommands.view.labels.premium');
 export const SubcommandViewLabelActive = T<string>('commands/config:subcommands.view.labels.active');
+export const SubcommandViewLabelOverviewSort = T<string>('commands/config:subcommands.view.labels.overviewSort');
