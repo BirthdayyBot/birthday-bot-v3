@@ -11,6 +11,7 @@ node_modules/
 # Ignore the dist output
 dist/
 .swc/
+coverage/
 
 # Ignore heapsnapshot and log files
 *.heapsnapshot
