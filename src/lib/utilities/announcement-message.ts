@@ -83,8 +83,7 @@ export async function sendBirthdayAnnouncement({
 		.setColor(BIRTHDAY_EMBED_COLOR)
 		.setTitle(embedTitle ?? DEFAULT_BIRTHDAY_EMBED_TITLE)
 		.setDescription(message)
-		.setFooter({ text: guild.name })
-		.setTimestamp();
+		.setFooter({ text: guild.name, iconURL: guild.iconURL() ?? undefined });
 
 	if (resolvedMember) {
 		embed.setThumbnail(resolvedMember.displayAvatarURL());
