@@ -1,0 +1,48 @@
+{
+    "command": {
+        "description": "Manage your Patreon premium subscription"
+    },
+    "subcommands": {
+        "activate": {
+            "description": "Activate premium on this server",
+            "responses": {
+                "title": "Premium Activated",
+                "description": "**{{name}}** now has premium features enabled!",
+                "serversCount": "You have activated your premium on **{{used}}/{{max}}** servers:",
+                "alreadyActive": "Premium is already active on this server.",
+                "noSlots": "You have used all your premium slots ({{used}}/{{max}}). Deactivate premium on another server first.",
+                "notPatron": "You have no premium subscription.",
+                "notPatronDescription": "By supporting **Birthdayy** on Patreon, you unlock premium slots to activate on your servers!",
+                "patreonButton": "Access the Patreon page",
+                "manageButton": "Manage my Premium"
+            }
+        },
+        "deactivate": {
+            "description": "Deactivate premium on this server",
+            "responses": {
+                "title": "Premium Deactivated",
+                "description": "**{{name}}** no longer has premium features.",
+                "serversCount": "You have activated your premium on **{{used}}/{{max}}** servers:",
+                "noActiveGuilds": "👉 No servers activated yet.",
+                "notActive": "Premium is not active on this server through your subscription.",
+                "manageButton": "Manage my Premium"
+            }
+        },
+        "infos": {
+            "description": "View your premium subscription status",
+            "responses": {
+                "title": "Information about your Premium",
+                "active": "Your premium subscription is active.",
+                "serversCount": "You have activated your premium on **{{used}}/{{max}}** servers:",
+                "serverEntry": "**{{name}}** (`{{id}}`)",
+                "serverEntryCurrent": "**{{name}}** (`{{id}}`) *(This server)*",
+                "noActiveGuilds": "👉 No servers activated yet.",
+                "tipDeactivate": "ℹ️ Go to the panel or use the `/premium deactivate` command to deactivate it on this server.",
+                "noPatron": "You have no premium subscription.",
+                "noPatronDescription": "By supporting **Birthdayy** on Patreon, you unlock premium slots to activate on your servers and help keep the bot running!",
+                "patreonButton": "Access the Patreon page",
+                "manageButton": "Manage my Premium"
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "command": {
+        "description": "Gérez votre abonnement premium Patreon"
+    },
+    "subcommands": {
+        "activate": {
+            "description": "Activer le premium sur ce serveur",
+            "responses": {
+                "title": "Premium Activé",
+                "description": "**{{name}}** dispose désormais des fonctionnalités premium !",
+                "serversCount": "Vous avez activé votre premium sur **{{used}}/{{max}}** serveurs :",
+                "alreadyActive": "Le premium est déjà actif sur ce serveur.",
+                "noSlots": "Vous avez utilisé tous vos slots premium ({{used}}/{{max}}). Désactivez le premium sur un autre serveur d'abord.",
+                "notPatron": "Vous n'avez aucun abonnement premium.",
+                "notPatronDescription": "En soutenant **Birthdayy** sur Patreon, vous debloquez des slots premium a activer sur vos serveurs !",
+                "patreonButton": "Acceder a la page Patreon",
+                "manageButton": "Gerer mon Premium"
+            }
+        },
+        "deactivate": {
+            "description": "Désactiver le premium sur ce serveur",
+            "responses": {
+                "title": "Premium Désactivé",
+                "description": "**{{name}}** n'a plus accès aux fonctionnalités premium.",
+                "serversCount": "Vous avez activé votre premium sur **{{used}}/{{max}}** serveurs :",
+                "noActiveGuilds": "👉 Aucun serveur activé",
+                "notActive": "Le premium n'est pas actif sur ce serveur via votre abonnement.",
+                "manageButton": "Gerer mon Premium"
+            }
+        },
+        "infos": {
+            "description": "Voir le statut de votre abonnement premium",
+            "responses": {
+                "title": "Informations concernant votre premium",
+                "active": "Votre abonnement premium est actif.",
+                "serversCount": "Vous avez activé votre premium sur **{{used}}/{{max}}** serveurs :",
+                "serverEntry": "**{{name}}** (`{{id}}`)",
+                "serverEntryCurrent": "**{{name}}** (`{{id}}`) *(Ce serveur)*",
+                "noActiveGuilds": "👉 Aucun serveur activé",
+                "tipDeactivate": "ℹ️ Rendez-vous sur le panel ou utilisez la commande `/premium désactiver` pour le désactiver sur ce serveur.",
+                "noPatron": "Vous n'avez aucun abonnement premium.",
+                "noPatronDescription": "En soutenant **Birthdayy** sur Patreon, vous debloquez des slots premium a activer sur vos serveurs et contribuez a maintenir le bot en ligne !",
+                "patreonButton": "Acceder a la page Patreon",
+                "manageButton": "Gerer mon Premium"
+            }
+        }
+    }
+}
