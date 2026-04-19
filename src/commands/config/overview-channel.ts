@@ -5,6 +5,7 @@ import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
+import { upsertBirthdayOverviewMessage } from '#lib/utilities/overview-message';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-overview-channel',
@@ -40,6 +41,7 @@ export class ConfigOverviewChannelSubcommand extends Command {
 			);
 
 		await saveGuildConfig(guildId, { overviewChannel: channel.id }, interaction);
+		await upsertBirthdayOverviewMessage(guildId);
 
 		return interaction.editReply(
 			editReplySuccess(
