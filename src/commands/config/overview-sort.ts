@@ -1,14 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigOverviewSortController } from '#lib/application/config-commands/ConfigOverviewSortController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
-import { upsertBirthdayOverviewMessage } from '#lib/utilities/overview-message';
-
-const OVERVIEW_SORT_MONTH = 'month';
-const OVERVIEW_SORT_UPCOMING = 'upcoming';
+import { BIRTHDAY_SORT_MONTH, BIRTHDAY_SORT_UPCOMING } from '#lib/utilities/birthday-command';
 
 @ApplyOptions<Command.Options>({
 	name: 'config-overview-sort',
@@ -28,10 +26,10 @@ const OVERVIEW_SORT_UPCOMING = 'upcoming';
 								.setRequired(true)
 								.addChoices(
 									createLocalizedChoice(LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceMonth, {
-										value: OVERVIEW_SORT_MONTH
+										value: BIRTHDAY_SORT_MONTH
 									}),
 									createLocalizedChoice(LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceUpcoming, {
-										value: OVERVIEW_SORT_UPCOMING
+										value: BIRTHDAY_SORT_UPCOMING
 									})
 								),
 							LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortDescription
@@ -46,11 +44,10 @@ export class ConfigOverviewSortSubcommand extends Command {
 		const guildId = await getGuildIdOrReply(interaction);
 		if (!guildId) return;
 
-		const sort = interaction.options.getString('sort', true);
-		const modeLabel =
-			sort === OVERVIEW_SORT_UPCOMING
-				? await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceUpcoming)
-				: await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewSortOptionSortChoiceMonth);
+		const defaultAnnouncementMessage = await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
+		const controller = new ConfigOverviewSortController(this.container.guild, { defaultAnnouncementMessage });
+		const sort = controller.normalize(interaction.options.getString('sort', true));
+		const modeLabel = await resolveKey(interaction, controller.resolveLabelKey(sort));
 
 		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
 		if (!confirmed)
@@ -58,14 +55,8 @@ export class ConfigOverviewSortSubcommand extends Command {
 				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
 			);
 
-		await saveGuildConfig(guildId, { overviewSort: sort }, interaction);
-		await upsertBirthdayOverviewMessage(guildId);
+		const applied = await controller.apply({ guildId, sort, modeLabel });
 
-		return interaction.editReply(
-			editReplySuccess(
-				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewSortResponseUpdated, { mode: modeLabel }),
-				interaction.user
-			)
-		);
+		return interaction.editReply(editReplySuccess(await resolveKey(interaction, applied.key, applied.args), interaction.user));
 	}
 }

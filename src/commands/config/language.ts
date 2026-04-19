@@ -1,8 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigLanguageController } from '#lib/application/config-commands/ConfigLanguageController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
 
@@ -43,25 +44,18 @@ export class ConfigLanguageSubcommand extends Command {
 		if (!guildId) return;
 
 		const language = interaction.options.getString('language', true);
-		const languageLabel = await resolveKey(
-			interaction,
-			language === 'fr'
-				? LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceFrFR
-				: LanguageKeys.Commands.Config.SubcommandLanguageOptionLanguageChoiceEnUS
-		);
+		const defaultAnnouncementMessage = await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
+		const controller = new ConfigLanguageController(this.container.guild, { defaultAnnouncementMessage });
+		const languageLabel = await resolveKey(interaction, controller.resolveLabelKey(language));
+
 		const confirmed = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmQuestion));
 		if (!confirmed)
 			return interaction.editReply(
 				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
 			);
 
-		await saveGuildConfig(guildId, { language }, interaction);
+		const applied = await controller.apply({ guildId, language, languageLabel });
 
-		return interaction.editReply(
-			editReplySuccess(
-				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandLanguageResponseUpdated, { language: languageLabel }),
-				interaction.user
-			)
-		);
+		return interaction.editReply(editReplySuccess(await resolveKey(interaction, applied.key, applied.args), interaction.user));
 	}
 }

@@ -1,18 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { BirthdayUpdateController } from '#lib/application/birthday-commands/BirthdayUpdateController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess, replyWarning } from '#lib/utilities/default-embed';
-import {
-	applyBirthdayOptions,
-	buildBirthday,
-	formatBirthdayDate,
-	formatTimeUntilNextBirthday,
-	getGuildLocaleAndTimezone,
-	resolveBirthdayTarget
-} from '#lib/utilities/birthday-command';
+import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-update',
@@ -41,14 +35,16 @@ export class BirthdayUpdateSubcommand extends Command {
 		const day = interaction.options.getInteger('day', true);
 		const month = interaction.options.getInteger('month', true);
 		const year = interaction.options.getInteger('year');
+		const controller = new BirthdayUpdateController(this.container.birthday, this.container.guild);
 
-		const birthday = buildBirthday(month, day, year);
-		if (!birthday) {
-			return interaction.reply(replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Birthday.ErrorInvalidDate), interaction.user));
-		}
+		const preparation = await controller.prepare({ guildId, targetId, month, day, year });
+		if (preparation.status === 'warning') {
+			if (preparation.code === 'invalid-date') {
+				return interaction.reply(
+					replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Birthday.ErrorInvalidDate), interaction.user)
+				);
+			}
 
-		const existing = await this.container.birthday.findByUserAndGuild(targetId, guildId);
-		if (!existing) {
 			const key = isSelf
 				? LanguageKeys.Commands.Birthday.SubcommandUpdateResponseNotFoundSelf
 				: LanguageKeys.Commands.Birthday.SubcommandUpdateResponseNotFoundOther;
@@ -62,19 +58,8 @@ export class BirthdayUpdateSubcommand extends Command {
 			);
 		}
 
-		await this.container.birthday.upsert({ userId: targetId, guildId, birthday });
-
-		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
-		const date = formatBirthdayDate(birthday, language);
-		const timeUntil = formatTimeUntilNextBirthday(birthday, timeZone);
-
-		const text = isSelf
-			? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandUpdateResponseUpdatedSelf, { date, timeUntil })
-			: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandUpdateResponseUpdatedOther, {
-					date,
-					timeUntil,
-					userId: targetId
-				});
+		const applied = await controller.apply({ guildId, targetId, birthday: preparation.data!.birthday, isSelf });
+		const text = await resolveKey(interaction, applied.key, applied.args as unknown as Record<string, unknown>);
 
 		return interaction.editReply(editReplySuccess(text, interaction.user));
 	}

@@ -1,24 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, createLocalizedChoice, resolveKey } from '@sapphire/plugin-i18next';
+import { BirthdayListController } from '#lib/application/birthday-commands/BirthdayListController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { createDefaultEmbed, replyInfo } from '#lib/utilities/default-embed';
-import {
-	formatBirthdayDate,
-	formatTimeUntilNextBirthday,
-	getAgeAtNextBirthday,
-	getGuildLocaleAndTimezone,
-	getNextBirthdayDate
-} from '#lib/utilities/birthday-command';
+import { BIRTHDAY_SORT_MONTH, BIRTHDAY_SORT_UPCOMING } from '#lib/utilities/birthday-command';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js';
 
 const ITEMS_PER_PAGE = 10;
 const BUTTON_TIMEOUT_MS = 120_000;
-const SORT_MONTH = 'month';
-const SORT_UPCOMING = 'upcoming';
-
-type SortMode = typeof SORT_MONTH | typeof SORT_UPCOMING;
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-list',
@@ -44,10 +35,10 @@ type SortMode = typeof SORT_MONTH | typeof SORT_UPCOMING;
 								.setRequired(false)
 								.addChoices(
 									createLocalizedChoice(LanguageKeys.Commands.Birthday.SubcommandListOptionSortChoiceMonth, {
-										value: SORT_MONTH
+										value: BIRTHDAY_SORT_MONTH
 									}),
 									createLocalizedChoice(LanguageKeys.Commands.Birthday.SubcommandListOptionSortChoiceUpcoming, {
-										value: SORT_UPCOMING
+										value: BIRTHDAY_SORT_UPCOMING
 									})
 								),
 							LanguageKeys.Commands.Birthday.SubcommandListOptionSortDescription
@@ -61,55 +52,31 @@ export class BirthdayListSubcommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const guildId = await getGuildIdOrReply(interaction);
 		if (!guildId) return;
+		const controller = new BirthdayListController(this.container.birthday, this.container.guild);
+		const result = await controller.execute({ guildId, sortMode: interaction.options.getString('sort') });
 
-		const birthdays = await this.container.birthday.findActiveByGuildId(guildId);
-		if (birthdays.length === 0) {
+		if (result.data.entries.length === 0) {
 			await interaction.reply(
 				replyInfo(await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEmpty), interaction.user)
 			);
 			return;
 		}
 
-		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
-		const sortMode = (interaction.options.getString('sort') ?? SORT_MONTH) as SortMode;
-		const sortedBirthdays = birthdays
-			.map((birthday) => ({
-				birthday,
-				month: birthday.getMonth(),
-				day: birthday.getDay(),
-				nextDate: getNextBirthdayDate(birthday.birthday, timeZone)
-			}))
-			.sort((a, b) => {
-				if (sortMode === SORT_UPCOMING) {
-					const leftNextDate = a.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-					const rightNextDate = b.nextDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
-					if (leftNextDate !== rightNextDate) return leftNextDate - rightNextDate;
-				}
-
-				if (a.month !== b.month) return a.month - b.month;
-				if (a.day !== b.day) return a.day - b.day;
-				return a.birthday.userId.localeCompare(b.birthday.userId);
-			});
-
 		const rows = await Promise.all(
-			sortedBirthdays.map(async ({ birthday }) => {
-				const date = formatBirthdayDate(birthday.birthday, language);
-				const timeUntil = formatTimeUntilNextBirthday(birthday.birthday, timeZone);
-				const age = getAgeAtNextBirthday(birthday.birthday, timeZone);
-
-				if (age !== null) {
+			result.data.entries.map(async (entry) => {
+				if (entry.age !== null) {
 					return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
-						userId: birthday.userId,
-						date,
-						age,
-						timeUntil
+						userId: entry.userId,
+						date: entry.date,
+						age: entry.age,
+						timeUntil: entry.timeUntil
 					});
 				}
 
 				return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithoutAge, {
-					userId: birthday.userId,
-					date,
-					timeUntil
+					userId: entry.userId,
+					date: entry.date,
+					timeUntil: entry.timeUntil
 				});
 			})
 		);

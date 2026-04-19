@@ -1,17 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { BirthdayRegisterController } from '#lib/application/birthday-commands/BirthdayRegisterController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
 import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { replySuccess, replyWarning } from '#lib/utilities/default-embed';
-import {
-	applyBirthdayOptions,
-	buildBirthday,
-	formatBirthdayDate,
-	formatTimeUntilNextBirthday,
-	getGuildLocaleAndTimezone,
-	resolveBirthdayTarget
-} from '#lib/utilities/birthday-command';
+import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-register',
@@ -40,33 +34,23 @@ export class BirthdayRegisterSubcommand extends Command {
 		const day = interaction.options.getInteger('day', true);
 		const month = interaction.options.getInteger('month', true);
 		const year = interaction.options.getInteger('year');
+		const controller = new BirthdayRegisterController(this.container.birthday, this.container.guild);
 
-		const birthday = buildBirthday(month, day, year);
-		if (!birthday) {
-			return interaction.reply(replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Birthday.ErrorInvalidDate), interaction.user));
-		}
+		const result = await controller.execute({ guildId, targetId, isSelf, month, day, year });
+		if (result.status === 'warning') {
+			if (result.code === 'invalid-date') {
+				return interaction.reply(
+					replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Birthday.ErrorInvalidDate), interaction.user)
+				);
+			}
 
-		const existing = await this.container.birthday.findByUserAndGuild(targetId, guildId);
-		if (existing?.isActive()) {
 			const key = isSelf
 				? LanguageKeys.Commands.Birthday.SubcommandRegisterResponseAlreadyExistsSelf
 				: LanguageKeys.Commands.Birthday.SubcommandRegisterResponseAlreadyExistsOther;
 			return interaction.reply(replyWarning(await resolveKey(interaction, key), interaction.user));
 		}
 
-		await this.container.birthday.upsert({ userId: targetId, guildId, birthday });
-
-		const { language, timeZone } = await getGuildLocaleAndTimezone(guildId);
-		const date = formatBirthdayDate(birthday, language);
-		const timeUntil = formatTimeUntilNextBirthday(birthday, timeZone);
-
-		const text = isSelf
-			? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandRegisterResponseRegisteredSelf, { date, timeUntil })
-			: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandRegisterResponseRegisteredOther, {
-					date,
-					timeUntil,
-					userId: targetId
-				});
+		const text = await resolveKey(interaction, result.key, result.args as unknown as Record<string, unknown>);
 
 		return interaction.reply(replySuccess(text, interaction.user));
 	}

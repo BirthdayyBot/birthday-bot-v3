@@ -1,8 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
+import { ConfigBirthdayRoleController } from '#lib/application/config-commands/ConfigBirthdayRoleController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { getGuildIdOrReply, saveGuildConfig } from '#lib/utilities/config-command';
+import { getGuildIdOrReply } from '#lib/utilities/config-command';
 import { awaitConfirmation } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess } from '#lib/utilities/default-embed';
 
@@ -39,13 +40,10 @@ export class ConfigBirthdayRoleSubcommand extends Command {
 				editReplyInfo(await resolveKey(interaction, LanguageKeys.Commands.Config.ConfirmCancelled), interaction.user)
 			);
 
-		await saveGuildConfig(guildId, { birthdayRole: role.id }, interaction);
+		const defaultAnnouncementMessage = await resolveKey(interaction, LanguageKeys.Commands.Config.DefaultAnnouncementMessage);
+		const controller = new ConfigBirthdayRoleController(this.container.guild, { defaultAnnouncementMessage });
+		const applied = await controller.apply({ guildId, roleId: role.id });
 
-		return interaction.editReply(
-			editReplySuccess(
-				await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandBirthdayRoleResponseUpdated, { roleId: role.id }),
-				interaction.user
-			)
-		);
+		return interaction.editReply(editReplySuccess(await resolveKey(interaction, applied.key, applied.args), interaction.user));
 	}
 }
