@@ -110,7 +110,13 @@
                 "dateWithAge": {
                     "self": "🎂 Your birthday is on **{{date}}** — you'll be turning **{{age}}** {{timeUntil}}! 🎉",
                     "other": "🎂 <@{{userId}}>'s birthday is on **{{date}}** — they'll be turning **{{age}}** {{timeUntil}}! 🎉"
-                }
+                },
+                "dateWithAgeToday": {
+                    "self": "🎂 Your birthday is today (**{{date}}**) — you're turning **{{age}}**! 🎉",
+                    "other": "🎂 <@{{userId}}>'s birthday is today (**{{date}}**) — they're turning **{{age}}**! 🎉"
+                },
+                "timeUntilToday": "today",
+                "timeUntilTomorrow": "tomorrow"
             }
         },
         "list": {

@@ -110,7 +110,13 @@
                 "dateWithAge": {
                     "self": "🎂 Votre anniversaire est le **{{date}}** — vous aurez **{{age}} ans** {{timeUntil}} ! 🎉",
                     "other": "🎂 L'anniversaire de <@{{userId}}> est le **{{date}}** — ils auront **{{age}} ans** {{timeUntil}} ! 🎉"
-                }
+                },
+                "dateWithAgeToday": {
+                    "self": "🎂 Votre anniversaire est le **{{date}}** — vous avez **{{age}} ans** aujourd'hui ! 🎉",
+                    "other": "🎂 L'anniversaire de <@{{userId}}> est le **{{date}}** — ils ont **{{age}} ans** aujourd'hui ! 🎉"
+                },
+                "timeUntilToday": "aujourd'hui",
+                "timeUntilTomorrow": "demain"
             }
         },
         "list": {

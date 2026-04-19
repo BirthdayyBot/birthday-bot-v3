@@ -74,6 +74,16 @@ export const SubcommandViewResponseDateWithAgeOther = FT<{ date: string; userId:
 	'commands/birthday:subcommands.view.responses.dateWithAge.other'
 );
 
+export const SubcommandViewResponseDateWithAgeTodaySelf = FT<{ date: string; age: number }, string>(
+	'commands/birthday:subcommands.view.responses.dateWithAgeToday.self'
+);
+export const SubcommandViewResponseDateWithAgeTodayOther = FT<{ date: string; userId: string; age: number }, string>(
+	'commands/birthday:subcommands.view.responses.dateWithAgeToday.other'
+);
+
+export const SubcommandViewTimeUntilToday = T<string>('commands/birthday:subcommands.view.responses.timeUntilToday');
+export const SubcommandViewTimeUntilTomorrow = T<string>('commands/birthday:subcommands.view.responses.timeUntilTomorrow');
+
 export const SubcommandListDescription = T<string>('commands/birthday:subcommands.list.description');
 export const SubcommandListOptionPageDescription = T<string>('commands/birthday:subcommands.list.options.page.description');
 export const SubcommandListOptionSortDescription = T<string>('commands/birthday:subcommands.list.options.sort.description');

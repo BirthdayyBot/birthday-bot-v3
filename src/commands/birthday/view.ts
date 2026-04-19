@@ -40,7 +40,26 @@ export class BirthdayViewSubcommand extends Command {
 			return interaction.reply(replyWarning(await resolveKey(interaction, key), interaction.user));
 		}
 
-		const text = await resolveKey(interaction, result.key, result.args as unknown as Record<string, unknown>);
+		const { daysUntil, ...restArgs } = result.args!;
+
+		if (daysUntil === 0 && 'age' in restArgs) {
+			const todayKey = isSelf
+				? LanguageKeys.Commands.Birthday.SubcommandViewResponseDateWithAgeTodaySelf
+				: LanguageKeys.Commands.Birthday.SubcommandViewResponseDateWithAgeTodayOther;
+			const text = await resolveKey(interaction, todayKey, restArgs as unknown as Record<string, unknown>);
+			return interaction.reply(replyInfo(text, interaction.user));
+		}
+
+		const timeUntil =
+			daysUntil === null
+				? '?'
+				: daysUntil === 0
+					? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewTimeUntilToday)
+					: daysUntil === 1
+						? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandViewTimeUntilTomorrow)
+						: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilDays, { days: daysUntil });
+
+		const text = await resolveKey(interaction, result.key, { ...restArgs, timeUntil } as unknown as Record<string, unknown>);
 
 		return interaction.reply(replyInfo(text, interaction.user));
 	}
