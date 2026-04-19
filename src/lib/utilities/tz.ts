@@ -57,6 +57,15 @@ export function getTimeZone(id: string): TimeZone | null {
 	return tz.get(toCanonicalIana(id).toLowerCase()) ?? null;
 }
 
+export function getTimeZonesByPrefix(prefixes: string[]): TimeZone[] {
+	const lower = prefixes.map((p) => p.toLowerCase());
+	const results: TimeZone[] = [];
+	for (const [key, value] of tz.entries()) {
+		if (lower.some((p) => key.startsWith(p))) results.push(value);
+	}
+	return results;
+}
+
 export function searchTimeZone(id: string): readonly TimeZoneSearchResult[] {
 	if (id.length === 0) return defaults;
 	if (id.length > MaximumLength) return [];

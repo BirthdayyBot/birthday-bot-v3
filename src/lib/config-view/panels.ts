@@ -1,4 +1,5 @@
 import { createDefaultEmbed, createOverviewEmbed } from '#lib/utilities/default-embed';
+import { getTimeZonesByPrefix } from '#lib/utilities/tz';
 import type { Guild } from '#lib/domain/guild/Guild';
 import {
 	ActionRowBuilder,
@@ -15,107 +16,13 @@ import type { Labels, PanelContext } from './types';
 
 // ── Timezone data ─────────────────────────────────────────────────────────────
 
-export const TIMEZONE_REGIONS: Record<string, { label: string; emoji: string; zones: string[] }> = {
-	africa: {
-		label: 'Africa',
-		emoji: '🌍',
-		zones: ['Africa/Abidjan', 'Africa/Cairo', 'Africa/Casablanca', 'Africa/Johannesburg', 'Africa/Lagos', 'Africa/Nairobi', 'Africa/Tunis']
-	},
-	americas: {
-		label: 'Americas',
-		emoji: '🌎',
-		zones: [
-			'America/Anchorage',
-			'America/Argentina/Buenos_Aires',
-			'America/Bogota',
-			'America/Chicago',
-			'America/Denver',
-			'America/Halifax',
-			'America/Lima',
-			'America/Los_Angeles',
-			'America/Mexico_City',
-			'America/New_York',
-			'America/Phoenix',
-			'America/Santiago',
-			'America/Sao_Paulo',
-			'America/Toronto',
-			'America/Vancouver'
-		]
-	},
-	asia: {
-		label: 'Asia',
-		emoji: '🌏',
-		zones: [
-			'Asia/Baghdad',
-			'Asia/Bangkok',
-			'Asia/Colombo',
-			'Asia/Dubai',
-			'Asia/Hong_Kong',
-			'Asia/Jakarta',
-			'Asia/Karachi',
-			'Asia/Kolkata',
-			'Asia/Kuala_Lumpur',
-			'Asia/Manila',
-			'Asia/Riyadh',
-			'Asia/Seoul',
-			'Asia/Shanghai',
-			'Asia/Singapore',
-			'Asia/Taipei',
-			'Asia/Tehran',
-			'Asia/Tokyo'
-		]
-	},
-	europe: {
-		label: 'Europe',
-		emoji: '🇪🇺',
-		zones: [
-			'Europe/Amsterdam',
-			'Europe/Athens',
-			'Europe/Belgrade',
-			'Europe/Berlin',
-			'Europe/Brussels',
-			'Europe/Bucharest',
-			'Europe/Budapest',
-			'Europe/Copenhagen',
-			'Europe/Helsinki',
-			'Europe/Istanbul',
-			'Europe/Kyiv',
-			'Europe/Lisbon',
-			'Europe/London',
-			'Europe/Madrid',
-			'Europe/Moscow',
-			'Europe/Oslo',
-			'Europe/Paris',
-			'Europe/Prague',
-			'Europe/Rome',
-			'Europe/Stockholm',
-			'Europe/Vienna',
-			'Europe/Warsaw',
-			'Europe/Zurich'
-		]
-	},
-	pacific: {
-		label: 'Pacific',
-		emoji: '🌊',
-		zones: ['Pacific/Auckland', 'Pacific/Fiji', 'Pacific/Guam', 'Pacific/Honolulu', 'Pacific/Noumea', 'Pacific/Port_Moresby', 'Pacific/Tahiti']
-	},
-	other: {
-		label: 'Other',
-		emoji: '🌐',
-		zones: [
-			'Atlantic/Azores',
-			'Atlantic/Canary',
-			'Atlantic/Reykjavik',
-			'Australia/Adelaide',
-			'Australia/Brisbane',
-			'Australia/Melbourne',
-			'Australia/Perth',
-			'Australia/Sydney',
-			'Indian/Maldives',
-			'Indian/Mauritius',
-			'UTC'
-		]
-	}
+export const TIMEZONE_REGIONS: Record<string, { label: string; emoji: string; prefixes: string[] }> = {
+	africa: { label: 'Africa', emoji: '🌍', prefixes: ['africa/'] },
+	americas: { label: 'Americas', emoji: '🌎', prefixes: ['america/'] },
+	asia: { label: 'Asia', emoji: '🌏', prefixes: ['asia/'] },
+	europe: { label: 'Europe', emoji: '🇪🇺', prefixes: ['europe/'] },
+	pacific: { label: 'Pacific', emoji: '🌊', prefixes: ['pacific/'] },
+	other: { label: 'Other', emoji: '🌐', prefixes: ['atlantic/', 'australia/', 'indian/', 'utc'] }
 };
 
 // ── Shared components ─────────────────────────────────────────────────────────
@@ -244,7 +151,11 @@ export function buildTimezoneSelectPanel(
 				new StringSelectMenuBuilder()
 					.setCustomId('tz-specific')
 					.setPlaceholder(labels.plhTimezone)
-					.addOptions(region.zones.map((zone) => ({ label: zone, value: zone })))
+					.addOptions(
+						getTimeZonesByPrefix(region.prefixes)
+							.slice(0, 25)
+							.map((zone) => ({ label: zone.full, value: zone.name }))
+					)
 			),
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder().setCustomId('cfg-general').setLabel(labels.btnBack).setStyle(ButtonStyle.Secondary)
