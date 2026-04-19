@@ -34,10 +34,7 @@ export class ConfigOverviewMessageSubcommand extends Command {
 		const message = interaction.options.getString('message', true).trim();
 		if (message.length === 0) {
 			return interaction.reply(
-				replyWarning(
-					await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageResponseEmpty),
-					interaction.user
-				)
+				replyWarning(await resolveKey(interaction, LanguageKeys.Commands.Config.SubcommandOverviewMessageResponseEmpty), interaction.user)
 			);
 		}
 
