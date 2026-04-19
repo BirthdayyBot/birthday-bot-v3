@@ -43,7 +43,7 @@ export class BirthdayViewController {
 			};
 		}
 
-		if (age !== null) {
+		if (age !== null && !existing.isAgeHidden()) {
 			return {
 				status: 'success',
 				key: LanguageKeys.Commands.Birthday.SubcommandViewResponseDateWithAgeOther,

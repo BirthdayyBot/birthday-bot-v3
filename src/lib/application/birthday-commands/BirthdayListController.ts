@@ -16,6 +16,7 @@ export interface BirthdayListEntry {
 	date: string;
 	daysUntil: number | null;
 	age: number | null;
+	hideAge: boolean;
 }
 
 export interface BirthdayListData {
@@ -48,7 +49,8 @@ export class BirthdayListController {
 			userId: birthday.userId,
 			date: formatBirthdayDateWithYear(birthday.birthday, timeZone, language),
 			daysUntil: getDaysUntilNextBirthday(birthday.birthday, timeZone),
-			age: getAgeAtNextBirthday(birthday.birthday, timeZone)
+			age: getAgeAtNextBirthday(birthday.birthday, timeZone),
+			hideAge: birthday.isAgeHidden()
 		}));
 
 		return { status: 'success', data: { sortMode, language, timeZone, entries } };

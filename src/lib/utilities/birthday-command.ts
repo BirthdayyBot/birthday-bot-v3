@@ -248,7 +248,7 @@ export function applyBirthdayOptions(sub: SlashCommandSubcommandBuilder, memberD
 		)
 		.addIntegerOption((option) =>
 			applyDescriptionLocalizedBuilder(
-				option.setName('year').setDescription('Birth year (optional)').setRequired(false).setMinValue(1900).setMaxValue(2100),
+				option.setName('year').setDescription('Year of birth').setRequired(true).setMinValue(1900).setMaxValue(2100),
 				LanguageKeys.Commands.Birthday.SubcommandOptionYearDescription
 			)
 		)

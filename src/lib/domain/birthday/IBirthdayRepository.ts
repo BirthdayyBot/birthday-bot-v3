@@ -7,5 +7,6 @@ export interface IBirthdayRepository {
 	findActiveByGuildId(guildId: string): Promise<Birthday[]>;
 	upsert(data: { userId: string; guildId: string; birthday: string }): Promise<void>;
 	setDisabled(userId: string, guildId: string, disabled: boolean): Promise<void>;
+	setHideAge(userId: string, guildId: string, hideAge: boolean): Promise<void>;
 	delete(userId: string, guildId: string): Promise<void>;
 }

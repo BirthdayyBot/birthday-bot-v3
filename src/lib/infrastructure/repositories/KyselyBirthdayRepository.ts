@@ -39,13 +39,17 @@ export class KyselyBirthdayRepository implements IBirthdayRepository {
 	public async upsert(data: { userId: string; guildId: string; birthday: string }): Promise<void> {
 		await this.#db
 			.insertInto('birthday')
-			.values({ user_id: data.userId, guild_id: data.guildId, birthday: data.birthday })
+			.values({ user_id: data.userId, guild_id: data.guildId, birthday: data.birthday, hide_age: false })
 			.onDuplicateKeyUpdate({ birthday: data.birthday, disabled: false })
 			.execute();
 	}
 
 	public async setDisabled(userId: string, guildId: string, disabled: boolean): Promise<void> {
 		await this.#db.updateTable('birthday').set({ disabled }).where('user_id', '=', userId).where('guild_id', '=', guildId).execute();
+	}
+
+	public async setHideAge(userId: string, guildId: string, hideAge: boolean): Promise<void> {
+		await this.#db.updateTable('birthday').set({ hide_age: hideAge }).where('user_id', '=', userId).where('guild_id', '=', guildId).execute();
 	}
 
 	public async delete(userId: string, guildId: string): Promise<void> {

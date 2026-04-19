@@ -4,7 +4,8 @@
     },
     "confirm": {
         "question": "Are you sure you want to save this change?",
-        "cancelled": "No changes were made."
+        "cancelled": "No changes were made.",
+        "hideAgeQuestion": "Do you want to hide your age from other members?"
     },
     "errors": {
         "guildOnly": "This command can only be used in a server.",
@@ -19,7 +20,7 @@
             "description": "Day of birth"
         },
         "year": {
-            "description": "Year of birth (optional)"
+            "description": "Year of birth"
         }
     },
     "months": {

@@ -14,6 +14,8 @@ export const SubcommandOptionMonthDescription = T<string>('commands/birthday:opt
 export const SubcommandOptionDayDescription = T<string>('commands/birthday:options.day.description');
 export const SubcommandOptionYearDescription = T<string>('commands/birthday:options.year.description');
 
+export const ConfirmHideAgeQuestion = T<string>('commands/birthday:confirm.hideAgeQuestion');
+
 // Month choices
 export const MonthJanuary = T<string>('commands/birthday:months.january');
 export const MonthFebruary = T<string>('commands/birthday:months.february');

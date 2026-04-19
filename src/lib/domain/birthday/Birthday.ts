@@ -5,17 +5,23 @@ export class Birthday {
 	/** Stored as "MM-DD", "MM-DD-YYYY", or "MM-DD-XXXX" for unknown year. */
 	public readonly birthday: string;
 	public readonly disabled: boolean;
+	public readonly hideAge: boolean;
 
-	public constructor(props: { id: bigint; userId: string; guildId: string; birthday: string; disabled: boolean }) {
+	public constructor(props: { id: bigint; userId: string; guildId: string; birthday: string; disabled: boolean; hideAge: boolean }) {
 		this.id = props.id;
 		this.userId = props.userId;
 		this.guildId = props.guildId;
 		this.birthday = props.birthday;
 		this.disabled = props.disabled;
+		this.hideAge = props.hideAge;
 	}
 
 	public isActive(): boolean {
 		return !this.disabled;
+	}
+
+	public isAgeHidden(): boolean {
+		return this.hideAge;
 	}
 
 	public isToday(nowMonthDay: string): boolean {

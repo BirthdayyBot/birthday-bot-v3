@@ -50,7 +50,7 @@ async function buildOverviewEmbed(guildId: string) {
 			const timeUntil = formatTimeUntilNextBirthday(birthday.birthday, guildConfig.timezone);
 			const age = getAgeAtNextBirthday(birthday.birthday, guildConfig.timezone);
 
-			if (age !== null) {
+			if (age !== null && !birthday.isAgeHidden()) {
 				return localize(guildConfig.language, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
 					displayName,
 					username,

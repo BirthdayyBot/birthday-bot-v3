@@ -3,7 +3,7 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { BirthdayUpdateController } from '#lib/application/birthday-commands/BirthdayUpdateController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { awaitConfirmation } from '#lib/utilities/confirm';
+import { awaitConfirmation, awaitConfirmationEdit } from '#lib/utilities/confirm';
 import { editReplyInfo, editReplySuccess, replyWarning } from '#lib/utilities/default-embed';
 import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
 
@@ -33,7 +33,7 @@ export class BirthdayUpdateSubcommand extends Command {
 		const { targetId, isSelf } = target;
 		const day = interaction.options.getInteger('day', true);
 		const month = interaction.options.getInteger('month', true);
-		const year = interaction.options.getInteger('year');
+		const year = interaction.options.getInteger('year', true);
 		const controller = new BirthdayUpdateController(this.container.birthday, this.container.guild);
 
 		const preparation = await controller.prepare({ guildId, targetId, month, day, year });
@@ -58,8 +58,15 @@ export class BirthdayUpdateSubcommand extends Command {
 		}
 
 		const applied = await controller.apply({ guildId, targetId, birthday: preparation.data!.birthday, isSelf });
-		const text = await resolveKey(interaction, applied.key, applied.args as unknown as Record<string, unknown>);
 
+		const hideAge = await awaitConfirmationEdit(
+			interaction,
+			await resolveKey(interaction, LanguageKeys.Commands.Birthday.ConfirmHideAgeQuestion),
+			{ yesLabel: 'Yes, hide', noLabel: 'No, show' }
+		);
+		await this.container.birthday.setHideAge(targetId, guildId, hideAge);
+
+		const text = await resolveKey(interaction, applied.key, applied.args as unknown as Record<string, unknown>);
 		return interaction.editReply(editReplySuccess(text, interaction.user));
 	}
 }

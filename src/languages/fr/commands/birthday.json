@@ -4,7 +4,8 @@
     },
     "confirm": {
         "question": "Confirmer la modification ?",
-        "cancelled": "Aucune modification effectuée."
+        "cancelled": "Aucune modification effectuée.",
+        "hideAgeQuestion": "Voulez-vous cacher votre âge aux autres membres ?"
     },
     "errors": {
         "guildOnly": "Cette commande ne peut être utilisée que sur un serveur.",
@@ -19,7 +20,7 @@
             "description": "Jour de naissance"
         },
         "year": {
-            "description": "Année de naissance (facultatif)"
+            "description": "Année de naissance"
         }
     },
     "months": {

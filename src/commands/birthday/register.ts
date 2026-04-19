@@ -3,8 +3,9 @@ import { Command } from '@kaname-png/plugin-subcommands-advanced';
 import { applyDescriptionLocalizedBuilder, resolveKey } from '@sapphire/plugin-i18next';
 import { BirthdayRegisterController } from '#lib/application/birthday-commands/BirthdayRegisterController';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { replySuccess, replyWarning } from '#lib/utilities/default-embed';
+import { editReplySuccess, replyWarning } from '#lib/utilities/default-embed';
 import { applyBirthdayOptions, resolveBirthdayTarget } from '#lib/utilities/birthday-command';
+import { awaitConfirmation } from '#lib/utilities/confirm';
 
 @ApplyOptions<Command.Options>({
 	name: 'birthday-register',
@@ -32,7 +33,7 @@ export class BirthdayRegisterSubcommand extends Command {
 		const { targetId, isSelf } = target;
 		const day = interaction.options.getInteger('day', true);
 		const month = interaction.options.getInteger('month', true);
-		const year = interaction.options.getInteger('year');
+		const year = interaction.options.getInteger('year', true);
 		const controller = new BirthdayRegisterController(this.container.birthday, this.container.guild);
 
 		const result = await controller.execute({ guildId, targetId, isSelf, month, day, year });
@@ -49,8 +50,13 @@ export class BirthdayRegisterSubcommand extends Command {
 			return interaction.reply(replyWarning(await resolveKey(interaction, key), interaction.user));
 		}
 
-		const text = await resolveKey(interaction, result.key, result.args as unknown as Record<string, unknown>);
+		const hideAge = await awaitConfirmation(interaction, await resolveKey(interaction, LanguageKeys.Commands.Birthday.ConfirmHideAgeQuestion), {
+			yesLabel: 'Yes, hide',
+			noLabel: 'No, show'
+		});
+		await this.container.birthday.setHideAge(targetId, guildId, hideAge);
 
-		return interaction.reply(replySuccess(text, interaction.user));
+		const text = await resolveKey(interaction, result.key, result.args as unknown as Record<string, unknown>);
+		return interaction.editReply(editReplySuccess(text, interaction.user));
 	}
 }

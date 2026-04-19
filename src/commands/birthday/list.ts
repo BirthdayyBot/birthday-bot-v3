@@ -84,7 +84,7 @@ export class BirthdayListSubcommand extends Command {
 								? await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilTomorrow)
 								: await resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListTimeUntilDays, { days });
 
-				if (entry.age !== null) {
+				if (entry.age !== null && !entry.hideAge) {
 					return resolveKey(interaction, LanguageKeys.Commands.Birthday.SubcommandListResponseEntryWithAge, {
 						displayName,
 						username,

@@ -8,6 +8,7 @@ export function toBirthdayEntity(row: Selectable<BirthdayTable>): Birthday {
 		userId: row.user_id,
 		guildId: row.guild_id,
 		birthday: row.birthday,
-		disabled: row.disabled
+		disabled: row.disabled,
+		hideAge: row.hide_age
 	});
 }
