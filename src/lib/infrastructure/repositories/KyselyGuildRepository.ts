@@ -30,6 +30,7 @@ export class KyselyGuildRepository implements IGuildRepository {
 			birthday_ping_role: data.birthdayPingRole,
 			log_channel: data.logChannel,
 			timezone: data.timezone,
+			announcement_hour: data.announcementHour,
 			premium: data.premium,
 			language: data.language,
 			last_updated: data.lastUpdated,

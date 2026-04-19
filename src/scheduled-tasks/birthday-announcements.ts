@@ -72,8 +72,8 @@ export function isBirthdayForDate(birthday: string, year: number, month: number,
 	return parsed.month === month && parsed.day === day;
 }
 
-export function getCatchupTargetDates(now: ZonedDateParts): Array<{ year: number; month: number; day: number }> {
-	if (now.hour >= 9) {
+export function getCatchupTargetDates(now: ZonedDateParts, announcementHour: number): Array<{ year: number; month: number; day: number }> {
+	if (now.hour >= announcementHour) {
 		return [{ year: now.year, month: now.month, day: now.day }];
 	}
 
@@ -102,7 +102,7 @@ export class BirthdayAnnouncementsTask extends ScheduledTask<'birthdayAnnounceme
 
 			const zonedNow = getZonedDateParts(guildConfig.timezone);
 			const birthdays = await this.container.birthday.findActiveByGuildId(cachedGuild.id);
-			const targetDates = getCatchupTargetDates(zonedNow);
+			const targetDates = getCatchupTargetDates(zonedNow, guildConfig.announcementHour);
 			if (targetDates.length === 0) continue;
 
 			const guild = await this.container.client.guilds.fetch(cachedGuild.id).catch(() => null);

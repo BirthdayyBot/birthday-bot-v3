@@ -16,6 +16,7 @@ export function toGuildEntity(row: Selectable<GuildTable>): Guild {
 		birthdayPingRole: row.birthday_ping_role,
 		logChannel: row.log_channel,
 		timezone: row.timezone,
+		announcementHour: row.announcement_hour,
 		premium: row.premium,
 		language: row.language,
 		lastUpdated: row.last_updated,
@@ -35,6 +36,7 @@ export function toGuildRow(data: GuildUpdateData): Updateable<GuildTable> {
 	if (data.birthdayPingRole !== undefined) row.birthday_ping_role = data.birthdayPingRole;
 	if (data.logChannel !== undefined) row.log_channel = data.logChannel;
 	if (data.timezone !== undefined) row.timezone = data.timezone;
+	if (data.announcementHour !== undefined) row.announcement_hour = data.announcementHour;
 	if (data.premium !== undefined) row.premium = data.premium;
 	if (data.language !== undefined) row.language = data.language;
 	if (data.lastUpdated !== undefined) row.last_updated = data.lastUpdated;

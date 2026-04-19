@@ -6,6 +6,7 @@ export interface BirthdayTable {
 	guild_id: string;
 	birthday: string;
 	disabled: Generated<boolean>;
+	hide_age: Generated<boolean>;
 }
 
 export interface GuildTable {
@@ -22,6 +23,7 @@ export interface GuildTable {
 	timezone: Generated<string>;
 	premium: Generated<boolean>;
 	language: Generated<string>;
+	announcement_hour: Generated<number>;
 	last_updated: Date | null;
 	disabled: Generated<boolean>;
 }

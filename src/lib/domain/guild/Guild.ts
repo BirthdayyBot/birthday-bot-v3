@@ -10,6 +10,7 @@ export class Guild {
 	public readonly birthdayPingRole: string | null;
 	public readonly logChannel: string | null;
 	public readonly timezone: string;
+	public readonly announcementHour: number;
 	public readonly premium: boolean;
 	public readonly language: string;
 	public readonly lastUpdated: Date | null;
@@ -27,6 +28,7 @@ export class Guild {
 		birthdayPingRole: string | null;
 		logChannel: string | null;
 		timezone: string;
+		announcementHour: number;
 		premium: boolean;
 		language: string;
 		lastUpdated: Date | null;
@@ -43,6 +45,7 @@ export class Guild {
 		this.birthdayPingRole = props.birthdayPingRole;
 		this.logChannel = props.logChannel;
 		this.timezone = props.timezone;
+		this.announcementHour = props.announcementHour;
 		this.premium = props.premium;
 		this.language = props.language;
 		this.lastUpdated = props.lastUpdated;

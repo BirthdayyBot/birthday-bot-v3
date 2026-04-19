@@ -9,6 +9,7 @@ const ALLOWED_KEYS: ReadonlyArray<keyof GuildUpdateData> = [
 	'language',
 	'announcementChannel',
 	'announcementMessage',
+	'announcementHour',
 	'overviewChannel',
 	'overviewSort',
 	'birthdayRole',

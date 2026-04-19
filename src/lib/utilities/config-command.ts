@@ -48,6 +48,7 @@ function createDefaultGuild(guildId: string, overrides: GuildUpdateData, default
 		birthdayPingRole: overrides.birthdayPingRole ?? null,
 		logChannel: overrides.logChannel ?? null,
 		timezone: overrides.timezone ?? DEFAULT_TIMEZONE,
+		announcementHour: overrides.announcementHour ?? 9,
 		premium: overrides.premium ?? false,
 		language: overrides.language ?? DEFAULT_LANGUAGE,
 		lastUpdated: overrides.lastUpdated ?? new Date(),
