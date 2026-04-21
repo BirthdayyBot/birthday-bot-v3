@@ -43,6 +43,7 @@ export const SubcommandOverviewSortResponseUpdated = FT<{ mode: string }, string
 export const SubcommandTimezoneResponseUpdated = FT<{ timezone: string }, string>('commands/config:subcommands.timezone.responses.updated');
 
 export const SubcommandViewResponseTitle = T<string>('commands/config:subcommands.view.responses.title');
+export const SubcommandViewMainSelectLabel = T<string>('commands/config:subcommands.view.main.selectLabel');
 export const SubcommandViewLabelPremium = T<string>('commands/config:subcommands.view.labels.premium');
 export const SubcommandViewLabelActive = T<string>('commands/config:subcommands.view.labels.active');
 export const SubcommandViewLabelOverviewSort = T<string>('commands/config:subcommands.view.labels.overviewSort');
@@ -59,7 +60,8 @@ export const SubcommandViewEditPremiumTitle = T<string>('commands/config:subcomm
 export const SubcommandViewEditGeneralTitle = T<string>('commands/config:subcommands.view.edit.generalTitle');
 export const SubcommandViewEditAnnouncementsTitle = T<string>('commands/config:subcommands.view.edit.announcementsTitle');
 export const SubcommandViewEditBirthdayRoleTitle = T<string>('commands/config:subcommands.view.edit.birthdayRoleTitle');
-export const SubcommandViewEditOverviewAndLogsTitle = T<string>('commands/config:subcommands.view.edit.overviewAndLogsTitle');
+export const SubcommandViewEditOverviewTitle = T<string>('commands/config:subcommands.view.edit.overviewTitle');
+export const SubcommandViewEditLogsTitle = T<string>('commands/config:subcommands.view.edit.logsTitle');
 export const SubcommandViewEditUpdated = T<string>('commands/config:subcommands.view.edit.updated');
 export const SubcommandViewEditSelectLanguagePlaceholder = T<string>('commands/config:subcommands.view.edit.selectLanguagePlaceholder');
 export const SubcommandViewEditSelectSortPlaceholder = T<string>('commands/config:subcommands.view.edit.selectSortPlaceholder');

@@ -1,23 +1,16 @@
+import { ConfigPage, type RouteResult } from '#lib/config-view/ConfigPage';
+import type { PageContext } from '#lib/config-view/types';
+import type { PremiumGrant } from '#lib/domain/premium/PremiumGrant';
+import { LanguageKeys } from '#lib/i18n/languageKeys';
+import { createDefaultEmbed } from '#lib/utilities/default-embed';
+import { CdnUrls, Emojis, resolveEmoji } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { container } from '@sapphire/framework';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { ConfigPage, type RouteResult } from '#lib/config-view/ConfigPage';
-import type { PageContext } from '#lib/config-view/types';
-import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { CdnUrls, Emojis, resolveEmoji } from '#utils/constants';
-import { createDefaultEmbed } from '#lib/utilities/default-embed';
-import type { PremiumGrant } from '#lib/domain/premium/PremiumGrant';
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	type ButtonInteraction,
-	type InteractionUpdateOptions,
-	type MessageComponentInteraction
-} from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type InteractionUpdateOptions, type MessageComponentInteraction } from 'discord.js';
 
 @ApplyOptions<ConfigPage.Options>({
-	position: 5,
+	position: 6,
 	title: LanguageKeys.Commands.Config.SubcommandViewEditPremiumTitle,
 	selectEmoji: Emojis.Crown
 })
