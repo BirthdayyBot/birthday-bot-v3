@@ -2,87 +2,43 @@
   "command": {
     "description": "Configure guild settings"
   },
-  "autocomplete": {
-    "timezone": {
-      "exact": "⭐ {{timezone}}",
-      "partial": "📄 {{timezone}}"
-    }
-  },
   "defaults": {
     "announcementMessage": "<:arrwright:931267038746390578> Today is a special Day!{NEW_LINE}<:gift:931267039094534175> Please wish {MENTION} a happy Birthday <3"
-  },
-  "confirm": {
-    "question": "Are you sure you want to apply this change?",
-    "cancelled": "Action cancelled."
   },
   "errors": {
     "guildOnly": "This command can only be used in a server."
   },
   "subcommands": {
     "timezone": {
-      "description": "Set the guild timezone",
-      "options": {
-        "timezone": {
-          "description": "Choose an IANA timezone (e.g. Europe/Paris)"
-        }
-      },
       "responses": {
-        "invalid": "Unknown timezone `{{timezone}}`. Use the autocomplete to pick a valid one.",
-        "alreadySet": "Guild timezone is already set to **{{timezone}}**.",
         "updated": "Guild timezone set to **{{timezone}}**."
       }
     },
     "announcementChannel": {
-      "description": "Set the announcement channel",
-      "options": {
-        "channel": {
-          "description": "Choose the channel for birthday announcements"
-        }
-      },
       "responses": {
         "updated": "Announcement channel set to <#{{channelId}}>."
       }
     },
     "announcementMessage": {
-      "description": "Set the announcement message template",
-      "options": {
-        "message": {
-          "description": "Set the announcement message text"
-        }
-      },
       "responses": {
         "empty": "Announcement message cannot be empty.",
         "updated": "Announcement message set to `{{message}}`."
       }
     },
     "overviewChannel": {
-      "description": "Set the overview channel",
-      "options": {
-        "channel": {
-          "description": "Choose the channel for birthday overviews"
-        }
-      },
       "responses": {
         "updated": "Overview channel set to <#{{channelId}}>."
       }
     },
     "overviewMessage": {
-      "description": "Set the overview message",
-      "options": {
-        "message": {
-          "description": "Set the overview message text"
-        }
-      },
       "responses": {
         "empty": "Overview message cannot be empty.",
         "updated": "Overview message set to `{{message}}`."
       }
     },
     "overviewSort": {
-      "description": "Set the overview sort mode",
       "options": {
         "sort": {
-          "description": "Sort overview by month or upcoming date",
           "choices": {
             "month": "By month",
             "upcoming": "Upcoming first"
@@ -94,43 +50,23 @@
       }
     },
     "birthdayRole": {
-      "description": "Set the birthday role",
-      "options": {
-        "role": {
-          "description": "Choose the role granted on birthdays"
-        }
-      },
       "responses": {
         "updated": "Birthday role set to <@&{{roleId}}>."
       }
     },
     "birthdayPingRole": {
-      "description": "Set the birthday ping role",
-      "options": {
-        "role": {
-          "description": "Choose the role mentioned in announcements"
-        }
-      },
       "responses": {
         "updated": "Birthday ping role set to <@&{{roleId}}>."
       }
     },
     "logChannel": {
-      "description": "Set the log channel",
-      "options": {
-        "channel": {
-          "description": "Choose the channel for birthday logs"
-        }
-      },
       "responses": {
         "updated": "Log channel set to <#{{channelId}}>."
       }
     },
     "language": {
-      "description": "Set the guild language",
       "options": {
         "language": {
-          "description": "Choose the server language",
           "choices": {
             "enUS": "English (US)",
             "frFR": "French (France)"
@@ -142,7 +78,6 @@
       }
     },
     "view": {
-      "description": "View the current guild configuration",
       "labels": {
         "premium": "Premium",
         "active": "Active",
@@ -156,20 +91,6 @@
         "birthdayRole": "Birthday role",
         "overviewChannel": "Overview channel",
         "logChannel": "Log channel"
-      },
-      "sections": {
-        "general": "⚙️ General",
-        "announcements": "📢 Birthday Announcements",
-        "birthdayRole": "🎂 Birthday Role",
-        "overviewAndLogs": "📊 Overview & Logs"
-      },
-      "buttons": {
-        "general": "General",
-        "announcements": "Announcements",
-        "birthdayRole": "Birthday Role",
-        "overviewAndLogs": "Overview & Logs",
-        "back": "← Back",
-        "premium": "👑 Premium"
       },
       "edit": {
         "generalTitle": "Edit General Settings",
