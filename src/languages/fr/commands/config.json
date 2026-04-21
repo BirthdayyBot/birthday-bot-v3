@@ -1,210 +1,219 @@
 {
-	"command": {
-		"description": "Configurer les parametres du serveur"
-	},
-	"autocomplete": {
-		"timezone": {
-			"exact": "⭐ {{timezone}}",
-			"partial": "📄 {{timezone}}"
-		}
-	},
-	"defaults": {
-		"announcementMessage": "<:arrwright:931267038746390578> Aujourd'hui est un jour special !{NEW_LINE}<:gift:931267039094534175> Souhaitez un joyeux anniversaire a {MENTION} <3"
-	},
-	"confirm": {
-		"question": "Etes-vous sur de vouloir appliquer ce changement ?",
-		"cancelled": "Action annulee."
-	},
-	"errors": {
-		"guildOnly": "Cette commande peut uniquement etre utilisee sur un serveur."
-	},
-	"subcommands": {
-		"timezone": {
-			"description": "Definir le fuseau horaire du serveur",
-			"options": {
-				"timezone": {
-					"description": "Choisir un fuseau IANA (ex: Europe/Paris)"
-				}
-			},
-			"responses": {
-				"invalid": "Fuseau horaire inconnu `{{timezone}}`. Utilisez l'autocompletion pour choisir une valeur valide.",
-				"alreadySet": "Le fuseau horaire du serveur est deja **{{timezone}}**.",
-				"updated": "Fuseau horaire du serveur defini sur **{{timezone}}**."
-			}
-		},
-		"announcementChannel": {
-			"description": "Definir le salon d'annonce",
-			"options": {
-				"channel": {
-					"description": "Choisir le salon des annonces d'anniversaire"
-				}
-			},
-			"responses": {
-				"updated": "Salon d'annonce defini sur <#{{channelId}}>."
-			}
-		},
-		"announcementMessage": {
-			"description": "Definir le modele du message d'annonce",
-			"options": {
-				"message": {
-					"description": "Definir le texte du message d'annonce"
-				}
-			},
-			"responses": {
-				"empty": "Le message d'annonce ne peut pas etre vide.",
-				"updated": "Message d'annonce defini sur `{{message}}`."
-			}
-		},
-		"overviewChannel": {
-			"description": "Definir le salon d'apercu",
-			"options": {
-				"channel": {
-					"description": "Choisir le salon des apercus d'anniversaire"
-				}
-			},
-			"responses": {
-				"updated": "Salon d'apercu defini sur <#{{channelId}}>."
-			}
-		},
-		"overviewMessage": {
-			"description": "Definir le message d'apercu",
-			"options": {
-				"message": {
-					"description": "Definir le texte du message d'apercu"
-				}
-			},
-			"responses": {
-				"empty": "Le message d'apercu ne peut pas etre vide.",
-				"updated": "Message d'apercu defini sur `{{message}}`."
-			}
-		},
-		"overviewSort": {
-			"description": "Definir le mode de tri de l'apercu",
-			"options": {
-				"sort": {
-					"description": "Trier l'apercu par mois ou par prochaine date",
-					"choices": {
-						"month": "Par mois",
-						"upcoming": "Les plus proches d'abord"
-					}
-				}
-			},
-			"responses": {
-				"updated": "Mode de tri de l'apercu defini sur **{{mode}}**."
-			}
-		},
-		"birthdayRole": {
-			"description": "Definir le role anniversaire",
-			"options": {
-				"role": {
-					"description": "Choisir le role attribue aux anniversaires"
-				}
-			},
-			"responses": {
-				"updated": "Role anniversaire defini sur <@&{{roleId}}>."
-			}
-		},
-		"birthdayPingRole": {
-			"description": "Definir le role ping anniversaire",
-			"options": {
-				"role": {
-					"description": "Choisir le role mentionne dans les annonces"
-				}
-			},
-			"responses": {
-				"updated": "Role ping anniversaire defini sur <@&{{roleId}}>."
-			}
-		},
-		"logChannel": {
-			"description": "Definir le salon de logs",
-			"options": {
-				"channel": {
-					"description": "Choisir le salon des logs anniversaire"
-				}
-			},
-			"responses": {
-				"updated": "Salon de logs defini sur <#{{channelId}}>."
-			}
-		},
-		"language": {
-			"description": "Definir la langue du serveur",
-			"options": {
-				"language": {
-					"description": "Choisir la langue du serveur",
-					"choices": {
-						"enUS": "Anglais (Etats-Unis)",
-						"frFR": "Francais (France)"
-					}
-				}
-			},
-			"responses": {
-				"updated": "Langue du serveur definie sur **{{language}}**."
-			}
-		},
-		"view": {
-			"description": "Afficher la configuration actuelle du serveur",
-			"labels": {
-				"premium": "Premium",
-				"active": "Actif",
-				"overviewSort": "Tri de l'apercu",
-				"timezone": "Fuseau horaire",
-				"language": "Langue",
-				"announcementChannel": "Salon d'annonce",
-				"announcementMessage": "Message d'annonce",
-				"announcementHour": "Heure d'annonce",
-				"birthdayPingRole": "Role de mention",
-				"birthdayRole": "Role anniversaire",
-				"overviewChannel": "Salon d'apercu",
-				"logChannel": "Salon de logs"
-			},
-			"sections": {
-				"general": "⚙️ General",
-				"announcements": "📢 Annonces d'anniversaires",
-				"birthdayRole": "🎂 Role anniversaire",
-				"overviewAndLogs": "📊 Apercu & Logs"
-			},
-			"buttons": {
-				"general": "General",
-				"announcements": "Annonces",
-				"birthdayRole": "Role anniversaire",
-				"overviewAndLogs": "Apercu & Logs",
-				"back": "← Retour",
-				"premium": "👑 Premium"
-			},
-			"edit": {
-				"generalTitle": "Modifier les parametres generaux",
-				"announcementsTitle": "Modifier les annonces d'anniversaires",
-				"birthdayRoleTitle": "Modifier le role anniversaire",
-				"overviewAndLogsTitle": "Modifier l'apercu & les logs",
-				"premiumTitle": "Premium",
-				"updated": "✅ Parametres mis a jour.",
-				"selectLanguagePlaceholder": "Choisir une langue...",
-				"selectSortPlaceholder": "Choisir le mode de tri...",
-				"selectChannelPlaceholder": "Definir le salon d'annonce...",
-				"selectHourPlaceholder": "Definir l'heure d'annonce...",
-				"selectPingRolePlaceholder": "Definir le role de mention...",
-				"selectRolePlaceholder": "Definir le role anniversaire...",
-				"selectOverviewChannelPlaceholder": "Definir le salon d'apercu...",
-				"selectLogChannelPlaceholder": "Definir le salon de logs...",
-				"modalMessageButtonLabel": "Definir le message",
-				"modalMessageTitle": "Definir le message d'annonce",
-				"modalMessageLabel": "Message",
-				"selectTimezoneRegionPlaceholder": "Selectionner une region...",
-				"selectTimezonePlaceholder": "Selectionner un fuseau...",
-				"removeChannel": "Retirer le salon",
-				"removeRole": "Retirer le role",
-				"resetMessage": "Réinitialiser le message",
-				"premiumActivateHere": "✅ Activer ici",
-				"premiumDeactivateHere": "❌ Desactiver ici",
-				"premiumSlotsLabel": "Slots",
-				"premiumServersLabel": "Serveurs actifs",
-				"premiumNotPatron": "Vous n'avez aucun abonnement premium.",
-				"premiumNotPatronDescription": "En soutenant **Birthdayy** sur Patreon, vous debloquez des slots premium a activer sur vos serveurs et contribuez a maintenir le bot en ligne !",
-				"premiumPatreonButton": "Acceder a la page Patreon"
-			},
-			"responses": {
-				"title": "Configuration actuelle du serveur"
-			}
-		}
-	}
+  "command": {
+    "description": "Configurer les parametres du serveur"
+  },
+  "autocomplete": {
+    "timezone": {
+      "exact": "⭐ {{timezone}}",
+      "partial": "📄 {{timezone}}"
+    }
+  },
+  "defaults": {
+    "announcementMessage": "<:arrwright:931267038746390578> Aujourd'hui est un jour special !{NEW_LINE}<:gift:931267039094534175> Souhaitez un joyeux anniversaire a {MENTION} <3"
+  },
+  "confirm": {
+    "question": "Etes-vous sur de vouloir appliquer ce changement ?",
+    "cancelled": "Action annulee."
+  },
+  "errors": {
+    "guildOnly": "Cette commande peut uniquement etre utilisee sur un serveur."
+  },
+  "subcommands": {
+    "timezone": {
+      "description": "Definir le fuseau horaire du serveur",
+      "options": {
+        "timezone": {
+          "description": "Choisir un fuseau IANA (ex: Europe/Paris)"
+        }
+      },
+      "responses": {
+        "invalid": "Fuseau horaire inconnu `{{timezone}}`. Utilisez l'autocompletion pour choisir une valeur valide.",
+        "alreadySet": "Le fuseau horaire du serveur est deja **{{timezone}}**.",
+        "updated": "Fuseau horaire du serveur defini sur **{{timezone}}**."
+      }
+    },
+    "announcementChannel": {
+      "description": "Definir le salon d'annonce",
+      "options": {
+        "channel": {
+          "description": "Choisir le salon des annonces d'anniversaire"
+        }
+      },
+      "responses": {
+        "updated": "Salon d'annonce defini sur <#{{channelId}}>."
+      }
+    },
+    "announcementMessage": {
+      "description": "Definir le modele du message d'annonce",
+      "options": {
+        "message": {
+          "description": "Definir le texte du message d'annonce"
+        }
+      },
+      "responses": {
+        "empty": "Le message d'annonce ne peut pas etre vide.",
+        "updated": "Message d'annonce defini sur `{{message}}`."
+      }
+    },
+    "overviewChannel": {
+      "description": "Definir le salon d'apercu",
+      "options": {
+        "channel": {
+          "description": "Choisir le salon des apercus d'anniversaire"
+        }
+      },
+      "responses": {
+        "updated": "Salon d'apercu defini sur <#{{channelId}}>."
+      }
+    },
+    "overviewMessage": {
+      "description": "Definir le message d'apercu",
+      "options": {
+        "message": {
+          "description": "Definir le texte du message d'apercu"
+        }
+      },
+      "responses": {
+        "empty": "Le message d'apercu ne peut pas etre vide.",
+        "updated": "Message d'apercu defini sur `{{message}}`."
+      }
+    },
+    "overviewSort": {
+      "description": "Definir le mode de tri de l'apercu",
+      "options": {
+        "sort": {
+          "description": "Trier l'apercu par mois ou par prochaine date",
+          "choices": {
+            "month": "Par mois",
+            "upcoming": "Les plus proches d'abord"
+          }
+        }
+      },
+      "responses": {
+        "updated": "Mode de tri de l'apercu defini sur **{{mode}}**."
+      }
+    },
+    "birthdayRole": {
+      "description": "Definir le role anniversaire",
+      "options": {
+        "role": {
+          "description": "Choisir le role attribue aux anniversaires"
+        }
+      },
+      "responses": {
+        "updated": "Role anniversaire defini sur <@&{{roleId}}>."
+      }
+    },
+    "birthdayPingRole": {
+      "description": "Definir le role ping anniversaire",
+      "options": {
+        "role": {
+          "description": "Choisir le role mentionne dans les annonces"
+        }
+      },
+      "responses": {
+        "updated": "Role ping anniversaire defini sur <@&{{roleId}}>."
+      }
+    },
+    "logChannel": {
+      "description": "Definir le salon de logs",
+      "options": {
+        "channel": {
+          "description": "Choisir le salon des logs anniversaire"
+        }
+      },
+      "responses": {
+        "updated": "Salon de logs defini sur <#{{channelId}}>."
+      }
+    },
+    "language": {
+      "description": "Definir la langue du serveur",
+      "options": {
+        "language": {
+          "description": "Choisir la langue du serveur",
+          "choices": {
+            "enUS": "Anglais (Etats-Unis)",
+            "frFR": "Francais (France)"
+          }
+        }
+      },
+      "responses": {
+        "updated": "Langue du serveur definie sur **{{language}}**."
+      }
+    },
+    "view": {
+      "description": "Afficher la configuration actuelle du serveur",
+      "labels": {
+        "premium": "Premium",
+        "active": "Actif",
+        "overviewSort": "Tri de l'apercu",
+        "timezone": "Fuseau horaire",
+        "language": "Langue",
+        "announcementChannel": "Salon d'annonce",
+        "announcementMessage": "Message d'annonce",
+        "announcementHour": "Heure d'annonce",
+        "birthdayPingRole": "Role de mention",
+        "birthdayRole": "Role anniversaire",
+        "overviewChannel": "Salon d'apercu",
+        "logChannel": "Salon de logs"
+      },
+      "sections": {
+        "general": "⚙️ Général",
+        "announcements": "📢 Annonces d'anniversaires",
+        "birthdayRole": "🎂 Rôle anniversaire",
+        "overviewAndLogs": "📊 Aperçu & Logs"
+      },
+      "buttons": {
+        "general": "⚙️ Général",
+        "announcements": "📢 Annonces",
+        "birthdayRole": "🎂 Rôle anniversaire",
+        "overviewAndLogs": "📊 Aperçu & Logs",
+        "back": "← Retour",
+        "premium": "👑 Premium"
+      },
+      "edit": {
+        "generalTitle": "Modifier les paramètres généraux",
+        "announcementsTitle": "Annonces",
+        "birthdayRoleTitle": "Rôle anniversaire",
+        "overviewAndLogsTitle": "Aperçu & Logs",
+        "premiumTitle": "Premium",
+        "updated": "✅ Paramètres mis à jour.",
+        "selectLanguagePlaceholder": "Choisir une langue...",
+        "selectSortPlaceholder": "Choisir le mode de tri...",
+        "selectChannelPlaceholder": "Définir le salon d'annonce...",
+        "selectHourPlaceholder": "Définir l'heure d'annonce...",
+        "selectPingRolePlaceholder": "Définir le rôle de mention...",
+        "selectRolePlaceholder": "Définir le rôle anniversaire...",
+        "selectOverviewChannelPlaceholder": "Définir le salon d'aperçu...",
+        "selectLogChannelPlaceholder": "Définir le salon de logs...",
+        "modalMessageButtonLabel": "Définir le message",
+        "modalMessageTitle": "Définir le message d'annonce",
+        "modalMessageLabel": "Message",
+        "selectTimezoneRegionPlaceholder": "Sélectionner une région...",
+        "selectTimezonePlaceholder": "Sélectionner un fuseau...",
+        "removeChannel": "Retirer le salon",
+        "removeRole": "Retirer le rôle",
+        "resetMessage": "Réinitialiser le message",
+        "premiumActivateHere": "✅ Activer ici",
+        "premiumDeactivateHere": "❌ Désactiver ici",
+        "premiumSlotsLabel": "Slots",
+        "premiumServersLabel": "Serveurs actifs",
+        "premiumNotPatron": "Vous n'avez aucun abonnement premium.",
+        "premiumNotPatronDescription": "En soutenant **Birthdayy** sur Patreon, vous débloquez des slots premium à activer sur vos serveurs et contribuez à maintenir le bot en ligne !",
+        "premiumPatreonButton": "Accéder à la page Patreon"
+      },
+      "responses": {
+        "title": "Configuration"
+      },
+      "main": {
+        "welcome": "Bienvenue dans la commande de configuration de BirthdayBot.\nGrâce à cette commande, vous pourrez configurer les différents systèmes proposés dans le sélecteur que vous trouverez ci-dessous.",
+        "selectLabel": "Accueil",
+        "paramsTitle": "**Paramètres de base**",
+        "linksTitle": "**Pour simplifier la configuration**",
+        "btnPanelWeb": "Panel Web",
+        "btnSupport": "Support Discord",
+        "btnDocs": "Documentation"
+      }
+    }
+  }
 }

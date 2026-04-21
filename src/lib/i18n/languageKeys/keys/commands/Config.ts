@@ -1,3 +1,4 @@
+export const SubcommandViewMainSelectLabel = T<string>('commands/config:subcommands.view.main.selectLabel');
 import { FT, T } from '#lib/types/index';
 
 export const AutocompleteTimezoneExact = FT<{ timezone: string }, string>('commands/config:autocomplete.timezone.exact');
@@ -127,3 +128,9 @@ export const SubcommandViewEditPremiumServersLabel = T<string>('commands/config:
 export const SubcommandViewEditPremiumNotPatron = T<string>('commands/config:subcommands.view.edit.premiumNotPatron');
 export const SubcommandViewEditPremiumNotPatronDescription = T<string>('commands/config:subcommands.view.edit.premiumNotPatronDescription');
 export const SubcommandViewEditPremiumPatreonButton = T<string>('commands/config:subcommands.view.edit.premiumPatreonButton');
+export const SubcommandViewMainWelcome = T<string>('commands/config:subcommands.view.main.welcome');
+export const SubcommandViewMainParamsTitle = T<string>('commands/config:subcommands.view.main.paramsTitle');
+export const SubcommandViewMainLinksTitle = T<string>('commands/config:subcommands.view.main.linksTitle');
+export const SubcommandViewMainBtnPanelWeb = T<string>('commands/config:subcommands.view.main.btnPanelWeb');
+export const SubcommandViewMainBtnSupport = T<string>('commands/config:subcommands.view.main.btnSupport');
+export const SubcommandViewMainBtnDocs = T<string>('commands/config:subcommands.view.main.btnDocs');

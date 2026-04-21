@@ -1,0 +1,9 @@
+{
+  "subcommands": {
+    "view": {
+      "main": {
+        "selectLabel": "Accueil"
+      }
+    }
+  }
+}

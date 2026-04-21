@@ -2,11 +2,9 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { applyDescriptionLocalizedBuilder } from '@sapphire/plugin-i18next';
 import { ConfigViewController } from '#lib/application/config-commands/ConfigViewController';
+import { ConfigPageRunner } from '#lib/config-view/ConfigPageRunner';
+import { VIEW_TIMEOUT_MS, type PageContext } from '#lib/config-view/types';
 import { LanguageKeys } from '#lib/i18n/languageKeys';
-import { handleButton, handleChannelSelect, handleRoleSelect, handleStringSelect } from '#lib/config-view/handlers';
-import { resolveLabels } from '#lib/config-view/labels';
-import { buildMainRow, buildMainView } from '#lib/config-view/panels';
-import { VIEW_TIMEOUT_MS, type PanelContext } from '#lib/config-view/types';
 import { ApplicationIntegrationType, InteractionContextType, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -30,17 +28,20 @@ export class ConfigCommand extends Command {
 
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const guildId = interaction.guildId!;
+		const runner = new ConfigPageRunner();
 
-		const ctx: PanelContext = {
+		let ctx: PageContext = {
 			guildId,
 			userId: interaction.user.id,
-			labels: await resolveLabels(interaction),
+			currentPage: 'main',
+			navigation: ['main'],
+			params: {},
 			viewController: new ConfigViewController(this.container.guild),
 			guildRepository: this.container.guild,
 			interaction
 		};
 
-		const initialView = await buildMainView(ctx);
+		const initialView = await runner.renderPage('main', ctx);
 		await interaction.reply({
 			embeds: initialView.embeds,
 			components: initialView.components,
@@ -55,15 +56,12 @@ export class ConfigCommand extends Command {
 		});
 
 		collector.on('collect', async (component) => {
-			if (component.isButton()) await handleButton(component, ctx);
-			else if (component.isStringSelectMenu()) await handleStringSelect(component, ctx);
-			else if (component.isChannelSelectMenu()) await handleChannelSelect(component, ctx);
-			else if (component.isRoleSelectMenu()) await handleRoleSelect(component, ctx);
+			ctx = await runner.routeInteraction(component, ctx);
 		});
 
 		collector.on('end', async () => {
 			try {
-				await interaction.editReply({ components: [buildMainRow(ctx.labels, true)] });
+				await interaction.editReply({ components: [] });
 			} catch {}
 		});
 	}
