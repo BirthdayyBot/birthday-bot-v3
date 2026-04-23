@@ -125,7 +125,7 @@
         "premiumPatreonButton": "Access the Patreon page"
       },
       "responses": {
-        "title": "Home"
+        "title": "Configuration"
       },
       "main": {
         "welcome": "Welcome to the configuration command of BirthdayBot.\nUse the selector below to configure each section of the bot.",
