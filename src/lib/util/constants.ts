@@ -6,7 +6,7 @@ export const ZeroWidthSpace = '\u200B';
 export const rootFolder = new URL('../../../', import.meta.url);
 export const srcFolder = new URL('src/', rootFolder);
 
-export const projectRoot = new URL(process.env.OVERRIDE_ROOT_PATH ?? 'dist', rootFolder);
+export const projectRoot = new URL(process.env.OVERRIDE_ROOT_PATH ?? 'dist/', rootFolder);
 export const languagesFolder = new URL('languages/', projectRoot);
 
 export enum Emojis {
