@@ -3,13 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'disc
 
 const PREMIUM_COLOR = 0xf6c90e;
 
-export async function sendPremiumGrantDM(
-	userId: string,
-	slots: number,
-	tier: string,
-	expiresAt: Date | null,
-	durationLabel?: string | null
-): Promise<void> {
+export async function sendPremiumGrantDM(userId: string, slots: number, tier: string, durationLabel?: string | null): Promise<void> {
 	try {
 		const user = await container.client.users.fetch(userId);
 		const dm = await user.createDM();
