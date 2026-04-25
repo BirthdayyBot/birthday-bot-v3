@@ -12,7 +12,13 @@ import type { Kysely } from 'kysely';
 import { WebhookClient } from 'discord.js';
 import type { API } from '@discordjs/core/http-only';
 
+import type { ConfigPageStore } from '#lib/config-view/ConfigPageStore';
+
 declare module '@sapphire/pieces' {
+	interface StoreRegistryEntries {
+		'config-pages': ConfigPageStore;
+	}
+
 	interface Container {
 		api?: API;
 		/** The InfluxDB Analytics controller. */

@@ -1,4 +1,5 @@
 import { container } from '@sapphire/framework';
+import { Time } from '@sapphire/time-utilities';
 import { URL } from 'node:url';
 
 export const ZeroWidthSpace = '\u200B';
@@ -118,3 +119,18 @@ export enum GuildIDEnum {
 	ChilliAttackV2 = '768556541439377438',
 	BirthdayyTesting = '980559116076470272'
 }
+
+export const SUBSCRIPTION_TIERS: Record<string, { slots: number; label: string }> = {
+	premium: { slots: 1, label: 'Birthdayy Premium' },
+	super_supporter: { slots: 3, label: 'Super Supporter' }
+} as const;
+
+export const EXPIRATION_TIMES: Record<string, { ms: number | null; label: string }> = {
+	permanent: { ms: null, label: 'à vie' },
+	'7d': { ms: Time.Day * 7, label: '7 jours' },
+	'15d': { ms: Time.Day * 15, label: '15 jours' },
+	'1m': { ms: Time.Day * 30, label: 'un mois' },
+	'3m': { ms: Time.Day * 90, label: '3 mois' },
+	'6m': { ms: Time.Day * 180, label: '6 mois' },
+	'1y': { ms: Time.Day * 365, label: 'un an' }
+} as const;
