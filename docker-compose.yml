@@ -43,7 +43,7 @@ services:
       timeout: 5s
       retries: 20
       start_period: 15s
-    image: 'mysql:8.4'
+    image: 'mysql:9.7'
     logging:
       options:
         max-size: '20m'
