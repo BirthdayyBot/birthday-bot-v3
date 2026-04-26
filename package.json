@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
-    "tsc-watch": "^6.3.1",
+    "tsc-watch": "^7.2.0",
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript": "~5.4.5",
