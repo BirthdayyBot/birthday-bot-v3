@@ -2162,7 +2162,7 @@ __metadata:
     lint-staged: "npm:^16.4.0"
     mysql2: "npm:^3.22.1"
     prettier: "npm:^3.8.3"
-    tsc-watch: "npm:^6.3.1"
+    tsc-watch: "npm:^7.2.0"
     tsdown: "npm:^0.21.9"
     tsx: "npm:^4.21.0"
     typescript: "npm:~5.4.5"
@@ -5064,7 +5064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-argv@npm:^0.3.1, string-argv@npm:^0.3.2":
+"string-argv@npm:^0.3.2":
   version: 0.3.2
   resolution: "string-argv@npm:0.3.2"
   checksum: 10/f9d3addf887026b4b5f997a271149e93bf71efc8692e7dc0816e8807f960b18bcb9787b45beedf0f97ff459575ee389af3f189d8b649834cac602f2e857e75af
@@ -5332,19 +5332,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsc-watch@npm:^6.3.1":
-  version: 6.3.1
-  resolution: "tsc-watch@npm:6.3.1"
+"tsc-watch@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "tsc-watch@npm:7.2.0"
   dependencies:
-    cross-spawn: "npm:^7.0.3"
+    cross-spawn: "npm:^7.0.6"
     node-cleanup: "npm:^2.1.2"
     ps-tree: "npm:^1.2.0"
-    string-argv: "npm:^0.3.1"
+    string-argv: "npm:^0.3.2"
   peerDependencies:
     typescript: "*"
   bin:
     tsc-watch: dist/lib/tsc-watch.js
-  checksum: 10/25dc8ef90dabacc61ba25c207d98fa6a277db06bce314969c27ece666af20981d59f0388719c471cc147674204dcb9f543a9c124bd521f1a5adea83d4ad173a3
+  checksum: 10/988b4d0385f354423dba46b84699d1653c1e1e5af375c1745013ac4d6b4f6cacdc8c38b79774b676eef7a57ab9b6214aaea4a043b0d6eebfd1837224faeeace5
   languageName: node
   linkType: hard
 
