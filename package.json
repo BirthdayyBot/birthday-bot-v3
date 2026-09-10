@@ -58,7 +58,7 @@
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript": "~5.4.5",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.0"
   },
   "scripts": {
     "start": "node --preserve-symlinks --enable-source-maps dist/index.mjs",
