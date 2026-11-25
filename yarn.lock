@@ -3077,13 +3077,13 @@ __metadata:
   linkType: hard
 
 "figlet@npm:^1.11.0":
-  version: 1.11.0
-  resolution: "figlet@npm:1.11.0"
+  version: 1.13.0
+  resolution: "figlet@npm:1.13.0"
   dependencies:
     commander: "npm:^14.0.0"
   bin:
     figlet: bin/index.js
-  checksum: 10/ed78dd3dcd7cd23daf43b84c53af9befc19c9e9e413ff061191d2b08413e5db1d97a9c383df7b1c488996c220e131c0e4dd8a1c8431257a3c97c761540b02025
+  checksum: 10/aabf4152aa10773d338b2cd2337d9d148f5d54621910e83c170a2d222d71a18f663ad9137371a3fb5d78261975724121faca38d24fee4c72e0c72e8d40abf419
   languageName: node
   linkType: hard
 
